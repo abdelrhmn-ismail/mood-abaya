@@ -134,12 +134,40 @@ Summary of what has been finished, following `STORE-PLAN.md`.
 
 ---
 
-## Next (from STORE-PLAN.md)
+## What’s still missing (from STORE-PLAN.md)
 
-- **Phase 8:** Admin foundation (dashboard, site settings locale/theme)
-- **Phase 9:** Admin orders, payments (mark paid, approve/reject bank), shipping, contact messages
-- **Phase 10:** Admin products & categories CRUD
-- **Phase 11:** Polish & UX
+### Phase 8: Admin foundation
+- **Admin** module (`php artisan module:make Admin`).
+- **Admin middleware** (e.g. `is_admin` using `users.is_admin`); route prefix `admin`; middleware `auth` + `admin`.
+- **DashboardService:** `getCounts()` (orders, pending payments, unread contacts), `getRecentOrders()`.
+- **Admin\SettingsService:** `getSettings()`, `updateSettings(array)` for locale & theme.
+- **Admin layout:** Tailwind sidebar: Dashboard, **Settings**, Orders, Payments, Products, Categories, Contact messages, Shipping.
+- **Settings page** (`/admin/settings`): form for default **locale** (en/ar) and default **theme** (light/dark/system); POST via SettingsService.
+- **DashboardController**, **SettingsController** (thin; call services only).
+
+### Phase 9: Admin – Orders, payments, shipping, contact messages
+- **Orders list:** table (order #, customer, date, total, payment method/status, order status); filters; link to detail.
+- **Order detail:** customer + items + total; change order status; for **cash** “Mark as paid”; for **bank** show proof + “Approve” / “Reject”.
+- **Payments list:** all payments; filter by pending approval (bank).
+- **Shipping:** per order: carrier, tracking number, “Mark as shipped” (`shipped_at`, create/update `Shipping`).
+- **Contact messages:** list with read/unread; mark as read when opened.
+- **Admin\OrderService**, **Admin\PaymentService**, **Admin\ShippingService**, **Admin\ContactMessageService** (and controllers that only call these).
+
+### Phase 10: Admin – Products & categories CRUD
+- **Admin\CategoryService:** `getAll()`, `create()`, `update()`, `delete()`; slug from name; image upload.
+- **Admin\ProductService:** `getAll($filters)`, `create()`, `update()`, `delete()`; images in `storage/app/public/products`.
+- Admin **CategoryController** and **ProductController** (validate + call admin services only).
+- Admin views for categories and products (index, create, edit, etc.).
+
+### Phase 11: Polish & UX
+- **Home:** already dynamic (featured categories, latest products).
+- **Customer order detail:** e.g. route `orders.show` and “View” link in account order history; page showing single order.
+- **Flash messages:** consistent success/error display (partially there; can be standardized).
+- **RTL / dark mode polish:** layout already supports locale + theme; final tweaks for RTL and dark.
+
+### Optional / not in scope
+- **Tamara:** not implemented (cash & bank only).
+- **AccountService** as a dedicated module: account page exists; plan’s AccountService could be added later for `getProfile`, `updateProfile`, `getOrderHistory` if desired.
 
 ---
 
