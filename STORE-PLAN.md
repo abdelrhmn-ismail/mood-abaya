@@ -1,6 +1,6 @@
-# Mood Abaya Store – Laravel + Bootstrap 5 Plan
+# Mood Abaya Store – Laravel + tailwind Plan
 
-A simple e-commerce store with categories, products, cart, multiple payment methods (cash, bank upload + approval, Tamara), and full admin control. Structured for **video coding sessions** with an AI agent.
+A simple e-commerce store with categories, products, cart, multiple payment methods (cash, bank upload + approval, Tamara), and full admin control. The site supports **Arabic (ar) and English (en)**; **admin can change locale and other site values**. The **theme supports light and dark mode** (user toggle; admin can set default). Structured for **video coding sessions** with an AI agent.
 
 **Architecture:** **Nwidart Laravel Modules** + **Service layer** (all business logic in services; controllers are thin).
 
@@ -13,11 +13,36 @@ A simple e-commerce store with categories, products, cart, multiple payment meth
 | Backend     | Laravel 12.x                     |
 | Structure   | nWidart/laravel-modules          |
 | Logic       | Services (all business logic)   |
-| Frontend    | Blade + Bootstrap 5              |
+| Frontend    | Blade + tailwind              |
 | Database    | MySQL / SQLite                   |
 | Auth        | Laravel Breeze or Fortify        |
 | File upload | Laravel Storage (bank receipts)  |
 | Payments    | Cash (manual), Bank (upload), Tamara API |
+
+---
+
+## Locale (Arabic / English) – Admin Can Change
+
+- **Supported locales:** `en` (English), `ar` (Arabic). The whole website (menus, labels, messages) is available in both; admin controls which locale is the **site default**.
+- **Admin control:** In Admin → **Site settings**, admin can:
+  - Set **default locale** (ar or en). All visitors see the site in this language unless they switch (e.g. locale switcher in navbar stores preference in session/cookie).
+  - Optionally: edit or add **translation strings** (e.g. “Home”, “Categories”, “Add to Cart”) for ar/en via a simple key-value or JSON/lang editor. If not implemented, use Laravel lang files only (`lang/en.json`, `lang/ar.json`) and admin changes require code/deploy.
+- **Implementation:**
+  - **Settings table:** Store `locale` (and other keys). Use `Setting::get('locale')` / `Setting::set('locale', 'ar')` and a middleware that sets `app()->setLocale(Setting::locale())` (or session override for user choice).
+  - **Lang files:** `lang/en.json`, `lang/ar.json` for all UI strings; use `__('Home')` in Blade.
+  - **RTL:** When locale is `ar`, set `dir="rtl"` and `lang="ar"` on `<html>`; use RTL-aware CSS (e.g. logical properties or Bootstrap RTL) so layout and alignment are correct for Arabic.
+
+---
+
+## Theme (Light / Dark Mode)
+
+- **Modes:** **Light**, **Dark**, and optionally **System** (follow OS preference). The frontend layout and components must look good in both light and dark.
+- **User preference:** A theme toggle (e.g. in navbar or footer) lets the user switch between light and dark. Persist choice in **cookie** or **localStorage** and apply a class on `<html>` (e.g. `class="dark"` for dark mode). Use Tailwind `dark:` (or Bootstrap dark utilities) for dark-mode styles.
+- **Admin control:** In Admin → **Site settings**, admin can set the **default theme** (light / dark / system) for first-time visitors. User’s saved preference overrides this.
+- **Implementation:**
+  - Store `theme` in settings table: `Setting::get('theme', 'light')` (values: `light`, `dark`, `system`).
+  - Frontend: small JS that runs on load to read cookie/localStorage (or default from a meta/script output from backend), then adds/removes `dark` on `document.documentElement`.
+  - All relevant Blade views and CSS use dark-mode variants (e.g. `bg-white dark:bg-gray-900`, `text-gray-900 dark:text-gray-100`).
 
 ---
 
@@ -47,7 +72,7 @@ Each module lives under `Modules/<ModuleName>/` with:
 | **Payment** | Cash, bank upload, bank approval, Tamara          | `PaymentService`, `BankPaymentService`, `TamaraService` |
 | **Contact** | Contact form, save message                        | `ContactService` |
 | **Account** | Profile, order history (customer view)            | `AccountService` |
-| **Admin** | Dashboard, orders, payments, shipping, products, categories, contact messages | `Admin\DashboardService`, `Admin\OrderService`, `Admin\PaymentService`, `Admin\ShippingService`, `Admin\ProductService`, `Admin\CategoryService`, `Admin\ContactMessageService` |
+| **Admin** | Dashboard, orders, payments, shipping, products, categories, contact messages, **site settings (locale, theme)** | `Admin\DashboardService`, `Admin\OrderService`, `Admin\PaymentService`, `Admin\ShippingService`, `Admin\ProductService`, `Admin\CategoryService`, `Admin\ContactMessageService`, `Admin\SettingsService` |
 
 Models can live in `app/Models` (shared) or inside each module’s `Entities`/`Models` depending on preference; the plan assumes **shared** `app/Models` for simplicity so modules stay decoupled but reuse the same Eloquent models.
 
@@ -75,6 +100,7 @@ Models can live in `app/Models` (shared) or inside each module’s `Entities`/`M
 | **Admin\ProductService** | Admin | `getAll($filters)`, `create(array $data)`, `update(Product $product, array $data)`, `delete(Product $product)` |
 | **Admin\CategoryService** | Admin | `getAll()`, `create(array $data)`, `update(Category $category, array $data)`, `delete(Category $category)` |
 | **Admin\ContactMessageService** | Admin | `getMessages()`, `markAsRead(ContactMessage $message)` |
+| **Admin\SettingsService** | Admin | `getSettings()` (locale, theme, etc.), `updateSettings(array $data)` – reads/writes `Setting` model for admin-editable site values |
 
 Controllers only call these services and return views/redirects; no business logic in controllers.
 
@@ -89,8 +115,10 @@ Use **PHP enums** (Laravel 9+) or a shared config file so the same values are us
 | **Order status** | `pending`, `processing`, `shipped`, `delivered`, `cancelled` | `orders.status`; admin order list/detail; customer order history |
 | **Payment status** | `pending`, `pending_approval`, `paid`, `rejected`, `failed` | `payments.status`, `orders.payment_status`; checkout and admin |
 | **Payment method** | `cash`, `bank`, `tamara` | `orders.payment_method`, `payments.method`; checkout form and payment flow |
+| **Site locale** | `en`, `ar` | Stored in `settings`; admin can change; middleware sets `app()->setLocale()` |
+| **Theme** | `light`, `dark`, `system` | Stored in `settings`; admin sets default; user preference in cookie/localStorage |
 
-**Implementation:** Create `app/Enums/OrderStatus.php`, `app/Enums/PaymentStatus.php`, `app/Enums/PaymentMethod.php` (backed enums with string values), or use `config/orders.php` returning arrays. Use enum/value in migrations (defaults), model casts, services (e.g. `OrderStatus::Pending`), and Blade (e.g. `@foreach(OrderStatus::cases())` or config array).
+**Implementation:** Create `app/Enums/OrderStatus.php`, `app/Enums/PaymentStatus.php`, `app/Enums/PaymentMethod.php` (backed enums with string values), or use `config/orders.php` returning arrays. Use enum/value in migrations (defaults), model casts, services (e.g. `OrderStatus::Pending`), and Blade (e.g. `@foreach(OrderStatus::cases())` or config array). Locale and theme are stored in the `settings` table and read via `Setting::locale()`, `Setting::get('theme')`.
 
 ---
 
@@ -128,19 +156,39 @@ Create **Form Request** classes and use them in the corresponding controllers. C
 
 ---
 
+## Phase Overview (Organized)
+
+| Phase | Name | Focus |
+|-------|------|--------|
+| **0** | Project setup | Laravel, nWidart modules, Tailwind, base layout, **settings table + locale/theme foundation** |
+| **1** | Static pages | Home, About, Contact (Core, Contact module) |
+| **2** | Database & models | Schema, shared models, **Setting** model, seeders |
+| **3** | Shop | Categories, products, product detail (Shop module) |
+| **4** | Cart | Add/update/remove cart (Cart module) |
+| **5** | Auth & account | Register, login, account, cart merge |
+| **6** | Checkout & orders | Checkout flow, order creation, bank upload |
+| **7** | Payment methods | Cash, bank approval, Tamara |
+| **8** | Admin foundation | Admin area, dashboard, **site settings (locale, theme)** |
+| **9** | Admin – orders & payments | Orders, payments, shipping, contact messages |
+| **10** | Admin – products & categories | CRUD for products and categories |
+| **11** | Polish & UX | Dynamic home, order detail, flash messages, **RTL/dark mode polish** |
+
+---
+
 ## Phase 0: Project Setup (Video 1)
 
-**Goal:** Fresh Laravel app, nWidart modules, Bootstrap 5, base layout, and routing.
+**Goal:** Fresh Laravel app, nWidart modules, Tailwind, base layout, routing, and **foundation for locale (ar/en) and theme (light/dark)**.
 
 1. Create Laravel project: `composer create-project laravel/laravel .`
-2. Install **nWidart/laravel-modules**: `composer require nwidart/laravel-modules` then `php artisan vendor:publish --provider="Nwidart\Modules\LaravelModulesServiceProvider"` and set `modules` path in `config/modules.php` (default: `Modules` in project root).
+2. Install **nWidart/laravel-modules**: `composer require nwidart/laravel-modules` then publish config and set `modules` path (default: `Modules` in project root).
 3. Create **Core** module: `php artisan module:make Core` (or create first for layout/routes).
-4. Install Bootstrap 5 (CDN or NPM + Vite). Put main layout in **Core** or in `resources/views/layouts`: `app.blade.php` with navbar (Home, About, Contact, Categories, Cart, Login/Register), footer, `@yield('content')`, Bootstrap 5 CSS/JS.
+4. Install Tailwind (CDN or NPM + Vite). Put main layout in **Core** or in `resources/views/layouts`: `app.blade.php` with navbar (Home, About, Contact, Categories, Cart, Login/Register), footer, `@yield('content')`, Tailwind CSS/JS. Ensure layout supports **theme** (e.g. `dark` class on `<html>` and dark-mode utility classes) and **locale** (`dir`, `lang` from app locale).
 5. Configure `.env` (DB, APP_NAME).
-6. Run migrations: `php artisan migrate`.
-7. In **Core** (or main `routes/web.php`), register **placeholder routes**: `home`, `about`, `contact`, `categories`, `cart`, `login`, `register`. Later these can be moved to respective modules.
+6. Create **settings** migration (key, value). Run migrations: `php artisan migrate`.
+7. Add **Setting** model with `get()` / `set()`; add middleware that sets `app()->setLocale(Setting::locale())`. Add `lang/en.json` and `lang/ar.json` with shared UI strings.
+8. In **Core** (or main `routes/web.php`), register **placeholder routes**: `home`, `about`, `contact`, `categories`, `cart`, `login`, `register`. Later these can be moved to respective modules.
 
-**Deliverable:** App runs, layout loads, nWidart modules ready, all main links exist.
+**Deliverable:** App runs, layout loads, nWidart modules ready, all main links exist. Settings table and locale/theme foundation in place.
 
 ---
 
@@ -174,9 +222,10 @@ Create **Form Request** classes and use them in the corresponding controllers. C
 | `payments`        | id, order_id, method (cash/bank/tamara), status, proof_path (for bank), reference, approved_at, approved_by |
 | `contact_messages`| id, name, email, subject, message, read_at |
 | `shippings`       | id, order_id, carrier, tracking_number, status, shipped_at |
+| `settings`        | key (string, primary), value (text), timestamps — site-wide: locale (ar/en), theme (light/dark/system) |
 
 **Models:**  
-`User`, `Category`, `Product`, `CartItem`, `Order`, `OrderItem`, `Payment`, `ContactMessage`, `Shipping` with relationships. No business logic in models (only relations, casts, fillable).
+`User`, `Category`, `Product`, `CartItem`, `Order`, `OrderItem`, `Payment`, `ContactMessage`, `Shipping`, **`Setting`** (key/value for locale, theme, and other admin-editable values) with relationships. No business logic in models (only relations, casts, fillable).
 
 **Seeders:**  
 Categories and a few products; one admin user.
@@ -191,10 +240,9 @@ Categories and a few products; one admin user.
 
 1. Create **Shop** module: `php artisan module:make Shop`.
 2. **CategoryService:** `getActiveCategories()`, `findBySlug(string $slug)`, `getProductsByCategory(Category $category)`.
-3. **ProductService:** `findBySlug(string $slug)`, optional `searchByName(string $q)`.
- “Add to cart” button.
+3. **ProductService:** `findBySlug(string $slug)`, optional `searchByName(string $q)`. Product detail view includes “Add to cart” button.
 4. **Controllers (thin):** CategoryController / ProductController only call services and return view.
-5. **Routes:** `/categories`, `/categories/{slug}`, `/products/{slug}`. Views: Bootstrap 5 cards and grid; product detail with Add to cart button.
+5. **Routes:** `/categories`, `/categories/{slug}`, `/products/{slug}`. Views: tailwind cards and grid; product detail with Add to cart button.
 6. Images in `storage/app/public`; `php artisan storage:link`.
 
 **Deliverable:** Shop module with CategoryService + ProductService; controllers only call services and return views.
@@ -280,15 +328,17 @@ Categories and a few products; one admin user.
 
 ## Phase 8: Admin – Foundation (Video 9)
 
-**Goal:** Admin area and access control. **Module:** Admin. **Service:** DashboardService.
+**Goal:** Admin area, access control, and **site settings (locale, theme)**. **Module:** Admin. **Services:** DashboardService, **Admin\SettingsService**.
 
 1. Create **Admin** module: `php artisan module:make Admin`.
 2. **Admin middleware:** e.g. `is_admin` (check `users.is_admin` or `users.role`). Route prefix `admin`, middleware `auth`, `admin`.
 3. **DashboardService:** `getCounts()` (orders, pending payments, unread contacts), `getRecentOrders()`.
-4. **Admin layout:** `Modules/Admin/resources/views/layouts/admin.blade.php` – Bootstrap 5 sidebar: Dashboard, Orders, Payments, Products, Categories, Contact messages, Shipping.
-5. **Controllers:** DashboardController only calls DashboardService::getCounts(), getRecentOrders(); returns view. Seeder: one admin user.
+4. **Admin\SettingsService:** `getSettings()` (locale, theme from `Setting` model), `updateSettings(array $data)` so admin can change **default locale (ar/en)** and **default theme (light/dark/system)**. Controllers only call this service.
+5. **Admin layout:** `Modules/Admin/resources/views/layouts/admin.blade.php` – Tailwind sidebar: Dashboard, **Settings**, Orders, Payments, Products, Categories, Contact messages, Shipping.
+6. **Settings page** (`/admin/settings`): Form to set default locale (dropdown: English, Arabic) and default theme (Light, Dark, System). POST to update via SettingsService; redirect with success.
+7. **Controllers:** DashboardController only calls DashboardService; SettingsController only calls Admin\SettingsService. Seeder: one admin user.
 
-**Deliverable:** Admin module with DashboardService; controllers thin; admin can see dashboard and sidebar.
+**Deliverable:** Admin module with DashboardService and SettingsService; admin can see dashboard, sidebar, and change site locale and default theme.
 
 ---
 
@@ -337,15 +387,17 @@ Categories and a few products; one admin user.
 2. **Account – Order detail:**  
    - Customer view: order summary, payment status, shipping status, tracking number (if shipped).
 3. **Flash messages:**  
-   - Success/error for cart, checkout, contact, admin actions (Bootstrap alerts).
+   - Success/error for cart, checkout, contact, admin actions (Tailwind/Bootstrap alerts).
 4. **Empty states:**  
    - Empty cart, no orders, no products in category.
 5. **Responsive:**  
-   - Ensure navbar, cart, and forms work on mobile (Bootstrap 5).
-6. **Optional:**  
+   - Ensure navbar, cart, and forms work on mobile (Tailwind).
+6. **Locale & theme polish:**  
+   - All frontend strings use `__()` from `lang/en.json` and `lang/ar.json`. When locale is `ar`, ensure `dir="rtl"` and RTL layout/alignment. Theme toggle in navbar/footer; persist theme in cookie/localStorage; all main views use dark-mode classes where needed.
+7. **Optional:**  
    - Email on order placed; email when payment approved or order shipped.
 
-**Deliverable:** Store and admin feel complete and consistent.
+**Deliverable:** Store and admin feel complete and consistent; ar/en and light/dark work correctly.
 
 ---
 
@@ -353,7 +405,7 @@ Categories and a few products; one admin user.
 
 | Video | Phase   | Focus (modules + services)                          |
 |-------|--------|-----------------------------------------------------|
-| 1     | 0      | Laravel + nWidart + Bootstrap 5 + layout + routes  |
+| 1     | 0      | Laravel + nWidart + tailwind + layout + routes  |
 | 2     | 1      | Core, Contact modules; ContactService               |
 | 3     | 2      | DB schema, models (app/Models), seeders             |
 | 4     | 3      | Shop module; CategoryService, ProductService        |
@@ -361,10 +413,10 @@ Categories and a few products; one admin user.
 | 6     | 5      | Account module; AccountService; cart merge          |
 | 7     | 6      | Order, Payment modules; CheckoutService, PaymentService, BankPaymentService |
 | 8     | 7      | Payment module; PaymentService, TamaraService      |
-| 9     | 8      | Admin module; DashboardService                     |
+| 9     | 8      | Admin module; DashboardService; **SettingsService (locale, theme)** |
 | 10    | 9      | Admin; OrderService, PaymentService, ShippingService, ContactMessageService |
 | 11    | 10     | Admin; CategoryService, ProductService (CRUD)      |
-| 12    | 11     | HomeService, polish, emails (optional)              |
+| 12    | 11     | HomeService, polish, **RTL/dark mode**, emails (optional) |
 
 ---
 
@@ -374,7 +426,7 @@ Categories and a few products; one admin user.
 app/
   Models/                    # Shared Eloquent models (used by all modules)
     User.php, Category.php, Product.php, CartItem.php,
-    Order.php, OrderItem.php, Payment.php, ContactMessage.php, Shipping.php
+    Order.php, OrderItem.php, Payment.php, ContactMessage.php, Shipping.php, Setting.php
 
 Modules/
   Core/
@@ -441,8 +493,13 @@ Modules/
         ProductService.php
         CategoryService.php
         ContactMessageService.php
+        SettingsService.php
     resources/views/
     routes/web.php
+
+lang/
+  en.json                 # English UI strings (used with __())
+  ar.json                 # Arabic UI strings; RTL when locale is ar
 
 resources/views/
   layouts/
@@ -464,7 +521,8 @@ routes/
 - **Commit per phase:** So you can revert or branch if needed.
 - **Nwidart modules:** Create one module per phase when introduced; put Controllers and **Services** inside the module (`Modules/<Name>/app/Services/`). Controllers only call services.
 - **Service layer:** All business logic goes in Service classes. Controllers: validate request → call service method(s) → return view/redirect. No domain logic in controllers.
-- **Bootstrap 5:** Use components (navbar, cards, forms, tables, alerts) for consistency.
+- **Tailwind / Bootstrap:** Use components (navbar, cards, forms, tables, alerts) for consistency.
+- **Locale & theme:** Keep `lang/en.json` and `lang/ar.json` in sync; use `__()` everywhere in frontend. Support RTL for Arabic and dark-mode classes for theme toggle.
 - **Naming:** Use same terms in plan and code (e.g. `payment_status`, `pending_approval`) so the AI can follow.
 - **Tamara:** Start with sandbox; document API keys in `.env` and keep them out of the repo.
 
