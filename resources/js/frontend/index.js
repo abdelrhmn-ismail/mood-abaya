@@ -3,8 +3,10 @@
  */
 import { initNavbar } from './navbar.js';
 import { initNewsletter } from './newsletter.js';
+import { initThemeToggle } from './theme.js';
 
 function init() {
+  initThemeToggle();
   initNavbar();
   initNewsletter();
 }
