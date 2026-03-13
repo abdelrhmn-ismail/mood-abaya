@@ -12,9 +12,7 @@ class CheckoutController extends Controller
 {
     public function __construct(
         private CheckoutService $checkoutService
-    ) {
-        $this->middleware('auth');
-    }
+    ) {}
 
     public function show(): View|RedirectResponse
     {

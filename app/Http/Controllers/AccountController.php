@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Order\Services\OrderService;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AccountController extends Controller
 {
@@ -17,5 +18,16 @@ class AccountController extends Controller
             'user' => $user,
             'orders' => $orders,
         ]);
+    }
+
+    public function showOrder(Request $request, string $orderNumber, OrderService $orderService): View
+    {
+        $order = $orderService->getOrderByNumberForUser($orderNumber, $request->user()->id);
+        if (!$order) {
+            throw new NotFoundHttpException(__('Order not found.'));
+        }
+        $order->load('items.product', 'payments', 'shippings');
+
+        return view('frontend.order-show', compact('order'));
     }
 }

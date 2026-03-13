@@ -3,10 +3,10 @@
  */
 import { initNavbar } from './navbar.js';
 import { initNewsletter } from './newsletter.js';
-import { initThemeToggle } from './theme.js';
+import { initHeroSlider } from './hero-slider.js';
 
 function init() {
-  initThemeToggle();
+  initHeroSlider();
   initNavbar();
   initNewsletter();
 }

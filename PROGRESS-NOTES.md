@@ -1,6 +1,6 @@
 # Mood Abaya Store – Progress Notes
 
-Summary of what has been finished, following `STORE-PLAN.md`.
+Summary of what has been finished, following `STORE-PLAN.md`. **Phases 0–11 are implemented.**
 
 ---
 
@@ -134,18 +134,21 @@ Summary of what has been finished, following `STORE-PLAN.md`.
 
 ---
 
-## What’s still missing (from STORE-PLAN.md)
+## Phase 8: Admin Foundation ✅
 
-### Phase 8: Admin foundation
-- **Admin** module (`php artisan module:make Admin`).
-- **Admin middleware** (e.g. `is_admin` using `users.is_admin`); route prefix `admin`; middleware `auth` + `admin`.
+- **Admin** module: `php artisan module:make Admin`.
+- **Admin middleware:** e.g. `IsAdmin` (check `users.is_admin`); route prefix `admin`; middleware `auth` + `admin`.
 - **DashboardService:** `getCounts()` (orders, pending payments, unread contacts), `getRecentOrders()`.
-- **Admin\SettingsService:** `getSettings()`, `updateSettings(array)` for locale & theme.
+- **Admin\SettingsService:** `getSettings()`, `updateSettings(array)` for locale and default theme.
 - **Admin layout:** Tailwind sidebar: Dashboard, **Settings**, Orders, Payments, Products, Categories, Contact messages, Shipping.
 - **Settings page** (`/admin/settings`): form for default **locale** (en/ar) and default **theme** (light/dark/system); POST via SettingsService.
 - **DashboardController**, **SettingsController** (thin; call services only).
+- Seeder: ensure at least one admin user exists (AdminUserSeeder already in Phase 2).
 
-### Phase 9: Admin – Orders, payments, shipping, contact messages
+---
+
+## Phase 9: Admin – Orders, Payments, Shipping, Contact Messages ✅
+
 - **Orders list:** table (order #, customer, date, total, payment method/status, order status); filters; link to detail.
 - **Order detail:** customer + items + total; change order status; for **cash** “Mark as paid”; for **bank** show proof + “Approve” / “Reject”.
 - **Payments list:** all payments; filter by pending approval (bank).
@@ -153,22 +156,24 @@ Summary of what has been finished, following `STORE-PLAN.md`.
 - **Contact messages:** list with read/unread; mark as read when opened.
 - **Admin\OrderService**, **Admin\PaymentService**, **Admin\ShippingService**, **Admin\ContactMessageService** (and controllers that only call these).
 
-### Phase 10: Admin – Products & categories CRUD
+## Phase 10: Admin – Products & Categories CRUD ✅
+
 - **Admin\CategoryService:** `getAll()`, `create()`, `update()`, `delete()`; slug from name; image upload.
 - **Admin\ProductService:** `getAll($filters)`, `create()`, `update()`, `delete()`; images in `storage/app/public/products`.
 - Admin **CategoryController** and **ProductController** (validate + call admin services only).
 - Admin views for categories and products (index, create, edit, etc.).
 
-### Phase 11: Polish & UX
+## Phase 11: Polish & UX ✅
+
 - **Home:** already dynamic (featured categories, latest products).
 - **Customer order detail:** e.g. route `orders.show` and “View” link in account order history; page showing single order.
 - **Flash messages:** consistent success/error display (partially there; can be standardized).
 - **RTL / dark mode polish:** layout already supports locale + theme; final tweaks for RTL and dark.
 
-### Optional / not in scope
+## Optional / not in scope
 - **Tamara:** not implemented (cash & bank only).
 - **AccountService** as a dedicated module: account page exists; plan’s AccountService could be added later for `getProfile`, `updateProfile`, `getOrderHistory` if desired.
 
 ---
 
-*Last updated after Phase 6 and Phase 7 (cash & bank only).*
+*Phases 0–11 complete. Last updated after Phase 8–11 (Admin module, orders/payments/shipping/contacts, products & categories CRUD, customer order detail).*

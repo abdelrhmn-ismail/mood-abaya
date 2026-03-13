@@ -4,30 +4,29 @@
 @section('description', __('Shop by Category'))
 
 @section('content')
-    <section class="py-16 md:py-20">
+    <section class="bg-white py-20 md:py-24">
         <div class="container mx-auto px-4">
-            <h1 class="text-3xl font-bold mb-10 text-center">{{ __('Shop by Category') }}</h1>
-            <div class="mx-auto grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                @forelse($categories ?? [] as $category)
-                    <a href="{{ route('categories.show', $category->slug) }}"
-                       class="group flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md">
+            <h1 class="text-center text-4xl font-bold text-slate-900 md:text-5xl">{{ __('Shop by Category') }}</h1>
+            <p class="mx-auto mt-3 max-w-2xl text-center text-slate-600">{{ __('Browse our collections') }}</p>
+            <div class="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                @forelse($categories as $category)
+                    <a href="{{ route('categories.show', $category->slug) }}" class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-xl">
                         @if($category->image)
-                            <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}"
-                                 class="h-40 w-full object-cover transition group-hover:scale-105">
+                            <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="h-48 w-full object-cover transition duration-300 group-hover:scale-105">
                         @else
-                            <div class="flex h-40 w-full items-center justify-center bg-gray-100">
-                                <span class="material-icons text-5xl text-gray-400">category</span>
+                            <div class="flex h-48 w-full items-center justify-center bg-gradient-to-br from-slate-100 to-slate-50">
+                                <span class="material-icons text-6xl text-slate-300">category</span>
                             </div>
                         @endif
-                        <div class="flex flex-1 flex-col p-4">
-                            <h2 class="font-semibold text-gray-900">{{ $category->name }}</h2>
+                        <div class="p-6">
+                            <h2 class="text-xl font-semibold text-slate-900">{{ $category->name }}</h2>
                             @if($category->description)
-                                <p class="mt-1 text-sm text-gray-600 line-clamp-2">{{ $category->description }}</p>
+                                <p class="mt-2 line-clamp-2 text-sm text-slate-600">{{ $category->description }}</p>
                             @endif
                         </div>
                     </a>
                 @empty
-                    <p class="col-span-full text-center text-gray-600">{{ __('No categories yet.') }}</p>
+                    <p class="col-span-full text-center text-slate-600">{{ __('No categories yet.') }}</p>
                 @endforelse
             </div>
         </div>

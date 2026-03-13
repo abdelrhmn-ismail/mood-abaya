@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-      dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}"
-      class="{{ request()->cookie('theme') === 'dark' ? 'dark' : '' }}">
+      dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -24,7 +23,7 @@
 
     @stack('styles')
 </head>
-<body class="min-h-screen bg-gray-50 text-gray-900 antialiased" data-ripple-light="true">
+<body class="min-h-screen bg-slate-50 text-slate-900 antialiased" data-ripple-light="true">
     @include('frontend.partials.navbar')
 
     <main class="flex-1">

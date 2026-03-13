@@ -4,5 +4,6 @@
     "Shop": true,
     "Cart": true,
     "Order": true,
-    "Payment": true
+    "Payment": true,
+    "Admin": true
 }

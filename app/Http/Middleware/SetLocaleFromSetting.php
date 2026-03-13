@@ -13,7 +13,10 @@ class SetLocaleFromSetting
     {
         try {
             if (\Illuminate\Support\Facades\Schema::hasTable('settings')) {
-                app()->setLocale(Setting::locale());
+                $locale = $request->session()->get('locale') ?? Setting::locale();
+                if (in_array($locale, ['en', 'ar'], true)) {
+                    app()->setLocale($locale);
+                }
             }
         } catch (\Throwable) {
             // Fallback if settings table missing or not migrated

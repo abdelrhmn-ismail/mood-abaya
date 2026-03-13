@@ -1,25 +1,31 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-    </div>
+    <h1 class="text-2xl font-bold text-slate-900">{{ __('Forgot your password?') }}</h1>
+    <p class="mt-2 text-sm text-slate-600">
+        {{ __('No problem. Enter your email and we will send you a password reset link.') }}
+    </p>
 
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    @if (session('status'))
+        <div class="mt-6 rounded-xl bg-green-100 px-4 py-3 text-sm text-green-800">{{ session('status') }}</div>
+    @endif
 
-    <form method="POST" action="{{ route('password.email') }}">
+    @error('email')
+        <div class="mt-4 rounded-xl bg-red-100 px-4 py-3 text-sm text-red-800">{{ $message }}</div>
+    @enderror
+
+    <form method="POST" action="{{ route('password.email') }}" class="mt-8 space-y-5">
         @csrf
 
-        <!-- Email Address -->
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <label for="email" class="mb-2 block text-sm font-medium text-slate-700">{{ __('Email') }}</label>
+            <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus
+                   class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-slate-900 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/20">
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
+        <div class="flex flex-wrap items-center gap-4">
+            <a href="{{ route('login') }}" class="text-sm font-medium text-slate-600 hover:text-slate-900">{{ __('Back to login') }}</a>
+            <button type="submit" class="rounded-xl bg-slate-900 px-6 py-3 font-semibold text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2">
                 {{ __('Email Password Reset Link') }}
-            </x-primary-button>
+            </button>
         </div>
     </form>
 </x-guest-layout>
