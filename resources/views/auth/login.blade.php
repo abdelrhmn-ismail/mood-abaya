@@ -44,4 +44,10 @@
             </button>
         </div>
     </form>
+
+    <div class="mt-6 text-center text-sm text-slate-600">
+        <a href="{{ route('register') }}" class="font-medium text-slate-700 hover:text-slate-900">
+            {{ __('Register') }}
+        </a>
+    </div>
 </x-guest-layout>

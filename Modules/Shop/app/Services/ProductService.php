@@ -20,11 +20,22 @@ class ProductService
         return Product::with('category')->active()->where('slug', $slug)->first();
     }
 
-    public function searchByName(string $q): Collection
+    /**
+     * Search products by name (searches in both en and ar translatable name).
+     */
+    public function search(?string $q): Collection
     {
+        $q = $q ?? '';
+        if (trim($q) === '') {
+            return collect();
+        }
+        $term = '%' . trim($q) . '%';
         return Product::with('category')
             ->active()
-            ->where('name', 'like', '%' . $q . '%')
+            ->where(function ($query) use ($term) {
+                $query->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(name, '$.en')) LIKE ?", [$term])
+                    ->orWhereRaw("JSON_UNQUOTE(JSON_EXTRACT(name, '$.ar')) LIKE ?", [$term]);
+            })
             ->orderBy('name')
             ->get();
     }

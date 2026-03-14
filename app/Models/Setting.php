@@ -42,10 +42,4 @@ class Setting extends Model
         return in_array($locale, ['ar', 'en'], true) ? $locale : 'en';
     }
 
-    public static function defaultTheme(): string
-    {
-        $theme = static::get('theme', 'light');
-
-        return in_array($theme, ['light', 'dark', 'system'], true) ? $theme : 'light';
-    }
 }

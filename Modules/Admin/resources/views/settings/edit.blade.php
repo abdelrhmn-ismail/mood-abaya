@@ -4,93 +4,232 @@
 @section('heading', __('Settings'))
 
 @section('content')
-<form action="{{ route('admin.settings.update') }}" method="POST" class="max-w-2xl space-y-8 rounded-lg bg-white p-6 shadow">
+@component('admin::components.card', ['title' => null])
+<form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
     @csrf
     @method('PUT')
 
-    <div class="space-y-4">
-        <h2 class="text-lg font-semibold text-gray-900">{{ __('Default locale') }}</h2>
-        <div>
-            <label for="locale" class="block text-sm font-medium text-gray-700">{{ __('Default locale') }}</label>
-            <select name="locale" id="locale" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                <option value="en" {{ ($settings['locale'] ?? 'en') === 'en' ? 'selected' : '' }}>English</option>
-                <option value="ar" {{ ($settings['locale'] ?? '') === 'ar' ? 'selected' : '' }}>العربية</option>
-            </select>
-            @error('locale')
-                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
+    {{-- Tabs --}}
+    <div class="border-b border-gray-200">
+        <nav class="-mb-px flex gap-4" role="tablist">
+            <button type="button" class="settings-tab border-b-2 border-indigo-600 px-1 py-3 text-sm font-medium text-indigo-600" data-tab="general" role="tab">{{ __('General') }}</button>
+            <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="seo" role="tab">{{ __('SEO') }}</button>
+            <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="labels" role="tab">{{ __('Site labels') }}</button>
+            <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="frontend" role="tab">{{ __('Frontend') }}</button>
+            <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="editor" role="tab">{{ __('Editor') }}</button>
+        </nav>
+    </div>
+
+    {{-- Tab: General --}}
+    @php
+        $brandingDisplayUrl = function ($val) {
+            if (empty($val)) return null;
+            return str_starts_with($val, 'http') ? $val : \Illuminate\Support\Facades\Storage::url($val);
+        };
+    @endphp
+    <div id="tab-general" class="settings-panel space-y-6">
+        <h2 class="text-lg font-semibold text-gray-900">{{ __('General') }}</h2>
+        @include('admin::components.form-field', [
+            'name' => 'locale',
+            'label' => __('Default locale'),
+            'type' => 'select',
+            'value' => $settings['locale'] ?? 'en',
+            'options' => [['value' => 'en', 'label' => __('English')], ['value' => 'ar', 'label' => __('Arabic')]],
+        ])
+        <div class="border-t border-gray-200 pt-6">
+            <h3 class="mb-3 text-sm font-medium text-gray-700">{{ __('Branding') }}</h3>
+            <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
+                <div class="rounded-xl border border-gray-200 bg-gray-50/50 p-4">
+                    <label class="block text-sm font-medium text-gray-700">{{ __('Site logo') }}</label>
+                    <p class="mt-0.5 text-xs text-gray-500">{{ __('Shown in navbar and footer (logo only, no text).') }} {{ __('Recommended dimensions') }}: 180×50</p>
+                    @php $logoVal = $settings['site_logo'] ?? ''; $logoUrl = $brandingDisplayUrl($logoVal); @endphp
+                    @if($logoUrl)
+                        <div class="mt-2 flex items-center gap-2 overflow-hidden rounded-lg border border-gray-200 bg-white p-2">
+                            <img src="{{ $logoUrl }}" alt="" class="max-h-12 max-w-[180px] object-contain" loading="lazy">
+                        </div>
+                    @endif
+                    <div class="mt-2">
+                        <input type="file" name="logo_file" accept="image/*,.svg" class="block w-full text-sm text-gray-500 file:mr-2 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-indigo-700 hover:file:bg-indigo-100">
+                    </div>
+                    <input type="text" name="site_logo" value="{{ old('site_logo', $logoVal) }}" placeholder="{{ __('Or paste image URL') }}" class="mt-2 block w-full rounded-lg border border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+                <div class="rounded-xl border border-gray-200 bg-gray-50/50 p-4">
+                    <label class="block text-sm font-medium text-gray-700">{{ __('Favicon') }}</label>
+                    <p class="mt-0.5 text-xs text-gray-500">{{ __('Browser tab icon.') }} {{ __('Recommended') }}: 32×32 .ico or .png</p>
+                    @php $favVal = $settings['favicon'] ?? ''; $favUrl = $brandingDisplayUrl($favVal); @endphp
+                    @if($favUrl)
+                        <div class="mt-2 flex items-center gap-2">
+                            <img src="{{ $favUrl }}" alt="" class="h-8 w-8 object-contain" loading="lazy">
+                        </div>
+                    @endif
+                    <div class="mt-2">
+                        <input type="file" name="favicon_file" accept=".ico,image/png,image/x-icon" class="block w-full text-sm text-gray-500 file:mr-2 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-indigo-700 hover:file:bg-indigo-100">
+                    </div>
+                    <input type="text" name="favicon" value="{{ old('favicon', $favVal) }}" placeholder="{{ __('Or paste image URL') }}" class="mt-2 block w-full rounded-lg border border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+            </div>
+            <div class="mt-4">
+                <label for="footer_tagline" class="block text-sm font-medium text-gray-700">{{ __('Footer tagline') }}</label>
+                <p class="mt-0.5 text-xs text-gray-500">{{ __('Short text under the logo in the footer.') }}</p>
+                <input type="text" name="footer_tagline" id="footer_tagline" value="{{ old('footer_tagline', $settings['footer_tagline'] ?? '') }}" placeholder="{{ __('Quality products for everyone. Shop with confidence.') }}" class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            </div>
         </div>
     </div>
 
-    <div class="space-y-4">
-        <h2 class="text-lg font-semibold text-gray-900">{{ __('Default theme') }}</h2>
-        <div>
-            <label for="theme" class="block text-sm font-medium text-gray-700">{{ __('Default theme') }}</label>
-            <select name="theme" id="theme" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                <option value="light" {{ ($settings['theme'] ?? 'light') === 'light' ? 'selected' : '' }}>{{ __('Light') }}</option>
-                <option value="dark" {{ ($settings['theme'] ?? '') === 'dark' ? 'selected' : '' }}>{{ __('Dark') }}</option>
-                <option value="system" {{ ($settings['theme'] ?? '') === 'system' ? 'selected' : '' }}>{{ __('System') }}</option>
-            </select>
-            @error('theme')
-                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-            @enderror
-        </div>
+    {{-- Tab: SEO --}}
+    <div id="tab-seo" class="settings-panel hidden space-y-4">
+        <h2 class="text-lg font-semibold text-gray-900">{{ __('SEO') }}</h2>
+        <p class="text-sm text-gray-500">{{ __('Default meta tags for the site. Used when a page does not set its own.') }}</p>
+        @include('admin::components.form-field', [
+            'name' => 'meta_title',
+            'label' => __('Meta title'),
+            'type' => 'text',
+            'value' => $settings['meta_title'] ?? '',
+            'attributes' => ['placeholder' => config('app.name')],
+        ])
+        @include('admin::components.form-field', [
+            'name' => 'meta_description',
+            'label' => __('Meta description'),
+            'type' => 'textarea',
+            'value' => $settings['meta_description'] ?? '',
+            'attributes' => ['rows' => 3, 'placeholder' => __('Short description for search engines.')],
+        ])
+        @include('admin::components.form-field', [
+            'name' => 'meta_keywords',
+            'label' => __('Meta keywords'),
+            'type' => 'text',
+            'value' => $settings['meta_keywords'] ?? '',
+            'attributes' => ['placeholder' => 'keyword1, keyword2'],
+        ])
+        @include('admin::components.form-field', [
+            'name' => 'og_image',
+            'label' => __('OG image URL'),
+            'type' => 'text',
+            'value' => $settings['og_image'] ?? '',
+            'attributes' => ['placeholder' => 'https://example.com/image.jpg'],
+        ])
     </div>
 
-    <div class="border-t border-gray-200 pt-8">
+    {{-- Tab: Site labels --}}
+    <div id="tab-labels" class="settings-panel hidden space-y-4">
         <h2 class="text-lg font-semibold text-gray-900">{{ __('Site labels') }}</h2>
-        <p class="mt-1 text-sm text-gray-500">{{ __('Navbar & footer words (leave blank to use default translation)') }}</p>
+        <p class="text-sm text-gray-500">{{ __('Navbar & footer words (leave blank to use default translation)') }}</p>
         @php $labels = $settings['labels'] ?? []; @endphp
-        <div class="mt-4 grid gap-4 sm:grid-cols-2">
+        <div class="grid gap-4 sm:grid-cols-2">
             <div class="sm:col-span-2">
                 <label for="label_site_name" class="block text-sm font-medium text-gray-700">{{ __('Site name') }}</label>
-                <input type="text" name="labels[site_name]" id="label_site_name" value="{{ old('labels.site_name', $labels['site_name'] ?? '') }}" placeholder="{{ config('app.name') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <input type="text" name="labels[site_name]" id="label_site_name" value="{{ old('labels.site_name', $labels['site_name'] ?? '') }}" placeholder="{{ config('app.name') }}" class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
             </div>
+            @foreach(['nav_home' => 'Home', 'nav_categories' => 'Categories', 'nav_products' => 'Products', 'nav_contact' => 'Contact', 'nav_cart' => 'Cart', 'nav_login' => 'Login', 'nav_register' => 'Register', 'nav_account' => 'Account', 'nav_logout' => 'Logout', 'nav_admin' => 'Admin'] as $key => $placeholder)
+                <div>
+                    <label for="label_{{ $key }}" class="block text-sm font-medium text-gray-700">{{ $placeholder }}</label>
+                    <input type="text" name="labels[{{ $key }}]" id="label_{{ $key }}" value="{{ old('labels.'.$key, $labels[$key] ?? '') }}" placeholder="{{ $placeholder }}" class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                </div>
+            @endforeach
+        </div>
+    </div>
+
+    {{-- Tab: Frontend (hero/header images) --}}
+    @php
+        $heroDisplayUrl = function ($val) {
+            if (empty($val)) return null;
+            return str_starts_with($val, 'http') ? $val : \Illuminate\Support\Facades\Storage::url($val);
+        };
+    @endphp
+    <div id="tab-frontend" class="settings-panel hidden space-y-6">
+        <div>
+            <h2 class="text-lg font-semibold text-gray-900">{{ __('Frontend') }}</h2>
+            <p class="mt-1 text-sm text-gray-500">{{ __("Configure header images for key frontend pages and the home hero slider. Upload an image or paste a URL.") }}</p>
+        </div>
+        <div class="space-y-6">
+            {{-- Page headers --}}
             <div>
-                <label for="label_nav_home" class="block text-sm font-medium text-gray-700">Home</label>
-                <input type="text" name="labels[nav_home]" id="label_nav_home" value="{{ old('labels.nav_home', $labels['nav_home'] ?? '') }}" placeholder="Home" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <h3 class="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">{{ __('Page headers') }}</h3>
+                <div class="grid gap-6 sm:grid-cols-1 lg:grid-cols-3">
+                    @foreach(['hero_account' => __('Account header image'), 'hero_cart' => __('Cart header image'), 'hero_contact' => __('Contact header image'), 'hero_page' => __('Static pages header image'), 'hero_search' => __('Search header image'), 'hero_categories' => __('Categories header image'), 'hero_products' => __('Products header image')] as $key => $label)
+                        @php $val = $settings[$key] ?? ''; $imgUrl = $heroDisplayUrl($val); @endphp
+                        <div class="rounded-xl border border-gray-200 bg-gray-50/50 p-4">
+                            <label class="block text-sm font-medium text-gray-700">{{ $label }}</label>
+                            <p class="mt-0.5 text-xs text-gray-500">{{ __('Recommended dimensions') }}: 1920×600</p>
+                            @if($imgUrl)
+                                <div class="mt-2 overflow-hidden rounded-lg border border-gray-200 bg-white">
+                                    <img src="{{ $imgUrl }}" alt="" class="h-28 w-full object-cover" loading="lazy">
+                                </div>
+                            @endif
+                            <div class="mt-2">
+                                <input type="file" name="hero_file_{{ $key }}" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-2 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-indigo-700 hover:file:bg-indigo-100">
+                            </div>
+                            <input type="text" name="{{ $key }}" value="{{ old($key, $val) }}" placeholder="{{ __('Or paste image URL') }}" class="mt-2 block w-full rounded-lg border border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        </div>
+                    @endforeach
+                </div>
             </div>
+            {{-- Home hero slider (3 images) --}}
             <div>
-                <label for="label_nav_categories" class="block text-sm font-medium text-gray-700">Categories</label>
-                <input type="text" name="labels[nav_categories]" id="label_nav_categories" value="{{ old('labels.nav_categories', $labels['nav_categories'] ?? '') }}" placeholder="Categories" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-            </div>
-            <div>
-                <label for="label_nav_products" class="block text-sm font-medium text-gray-700">Products</label>
-                <input type="text" name="labels[nav_products]" id="label_nav_products" value="{{ old('labels.nav_products', $labels['nav_products'] ?? '') }}" placeholder="Products" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-            </div>
-            <div>
-                <label for="label_nav_contact" class="block text-sm font-medium text-gray-700">Contact</label>
-                <input type="text" name="labels[nav_contact]" id="label_nav_contact" value="{{ old('labels.nav_contact', $labels['nav_contact'] ?? '') }}" placeholder="Contact" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-            </div>
-            <div>
-                <label for="label_nav_cart" class="block text-sm font-medium text-gray-700">Cart</label>
-                <input type="text" name="labels[nav_cart]" id="label_nav_cart" value="{{ old('labels.nav_cart', $labels['nav_cart'] ?? '') }}" placeholder="Cart" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-            </div>
-            <div>
-                <label for="label_nav_login" class="block text-sm font-medium text-gray-700">Login</label>
-                <input type="text" name="labels[nav_login]" id="label_nav_login" value="{{ old('labels.nav_login', $labels['nav_login'] ?? '') }}" placeholder="Login" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-            </div>
-            <div>
-                <label for="label_nav_register" class="block text-sm font-medium text-gray-700">Register</label>
-                <input type="text" name="labels[nav_register]" id="label_nav_register" value="{{ old('labels.nav_register', $labels['nav_register'] ?? '') }}" placeholder="Register" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-            </div>
-            <div>
-                <label for="label_nav_account" class="block text-sm font-medium text-gray-700">Account</label>
-                <input type="text" name="labels[nav_account]" id="label_nav_account" value="{{ old('labels.nav_account', $labels['nav_account'] ?? '') }}" placeholder="Account" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-            </div>
-            <div>
-                <label for="label_nav_logout" class="block text-sm font-medium text-gray-700">Logout</label>
-                <input type="text" name="labels[nav_logout]" id="label_nav_logout" value="{{ old('labels.nav_logout', $labels['nav_logout'] ?? '') }}" placeholder="Logout" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-            </div>
-            <div>
-                <label for="label_nav_admin" class="block text-sm font-medium text-gray-700">Admin</label>
-                <input type="text" name="labels[nav_admin]" id="label_nav_admin" value="{{ old('labels.nav_admin', $labels['nav_admin'] ?? '') }}" placeholder="Admin" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                <h3 class="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">{{ __('Home hero slider') }}</h3>
+                <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-3">
+                    @foreach(['hero_home_1' => __('Home hero image 1'), 'hero_home_2' => __('Home hero image 2'), 'hero_home_3' => __('Home hero image 3')] as $key => $label)
+                        @php $val = $settings[$key] ?? ''; $imgUrl = $heroDisplayUrl($val); @endphp
+                        <div class="rounded-xl border border-gray-200 bg-gray-50/50 p-4">
+                            <label class="block text-sm font-medium text-gray-700">{{ $label }}</label>
+                            <p class="mt-0.5 text-xs text-gray-500">{{ __('Recommended dimensions') }}: 1920×1080</p>
+                            @if($imgUrl)
+                                <div class="mt-2 overflow-hidden rounded-lg border border-gray-200 bg-white">
+                                    <img src="{{ $imgUrl }}" alt="" class="h-28 w-full object-cover" loading="lazy">
+                                </div>
+                            @endif
+                            <div class="mt-2">
+                                <input type="file" name="hero_file_{{ $key }}" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-2 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-indigo-700 hover:file:bg-indigo-100">
+                            </div>
+                            <input type="text" name="{{ $key }}" value="{{ old($key, $val) }}" placeholder="{{ __('Or paste image URL') }}" class="mt-2 block w-full rounded-lg border border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>
 
-    <button type="submit" class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
-        {{ __('Save settings') }}
-    </button>
+    {{-- Tab: Editor (TinyMCE) --}}
+    <div id="tab-editor" class="settings-panel hidden space-y-4">
+        <h2 class="text-lg font-semibold text-gray-900">{{ __('Editor') }}</h2>
+        <p class="text-sm text-gray-500">{{ __('TinyMCE API key is required for the rich text editor on product and category descriptions. Get a free key at') }} <a href="https://www.tiny.cloud/auth/signup/" target="_blank" rel="noopener" class="text-indigo-600 hover:underline">tiny.cloud</a>.</p>
+        @include('admin::components.form-field', [
+            'name' => 'tinymce_api_key',
+            'label' => __('TinyMCE API key'),
+            'type' => 'text',
+            'value' => $settings['tinymce_api_key'] ?? '',
+            'attributes' => ['placeholder' => 'your-api-key', 'autocomplete' => 'off'],
+        ])
+    </div>
+
+    @include('admin::components.form-actions', [
+        'submitLabel' => __('Save settings'),
+        'cancelUrl' => null,
+    ])
 </form>
+@endcomponent
+
+@push('admin-scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var tabs = document.querySelectorAll('.settings-tab');
+    var panels = document.querySelectorAll('.settings-panel');
+    tabs.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var tab = this.getAttribute('data-tab');
+            tabs.forEach(function(b) {
+                b.classList.remove('border-indigo-600', 'text-indigo-600');
+                b.classList.add('border-transparent', 'text-gray-500');
+            });
+            this.classList.add('border-indigo-600', 'text-indigo-600');
+            this.classList.remove('border-transparent', 'text-gray-500');
+            panels.forEach(function(p) {
+                p.classList.add('hidden');
+                if (p.id === 'tab-' + tab) p.classList.remove('hidden');
+            });
+        });
+    });
+});
+</script>
+@endpush
 @endsection

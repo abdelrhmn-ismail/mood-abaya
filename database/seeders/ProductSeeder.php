@@ -8,6 +8,8 @@ use Illuminate\Database\Seeder;
 
 class ProductSeeder extends Seeder
 {
+    use CreatesTestImages;
+
     public function run(): void
     {
         $abaya = Category::where('slug', 'abayas')->first();
@@ -17,35 +19,47 @@ class ProductSeeder extends Seeder
         $products = [
             [
                 'category_id' => $abaya?->id,
-                'name' => 'Classic Black Abaya',
+                'name' => ['en' => 'Classic Black Abaya', 'ar' => 'عباية سوداء كلاسيكية'],
                 'slug' => 'classic-black-abaya',
-                'description' => 'Elegant classic black abaya, perfect for daily wear.',
+                'description' => ['en' => 'Elegant classic black abaya, perfect for daily wear.', 'ar' => 'عباية سوداء كلاسيكية أنيقة، مثالية للارتداء اليومي.'],
+                'short_description' => 'Classic black abaya for daily wear.',
                 'price' => 199.00,
+                'compare_at_price' => 249.00,
                 'stock' => 25,
+                'sku' => 'ABY-001',
+                'featured' => true,
             ],
             [
                 'category_id' => $abaya?->id,
-                'name' => 'Embroidered Abaya',
+                'name' => ['en' => 'Embroidered Abaya', 'ar' => 'عباية مطرزة'],
                 'slug' => 'embroidered-abaya',
-                'description' => 'Beautiful embroidered abaya for special occasions.',
+                'description' => ['en' => 'Beautiful embroidered abaya for special occasions.', 'ar' => 'عباية مطرزة جميلة للمناسبات الخاصة.'],
+                'short_description' => 'Embroidered abaya for special occasions.',
                 'price' => 349.00,
                 'stock' => 15,
+                'sku' => 'ABY-002',
             ],
             [
                 'category_id' => $jilbab?->id,
-                'name' => 'Casual Jilbab',
+                'name' => ['en' => 'Casual Jilbab', 'ar' => 'جلباب كاجوال'],
                 'slug' => 'casual-jilbab',
-                'description' => 'Comfortable casual jilbab in soft fabric.',
+                'description' => ['en' => 'Comfortable casual jilbab in soft fabric.', 'ar' => 'جلباب كاجوال مريح من قماش ناعم.'],
+                'short_description' => 'Comfortable casual jilbab.',
                 'price' => 129.00,
+                'compare_at_price' => 159.00,
                 'stock' => 30,
+                'sku' => 'JLB-001',
+                'featured' => true,
             ],
             [
                 'category_id' => $hijab?->id,
-                'name' => 'Premium Hijab Set',
+                'name' => ['en' => 'Premium Hijab Set', 'ar' => 'طقم حجاب مميز'],
                 'slug' => 'premium-hijab-set',
-                'description' => 'Set of three premium quality hijabs.',
+                'description' => ['en' => 'Set of three premium quality hijabs.', 'ar' => 'طقم من ثلاثة حجابات عالية الجودة.'],
+                'short_description' => 'Set of three premium hijabs.',
                 'price' => 59.00,
                 'stock' => 50,
+                'sku' => 'HIJ-001',
             ],
         ];
 
@@ -53,12 +67,16 @@ class ProductSeeder extends Seeder
             if (empty($data['category_id'])) {
                 continue;
             }
+            $slug = $data['slug'];
+            $imagePath = $this->createTestImage('products', $slug);
+            $data['image'] = $imagePath;
+            $data['active'] = true;
             Product::updateOrCreate(
                 [
                     'category_id' => $data['category_id'],
-                    'slug' => $data['slug'],
+                    'slug' => $slug,
                 ],
-                array_merge($data, ['active' => true])
+                $data
             );
         }
     }

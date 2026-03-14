@@ -4,15 +4,23 @@
 @section('heading', __('Contact message'))
 
 @section('content')
-<div class="rounded-lg bg-white p-6 shadow">
-    <p><strong>{{ __('Name') }}:</strong> {{ $contactMessage->name }}</p>
-    <p><strong>{{ __('Email') }}:</strong> {{ $contactMessage->email }}</p>
-    <p><strong>{{ __('Subject') }}:</strong> {{ $contactMessage->subject }}</p>
-    <p><strong>{{ __('Date') }}:</strong> {{ $contactMessage->created_at->format('Y-m-d H:i') }}</p>
-    <div class="mt-4 border-t pt-4">
-        <strong>{{ __('Message') }}:</strong>
-        <p class="mt-2 whitespace-pre-wrap text-gray-700">{{ $contactMessage->message }}</p>
+@component('admin::components.card', ['title' => null])
+    @include('admin::components.detail-list', [
+        'items' => [
+            ['label' => __('Name'), 'value' => $contactMessage->name],
+            ['label' => __('Email'), 'value' => $contactMessage->email],
+            ['label' => __('Subject'), 'value' => $contactMessage->subject],
+            ['label' => __('Date'), 'value' => $contactMessage->created_at->format('Y-m-d H:i')],
+        ],
+    ])
+    <div class="mt-4 border-t border-gray-200 pt-4">
+        <dt class="text-sm font-medium text-gray-500">{{ __('Message') }}</dt>
+        <dd class="mt-2 whitespace-pre-wrap text-sm text-gray-900">{{ $contactMessage->message }}</dd>
     </div>
-</div>
-<p class="mt-4"><a href="{{ route('admin.contacts.index') }}" class="text-indigo-600 hover:text-indigo-900">{{ __('Back to messages') }}</a></p>
+@endcomponent
+
+@include('admin::components.back-link', [
+    'url' => route('admin.contacts.index'),
+    'text' => __('Back to messages'),
+])
 @endsection

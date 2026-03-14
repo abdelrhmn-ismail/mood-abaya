@@ -5,13 +5,17 @@ use Modules\Admin\Http\Controllers\CategoryController;
 use Modules\Admin\Http\Controllers\ContactMessageController;
 use Modules\Admin\Http\Controllers\DashboardController;
 use Modules\Admin\Http\Controllers\OrderController;
+use Modules\Admin\Http\Controllers\PageContentController;
 use Modules\Admin\Http\Controllers\PaymentController;
 use Modules\Admin\Http\Controllers\ProductController;
+use Modules\Admin\Http\Controllers\ReviewController;
 use Modules\Admin\Http\Controllers\SettingsController;
 
 Route::get('/', DashboardController::class)->name('dashboard');
 Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
 Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
+Route::get('/translations', [SettingsController::class, 'translations'])->name('translations.index');
+Route::put('/translations', [SettingsController::class, 'updateTranslations'])->name('translations.update');
 
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
@@ -29,3 +33,10 @@ Route::get('/contacts/{contactMessage}', [ContactMessageController::class, 'show
 
 Route::resource('categories', CategoryController::class)->except('show');
 Route::resource('products', ProductController::class)->except('show');
+
+Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+Route::post('/reviews/{review}/toggle-visibility', [ReviewController::class, 'toggleVisibility'])->name('reviews.toggle-visibility');
+
+Route::get('/page-contents', [PageContentController::class, 'index'])->name('page-contents.index');
+Route::get('/page-contents/{pageContent}/edit', [PageContentController::class, 'edit'])->name('page-contents.edit');
+Route::put('/page-contents/{pageContent}', [PageContentController::class, 'update'])->name('page-contents.update');

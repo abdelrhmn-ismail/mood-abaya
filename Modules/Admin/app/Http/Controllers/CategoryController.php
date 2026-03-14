@@ -29,13 +29,22 @@ class CategoryController
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|array',
+            'name.en' => 'nullable|string|max:255',
+            'name.ar' => 'nullable|string|max:255',
             'slug' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'nullable|array',
+            'description.en' => 'nullable|string',
+            'description.ar' => 'nullable|string',
             'image' => 'nullable|image|max:2048',
             'sort_order' => 'nullable|integer',
             'active' => 'nullable|boolean',
         ]);
+        $data['name'] = array_filter($data['name'] ?? [], fn ($v) => $v !== null && $v !== '');
+        $data['description'] = array_filter($data['description'] ?? [], fn ($v) => $v !== null && $v !== '');
+        if (empty($data['name'])) {
+            return back()->withErrors(['name' => __('At least one language is required for name.')])->withInput();
+        }
         $data['active'] = $request->boolean('active');
         $this->categoryService->create($data);
 
@@ -50,13 +59,22 @@ class CategoryController
     public function update(Request $request, Category $category): RedirectResponse
     {
         $data = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|array',
+            'name.en' => 'nullable|string|max:255',
+            'name.ar' => 'nullable|string|max:255',
             'slug' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'nullable|array',
+            'description.en' => 'nullable|string',
+            'description.ar' => 'nullable|string',
             'image' => 'nullable|image|max:2048',
             'sort_order' => 'nullable|integer',
             'active' => 'nullable|boolean',
         ]);
+        $data['name'] = array_filter($data['name'] ?? [], fn ($v) => $v !== null && $v !== '');
+        $data['description'] = array_filter($data['description'] ?? [], fn ($v) => $v !== null && $v !== '');
+        if (empty($data['name'])) {
+            return back()->withErrors(['name' => __('At least one language is required for name.')])->withInput();
+        }
         $data['active'] = $request->boolean('active');
         $this->categoryService->update($category, $data);
 

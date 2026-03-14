@@ -1,7 +1,9 @@
 @extends('frontend.layouts.app')
 
-@section('title', $product->name . ' – ' . config('app.name'))
-@section('description', Str::limit($product->description, 160))
+@section('title', ($product->meta_title ?: $product->name) . ' – ' . config('app.name'))
+@section('description', $product->meta_description ?: Str::limit(strip_tags($product->description ?? ''), 160))
+@section('meta_keywords', $product->meta_keywords ?? '')
+@section('og_image', $product->og_image ? (str_starts_with($product->og_image, 'http') ? $product->og_image : asset($product->og_image)) : '')
 
 @section('content')
     <section class="bg-white py-12 md:py-16">
@@ -25,10 +27,26 @@
                         @endif
                     </div>
                     <div>
+                        @if($product->hasDiscount())
+                            <span class="inline-block rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-800">{{ __('Save') }} {{ $product->discountPercent() }}%</span>
+                        @endif
                         <h1 class="text-3xl font-bold text-slate-900 md:text-4xl">{{ $product->name }}</h1>
-                        <p class="mt-4 text-2xl font-bold text-slate-800">{{ number_format($product->price, 2) }} {{ __('SAR') }}</p>
+                        <div class="mt-4 flex flex-wrap items-baseline gap-2">
+                            <p class="text-2xl font-bold text-slate-800">{{ number_format($product->price, 2) }} {{ __('SAR') }}</p>
+                            @if($product->hasDiscount())
+                                <p class="text-lg text-slate-500 line-through">{{ number_format($product->compare_at_price, 2) }} {{ __('SAR') }}</p>
+                            @endif
+                            @if($product->visibleReviewsCount() > 0)
+                                <div class="flex items-center gap-1.5 text-sm text-slate-600">
+                                    @for($s = 1; $s <= 5; $s++)
+                                        <span class="material-icons text-lg {{ $s <= round($product->averageRating()) ? 'text-amber-400' : 'text-slate-300' }}">star</span>
+                                    @endfor
+                                    <span class="ml-1">({{ $product->visibleReviewsCount() }} {{ $product->visibleReviewsCount() === 1 ? __('review') : __('reviews') }})</span>
+                                </div>
+                            @endif
+                        </div>
                         @if($product->description)
-                            <div class="mt-6 text-slate-600 prose prose-slate max-w-none">{{ nl2br(e($product->description)) }}</div>
+                            <div class="mt-6 text-slate-600 prose prose-slate max-w-none">{!! safe_html($product->description) !!}</div>
                         @endif
                         <p class="mt-6 text-sm text-slate-500">
                             @if($product->stock > 0)
@@ -51,6 +69,29 @@
                     </div>
                 </div>
             </div>
+            @if($product->reviews->isNotEmpty())
+                <div class="mx-auto mt-12 max-w-5xl border-t border-slate-200 pt-12">
+                    <h2 class="text-xl font-semibold text-slate-900">{{ __('Reviews') }} ({{ $product->reviews->count() }})</h2>
+                    <ul class="mt-6 space-y-4">
+                        @foreach($product->reviews as $review)
+                            <li class="rounded-xl border border-slate-100 bg-slate-50/50 p-4">
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <div class="flex items-center gap-2">
+                                        @for($s = 1; $s <= 5; $s++)
+                                            <span class="material-icons text-amber-400 text-lg">{{ $s <= $review->rating ? 'star' : 'star_border' }}</span>
+                                        @endfor
+                                        <span class="text-sm font-medium text-slate-700">{{ $review->user->name ?? __('Customer') }}</span>
+                                    </div>
+                                    <span class="text-xs text-slate-500">{{ $review->created_at->format('d M Y') }}</span>
+                                </div>
+                                @if($review->comment)
+                                    <p class="mt-2 text-sm text-slate-600">{{ $review->comment }}</p>
+                                @endif
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
         </div>
     </section>
 @endsection

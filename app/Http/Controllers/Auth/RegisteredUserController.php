@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Modules\Cart\Services\CartService;
 
 class RegisteredUserController extends Controller
 {
@@ -28,7 +29,7 @@ class RegisteredUserController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, CartService $cartService): RedirectResponse
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -46,6 +47,9 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // Merge any guest cart items into the new user's cart
+        $cartService->mergeGuestCartToUser((int) $user->id);
+
+        return redirect(route('account', absolute: false));
     }
 }

@@ -30,6 +30,10 @@
         if ($format === 'boolean') {
             return $val ? __('Yes') : __('No');
         }
+        $limit = $col['limit'] ?? null;
+        if ($limit !== null && is_string($val)) {
+            $val = \Illuminate\Support\Str::limit($val, (int) $limit);
+        }
         if ($val === null || $val === '') {
             return '—';
         }
@@ -37,59 +41,59 @@
     };
 @endphp
 
-<div class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
+<div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
     <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-                <tr>
+        <table class="min-w-full">
+            <thead>
+                <tr class="border-b border-gray-200 bg-slate-50/80">
                     @foreach($columns as $col)
-                        <th scope="col" class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th scope="col" class="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-600">
                             {{ $col['label'] ?? '' }}
                         </th>
                     @endforeach
                     @if($hasActions)
-                        <th scope="col" class="relative px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th scope="col" class="relative px-5 py-4 text-right text-xs font-semibold uppercase tracking-wider text-slate-600">
                             {{ __('Actions') }}
                         </th>
                     @endif
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-200 bg-white">
+            <tbody class="divide-y divide-gray-100">
                 @forelse($rows as $row)
                     @php
-                        $rowClass = 'hover:bg-gray-50 transition-colors';
+                        $rowClass = 'bg-white transition-colors hover:bg-slate-50/70';
                         if ($rowHighlightKey !== null && empty(data_get($row, $rowHighlightKey))) {
                             $rowClass .= ' ' . $rowHighlightClass;
                         }
                     @endphp
                     <tr class="{{ $rowClass }}">
                         @foreach($columns as $col)
-                            <td class="whitespace-nowrap px-4 py-3 text-sm text-gray-900 {{ $col['class'] ?? '' }}">
+                            <td class="whitespace-nowrap px-5 py-4 text-sm text-slate-800 {{ $col['class'] ?? '' }}">
                                 {{ $getCellValue($row, $col) }}
                             </td>
                         @endforeach
                         @if($hasActions)
-                            <td class="relative whitespace-nowrap px-4 py-3 text-right text-sm">
-                                <div class="flex items-center justify-end gap-2">
+                            <td class="relative whitespace-nowrap px-5 py-4 text-right">
+                                <div class="flex items-center justify-end gap-1">
                                     @if(!empty($actions['view_route']))
-                                        <a href="{{ route($actions['view_route'], $row) }}" class="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900" title="{{ __('View') }}">
+                                        <a href="{{ route($actions['view_route'], $row) }}" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900" title="{{ __('View') }}">
                                             <span class="material-icons text-lg">visibility</span>
-                                            <span class="hidden sm:inline">{{ __('View') }}</span>
+                                            <span class="hidden sm:inline text-sm font-medium">{{ __('View') }}</span>
                                         </a>
                                     @endif
                                     @if(!empty($actions['edit_route']))
-                                        <a href="{{ route($actions['edit_route'], $row) }}" class="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-indigo-600 hover:bg-indigo-50" title="{{ __('Edit') }}">
+                                        <a href="{{ route($actions['edit_route'], $row) }}" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-indigo-600 transition hover:bg-indigo-50" title="{{ __('Edit') }}">
                                             <span class="material-icons text-lg">edit</span>
-                                            <span class="hidden sm:inline">{{ __('Edit') }}</span>
+                                            <span class="hidden sm:inline text-sm font-medium">{{ __('Edit') }}</span>
                                         </a>
                                     @endif
                                     @if(!empty($actions['delete_route']))
                                         <form action="{{ route($actions['delete_route'], $row) }}" method="POST" class="inline" onsubmit="return confirm('{{ $actions['delete_confirm'] ?? __('Are you sure?') }}');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-red-600 hover:bg-red-50" title="{{ __('Delete') }}">
+                                            <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-red-600 transition hover:bg-red-50" title="{{ __('Delete') }}">
                                                 <span class="material-icons text-lg">delete</span>
-                                                <span class="hidden sm:inline">{{ __('Delete') }}</span>
+                                                <span class="hidden sm:inline text-sm font-medium">{{ __('Delete') }}</span>
                                             </button>
                                         </form>
                                     @endif
@@ -99,7 +103,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="{{ $colCount }}" class="px-4 py-12 text-center text-gray-500">
+                        <td colspan="{{ $colCount }}" class="px-5 py-16 text-center text-slate-500">
                             {{ $emptyMessage }}
                         </td>
                     </tr>

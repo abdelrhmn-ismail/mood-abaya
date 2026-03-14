@@ -4,12 +4,23 @@
 @section('description', __('Quality products for everyone. Shop with confidence.'))
 
 @section('content')
+    @php
+        $heroRaw = fn ($key, $default) => \App\Models\Setting::get($key, $default);
+        $heroUrl = function ($val) {
+            if (empty($val)) return $val;
+            return str_starts_with($val, 'http') ? $val : \Illuminate\Support\Facades\Storage::url($val);
+        };
+        $hero1 = $heroUrl($heroRaw('hero_home_1', 'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=1920'));
+        $hero2 = $heroUrl($heroRaw('hero_home_2', 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=1920'));
+        $hero3 = $heroUrl($heroRaw('hero_home_3', 'https://images.unsplash.com/photo-1583391733982-1cfec2046952?w=1920'));
+    @endphp
+
     {{-- Hero slider (3 images) --}}
     <section class="relative h-[70vh] min-h-[420px] overflow-hidden bg-slate-900" data-hero-slider>
         <div class="absolute inset-0">
-            <div class="absolute inset-0 transition-opacity duration-700 opacity-100" data-hero-slide style="background: url('https://images.unsplash.com/photo-1558171813-4c088753af8f?w=1920') center/cover no-repeat;"></div>
-            <div class="absolute inset-0 transition-opacity duration-700 opacity-0 pointer-events-none" data-hero-slide style="background: url('https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=1920') center/cover no-repeat;"></div>
-            <div class="absolute inset-0 transition-opacity duration-700 opacity-0 pointer-events-none" data-hero-slide style="background: url('https://images.unsplash.com/photo-1583391733982-1cfec2046952?w=1920') center/cover no-repeat;"></div>
+            <div class="absolute inset-0 transition-opacity duration-700 opacity-100" data-hero-slide style="background: url('{{ $hero1 }}') center/cover no-repeat;"></div>
+            <div class="absolute inset-0 transition-opacity duration-700 opacity-0 pointer-events-none" data-hero-slide style="background: url('{{ $hero2 }}') center/cover no-repeat;"></div>
+            <div class="absolute inset-0 transition-opacity duration-700 opacity-0 pointer-events-none" data-hero-slide style="background: url('{{ $hero3 }}') center/cover no-repeat;"></div>
         </div>
         <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
         <div class="absolute inset-0 flex flex-col items-center justify-center px-4 text-center text-white">
@@ -75,8 +86,16 @@
                                 </div>
                             @endif
                             <div class="p-5">
+                                @if($product->hasDiscount())
+                                    <span class="inline-block rounded bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800">{{ __('Save') }} {{ $product->discountPercent() }}%</span>
+                                @endif
                                 <h3 class="font-semibold text-slate-900">{{ $product->name }}</h3>
-                                <p class="mt-2 text-lg font-bold text-slate-800">{{ number_format($product->price, 2) }} {{ __('SAR') }}</p>
+                                <div class="mt-2 flex flex-wrap items-baseline gap-1.5">
+                                    <span class="text-lg font-bold text-slate-800">{{ number_format($product->price, 2) }} {{ __('SAR') }}</span>
+                                    @if($product->hasDiscount())
+                                        <span class="text-sm text-slate-500 line-through">{{ number_format($product->compare_at_price, 2) }} {{ __('SAR') }}</span>
+                                    @endif
+                                </div>
                             </div>
                         </a>
                         <div class="border-t border-slate-100 p-4">

@@ -27,7 +27,11 @@ class PaymentService
             'approved_at' => now(),
             'approved_by' => Auth::id(),
         ]);
-        $payment->order->update(['payment_status' => 'paid']);
+        $updates = ['payment_status' => 'paid'];
+        if ($payment->order->status === 'pending') {
+            $updates['status'] = 'processing';
+        }
+        $payment->order->update($updates);
     }
 
     public function approveBankPayment(Payment $payment): void

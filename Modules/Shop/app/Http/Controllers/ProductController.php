@@ -20,6 +20,10 @@ class ProductController extends Controller
             abort(404);
         }
 
+        $product->load([
+            'reviews' => fn ($q) => $q->where('is_visible', true)->with('user')->orderByDesc('created_at'),
+        ]);
+
         return view('frontend.product', compact('product'));
     }
 }

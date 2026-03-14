@@ -4,44 +4,74 @@
 @section('heading', __('Edit category'))
 
 @section('content')
-<form action="{{ route('admin.categories.update', $category) }}" method="POST" enctype="multipart/form-data" class="max-w-md space-y-4 rounded-lg bg-white p-6 shadow">
+@php $locales = config('app.available_locales', ['en', 'ar']); @endphp
+@component('admin::components.card', ['title' => null])
+<form action="{{ route('admin.categories.update', $category) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
     @csrf
     @method('PUT')
     <div>
-        <label for="name" class="block text-sm font-medium text-gray-700">{{ __('Name') }} *</label>
-        <input type="text" name="name" id="name" value="{{ old('name', $category->name) }}" class="mt-1 block w-full rounded-md border-gray-300" required>
-        @error('name')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+        <p class="mb-2 text-sm font-medium text-gray-700">{{ __('Translations') }}</p>
+        <div class="flex gap-2 border-b border-gray-200">
+            @foreach($locales as $locale)
+                <button type="button" class="locale-tab rounded-t px-4 py-2 text-sm font-medium {{ $loop->first ? 'bg-gray-200 text-gray-900' : 'text-gray-600 hover:bg-gray-100' }}" data-locale="{{ $locale }}">{{ $locale === 'en' ? __('English') : __('Arabic') }}</button>
+            @endforeach
+        </div>
+        @foreach($locales as $locale)
+            <div class="locale-panel mt-4 space-y-4 {{ $loop->first ? '' : 'hidden' }}" data-locale="{{ $locale }}">
+                @include('admin::components.form-field', [
+                    'name' => "name[{$locale}]",
+                    'label' => __('Name') . " ({$locale})",
+                    'type' => 'text',
+                    'value' => old("name.{$locale}", $category->getTranslation('name', $locale, false)),
+                    'required' => $loop->first,
+                ])
+                @include('admin::components.rich-editor', [
+                    'name' => "description[{$locale}]",
+                    'id' => 'description_' . $locale,
+                    'label' => __('Description') . " ({$locale})",
+                    'value' => old("description.{$locale}", $category->getTranslation('description', $locale, false)),
+                    'errorKey' => "description.{$locale}",
+                ])
+            </div>
+        @endforeach
     </div>
-    <div>
-        <label for="slug" class="block text-sm font-medium text-gray-700">{{ __('Slug') }}</label>
-        <input type="text" name="slug" id="slug" value="{{ old('slug', $category->slug) }}" class="mt-1 block w-full rounded-md border-gray-300">
-        @error('slug')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-    </div>
-    <div>
-        <label for="description" class="block text-sm font-medium text-gray-700">{{ __('Description') }}</label>
-        <textarea name="description" id="description" rows="3" class="mt-1 block w-full rounded-md border-gray-300">{{ old('description', $category->description) }}</textarea>
-        @error('description')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-    </div>
-    <div>
-        <label for="image" class="block text-sm font-medium text-gray-700">{{ __('Image') }}</label>
-        @if($category->image)
-            <p class="text-sm text-gray-500">{{ __('Current') }}: <a href="{{ \Illuminate\Support\Facades\Storage::url($category->image) }}" target="_blank">{{ $category->image }}</a></p>
-        @endif
-        <input type="file" name="image" id="image" accept="image/*" class="mt-1 block w-full text-sm">
-        @error('image')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-    </div>
-    <div>
-        <label for="sort_order" class="block text-sm font-medium text-gray-700">{{ __('Sort order') }}</label>
-        <input type="number" name="sort_order" id="sort_order" value="{{ old('sort_order', $category->sort_order) }}" class="mt-1 block w-full rounded-md border-gray-300">
-        @error('sort_order')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
-    </div>
-    <div>
-        <label class="inline-flex items-center">
-            <input type="checkbox" name="active" value="1" {{ old('active', $category->active) ? 'checked' : '' }} class="rounded border-gray-300">
-            <span class="ml-2 text-sm">{{ __('Active') }}</span>
-        </label>
-    </div>
-    <button type="submit" class="rounded-md bg-indigo-600 px-4 py-2 text-sm text-white hover:bg-indigo-700">{{ __('Update category') }}</button>
-    <a href="{{ route('admin.categories.index') }}" class="ml-2 text-gray-600 hover:text-gray-900">{{ __('Cancel') }}</a>
+    @include('admin::components.form-field', ['name' => 'slug', 'label' => __('Slug'), 'type' => 'text', 'value' => old('slug', $category->slug)])
+    @include('admin::components.form-field', ['name' => 'image', 'label' => __('Image'), 'type' => 'file', 'value' => '', 'attributes' => ['accept' => 'image/*', 'current' => $category->image, 'current_url' => $category->image ? \Illuminate\Support\Facades\Storage::url($category->image) : '']])
+    @include('admin::components.form-field', ['name' => 'sort_order', 'label' => __('Sort order'), 'type' => 'number', 'value' => old('sort_order', $category->sort_order), 'attributes' => ['min' => 0]])
+    @include('admin::components.form-field', ['name' => 'active', 'label' => '', 'type' => 'checkbox', 'value' => $category->active, 'attributes' => ['help' => __('Active')]])
+    @include('admin::components.form-actions', [
+        'submitLabel' => __('Update category'),
+        'cancelUrl' => route('admin.categories.index'),
+    ])
 </form>
+@endcomponent
+@push('admin-scripts')
+@php $tinymceKey = \App\Models\Setting::get('tinymce_api_key') ?: 'no-api-key'; @endphp
+<script src="https://cdn.tiny.cloud/1/{{ $tinymceKey }}/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof tinymce !== 'undefined' && document.querySelectorAll('.rich-editor').length) {
+        tinymce.init({
+            selector: '.rich-editor',
+            height: 220,
+            menubar: false,
+            plugins: 'lists link code',
+            toolbar: 'undo redo | formatselect | bold italic | alignleft aligncenter alignright | bullist numlist | link | removeformat | code',
+            content_style: 'body { font-family: inherit; font-size: 14px; }',
+            directionality: document.documentElement.dir || 'ltr',
+        });
+    }
+    document.querySelectorAll('.locale-tab').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var locale = this.getAttribute('data-locale');
+            document.querySelectorAll('.locale-tab').forEach(function(b) { b.classList.remove('bg-gray-200', 'text-gray-900'); b.classList.add('text-gray-600'); });
+            this.classList.add('bg-gray-200', 'text-gray-900'); this.classList.remove('text-gray-600');
+            document.querySelectorAll('.locale-panel').forEach(function(p) {
+                p.classList.toggle('hidden', p.getAttribute('data-locale') !== locale);
+            });
+        });
+    });
+});
+</script>
+@endpush
 @endsection

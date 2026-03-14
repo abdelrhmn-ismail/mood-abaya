@@ -4,11 +4,11 @@
 @section('description', __('Shop by Category'))
 
 @section('content')
-    <section class="bg-white py-20 md:py-24">
+    <x-frontend.hero-header :title="__('Shop by Category')" :subtitle="__('Browse our collections')" setting="hero_categories" />
+
+    <section class="bg-white py-16 md:py-20">
         <div class="container mx-auto px-4">
-            <h1 class="text-center text-4xl font-bold text-slate-900 md:text-5xl">{{ __('Shop by Category') }}</h1>
-            <p class="mx-auto mt-3 max-w-2xl text-center text-slate-600">{{ __('Browse our collections') }}</p>
-            <div class="mx-auto mt-12 grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="mx-auto mt-6 grid max-w-5xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 @forelse($categories as $category)
                     <a href="{{ route('categories.show', $category->slug) }}" class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-xl">
                         @if($category->image)

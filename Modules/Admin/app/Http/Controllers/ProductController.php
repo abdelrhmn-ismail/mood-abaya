@@ -35,15 +35,38 @@ class ProductController
     {
         $data = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
+            'name' => 'required|array',
+            'name.en' => 'nullable|string|max:255',
+            'name.ar' => 'nullable|string|max:255',
             'slug' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'nullable|array',
+            'description.en' => 'nullable|string',
+            'description.ar' => 'nullable|string',
+            'sku' => 'nullable|string|max:100',
+            'barcode' => 'nullable|string|max:100',
+            'short_description' => 'nullable|string|max:500',
+            'tags' => 'nullable|string|max:500',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'meta_keywords' => 'nullable|string|max:500',
+            'og_image' => 'nullable|string|max:500',
             'price' => 'required|numeric|min:0',
+            'compare_at_price' => 'nullable|numeric|min:0',
             'image' => 'nullable|image|max:2048',
             'stock' => 'nullable|integer|min:0',
+            'min_order_qty' => 'nullable|integer|min:1',
+            'max_order_qty' => 'nullable|integer|min:1',
+            'weight_kg' => 'nullable|numeric|min:0',
             'active' => 'nullable|boolean',
+            'featured' => 'nullable|boolean',
         ]);
+        $data['name'] = array_filter($data['name'] ?? [], fn ($v) => $v !== null && $v !== '');
+        $data['description'] = array_filter($data['description'] ?? [], fn ($v) => $v !== null && $v !== '');
+        if (empty($data['name'])) {
+            return back()->withErrors(['name' => __('At least one language is required for name.')])->withInput();
+        }
         $data['active'] = $request->boolean('active');
+        $data['featured'] = $request->boolean('featured');
         $data['stock'] = (int) ($data['stock'] ?? 0);
         $this->productService->create($data);
 
@@ -61,15 +84,38 @@ class ProductController
     {
         $data = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
+            'name' => 'required|array',
+            'name.en' => 'nullable|string|max:255',
+            'name.ar' => 'nullable|string|max:255',
             'slug' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'nullable|array',
+            'description.en' => 'nullable|string',
+            'description.ar' => 'nullable|string',
+            'sku' => 'nullable|string|max:100',
+            'barcode' => 'nullable|string|max:100',
+            'short_description' => 'nullable|string|max:500',
+            'tags' => 'nullable|string|max:500',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'meta_keywords' => 'nullable|string|max:500',
+            'og_image' => 'nullable|string|max:500',
             'price' => 'required|numeric|min:0',
+            'compare_at_price' => 'nullable|numeric|min:0',
             'image' => 'nullable|image|max:2048',
             'stock' => 'nullable|integer|min:0',
+            'min_order_qty' => 'nullable|integer|min:1',
+            'max_order_qty' => 'nullable|integer|min:1',
+            'weight_kg' => 'nullable|numeric|min:0',
             'active' => 'nullable|boolean',
+            'featured' => 'nullable|boolean',
         ]);
+        $data['name'] = array_filter($data['name'] ?? [], fn ($v) => $v !== null && $v !== '');
+        $data['description'] = array_filter($data['description'] ?? [], fn ($v) => $v !== null && $v !== '');
+        if (empty($data['name'])) {
+            return back()->withErrors(['name' => __('At least one language is required for name.')])->withInput();
+        }
         $data['active'] = $request->boolean('active');
+        $data['featured'] = $request->boolean('featured');
         if (isset($data['stock'])) {
             $data['stock'] = (int) $data['stock'];
         }

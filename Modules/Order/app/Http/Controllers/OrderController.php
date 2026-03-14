@@ -11,9 +11,7 @@ class OrderController extends Controller
 {
     public function __construct(
         private OrderService $orderService
-    ) {
-        $this->middleware('auth');
-    }
+    ) {}
 
     public function confirmed(Request $request, string $orderNumber): View|\Illuminate\Http\RedirectResponse
     {

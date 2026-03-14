@@ -2,11 +2,14 @@
     <div class="container mx-auto px-4 py-16">
         <div class="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
             <div>
-                <a href="{{ url('/') }}" class="flex items-center gap-2 text-lg font-bold text-white">
-                    <span class="material-icons text-2xl">storefront</span>
-                    {{ site_label('site_name') }}
+                <a href="{{ url('/') }}" class="inline-flex items-center" aria-label="{{ site_label('site_name') }}">
+                    @if(site_logo_url())
+                        <img src="{{ site_logo_url() }}" alt="" class="h-10 w-auto max-w-[180px] object-contain brightness-0 invert">
+                    @else
+                        <span class="material-icons text-3xl text-white">storefront</span>
+                    @endif
                 </a>
-                <p class="mt-4 text-sm text-slate-400">{{ __('Quality products for everyone. Shop with confidence.') }}</p>
+                <p class="mt-4 text-sm text-slate-400">{{ footer_tagline() }}</p>
             </div>
             <div>
                 <h4 class="text-sm font-semibold uppercase tracking-wider text-white">{{ __('Quick Links') }}</h4>
@@ -21,6 +24,10 @@
                 <h4 class="text-sm font-semibold uppercase tracking-wider text-white">{{ __('Support') }}</h4>
                 <ul class="mt-4 space-y-3">
                     <li><a href="{{ route('contact') }}" class="text-sm hover:text-white transition-colors">{{ __('Contact Us') }}</a></li>
+                    <li><a href="{{ route('page.show', 'terms') }}" class="text-sm hover:text-white transition-colors">{{ __('Terms & Conditions') }}</a></li>
+                    <li><a href="{{ route('page.show', 'privacy') }}" class="text-sm hover:text-white transition-colors">{{ __('Privacy Policy') }}</a></li>
+                    <li><a href="{{ route('page.show', 'shipping') }}" class="text-sm hover:text-white transition-colors">{{ __('Shipping Policy') }}</a></li>
+                    <li><a href="{{ route('page.show', 'return-refund') }}" class="text-sm hover:text-white transition-colors">{{ __('Return & Refund Policy') }}</a></li>
                 </ul>
             </div>
             <div>
@@ -32,7 +39,7 @@
             </div>
         </div>
         <div class="mt-12 border-t border-slate-800 pt-8 text-center text-sm text-slate-500">
-            &copy; {{ date('Y') }} {{ config('app.name') }}. {{ __('All rights reserved.') }}
+            &copy; {{ date('Y') }} {{ site_label('site_name') }}. {{ __('All rights reserved.') }}
         </div>
     </div>
 </footer>

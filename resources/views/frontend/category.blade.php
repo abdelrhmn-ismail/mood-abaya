@@ -1,7 +1,7 @@
 @extends('frontend.layouts.app')
 
 @section('title', $category->name . ' – ' . config('app.name'))
-@section('description', $category->description ?? $category->name)
+@section('description', Str::limit(strip_tags($category->description ?? ''), 160) ?: $category->name)
 
 @section('content')
     <section class="bg-white py-12 md:py-16">
@@ -13,7 +13,7 @@
             </nav>
             <h1 class="text-4xl font-bold text-slate-900 md:text-5xl">{{ $category->name }}</h1>
             @if($category->description)
-                <p class="mt-4 max-w-2xl text-slate-600">{{ $category->description }}</p>
+                <div class="mt-4 max-w-2xl text-slate-600 prose prose-slate">{!! safe_html($category->description) !!}</div>
             @endif
             <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 @forelse($products as $product)
@@ -26,8 +26,16 @@
                             </div>
                         @endif
                         <div class="p-5">
+                            @if($product->hasDiscount())
+                                <span class="inline-block rounded bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800">{{ __('Save') }} {{ $product->discountPercent() }}%</span>
+                            @endif
                             <h2 class="font-semibold text-slate-900">{{ $product->name }}</h2>
-                            <p class="mt-2 text-lg font-bold text-slate-800">{{ number_format($product->price, 2) }} {{ __('SAR') }}</p>
+                            <div class="mt-2 flex flex-wrap items-baseline gap-1.5">
+                                <span class="text-lg font-bold text-slate-800">{{ number_format($product->price, 2) }} {{ __('SAR') }}</span>
+                                @if($product->hasDiscount())
+                                    <span class="text-sm text-slate-500 line-through">{{ number_format($product->compare_at_price, 2) }} {{ __('SAR') }}</span>
+                                @endif
+                            </div>
                         </div>
                     </a>
                 @empty

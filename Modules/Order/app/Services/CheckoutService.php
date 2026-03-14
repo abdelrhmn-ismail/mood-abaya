@@ -48,7 +48,7 @@ class CheckoutService
             $order = Order::create([
                 'user_id' => Auth::id(),
                 'order_number' => $orderNumber,
-                'status' => 'pending',
+                'status' => $paymentMethod === 'cash' ? 'processing' : 'pending',
                 'payment_method' => $paymentMethod,
                 'payment_status' => $paymentMethod === 'bank' ? 'pending_approval' : 'pending',
                 'shipping_address' => is_array($address) ? json_encode($address) : $address,

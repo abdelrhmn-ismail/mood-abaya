@@ -5,9 +5,29 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>@yield('title', config('app.name'))</title>
-    <meta name="description" content="@yield('description', 'Shop the latest collection')">
+    @if(site_favicon_url())
+    <link rel="icon" href="{{ site_favicon_url() }}">
+    @endif
+    @php
+        $siteMetaTitle = \App\Models\Setting::get('meta_title', '');
+        $siteMetaDesc = \App\Models\Setting::get('meta_description', '');
+        $siteMetaKeywords = \App\Models\Setting::get('meta_keywords', '');
+        $siteOgImage = \App\Models\Setting::get('og_image', '');
+        $defaultTitle = $siteMetaTitle ?: config('app.name');
+        $defaultDesc = $siteMetaDesc ?: __('Quality products for everyone. Shop with confidence.');
+    @endphp
+    <title>@yield('title', $defaultTitle)</title>
+    <meta name="description" content="@yield('description', $defaultDesc)">
+    @php $pageKeywords = trim($__env->yieldContent('meta_keywords') ?? ''); $pageOgImage = trim($__env->yieldContent('og_image') ?? ''); @endphp
+    @if($pageKeywords || $siteMetaKeywords)
+        <meta name="keywords" content="{{ $pageKeywords ?: $siteMetaKeywords }}">
+    @endif
+    <meta property="og:title" content="@yield('title', $defaultTitle)">
+    <meta property="og:description" content="@yield('description', $defaultDesc)">
+    <meta property="og:type" content="website">
+    @if($pageOgImage || $siteOgImage)
+        <meta property="og:image" content="{{ $pageOgImage ?: $siteOgImage }}">
+    @endif
 
     {{-- Tailwind CSS (required for utility classes: flex, grid, bg-*, etc.) --}}
     @vite(['resources/css/app.css'])

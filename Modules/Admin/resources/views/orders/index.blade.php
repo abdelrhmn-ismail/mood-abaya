@@ -4,7 +4,7 @@
 @section('heading', __('Orders'))
 
 @section('content')
-<form method="GET" class="mb-6 flex flex-wrap items-center gap-2">
+@component('admin::components.filter-bar')
     <input type="text" name="order_number" value="{{ request('order_number') }}" placeholder="{{ __('Order #') }}" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
     <select name="status" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
         <option value="">{{ __('All statuses') }}</option>
@@ -21,8 +21,7 @@
         <option value="paid" {{ request('payment_status') === 'paid' ? 'selected' : '' }}>paid</option>
         <option value="rejected" {{ request('payment_status') === 'rejected' ? 'selected' : '' }}>rejected</option>
     </select>
-    <button type="submit" class="rounded-lg bg-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-300">{{ __('Filter') }}</button>
-</form>
+@endcomponent
 
 @include('admin::components.table', [
     'columns' => [

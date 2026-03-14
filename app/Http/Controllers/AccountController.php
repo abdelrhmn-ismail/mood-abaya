@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProductReview;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Modules\Order\Services\OrderService;
@@ -9,14 +11,32 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AccountController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request, OrderService $orderService): View|RedirectResponse
     {
         $user = $request->user();
+        if ($user && $user->is_admin) {
+            return redirect()->route('admin.dashboard');
+        }
         $orders = $user->orders()->with('items.product')->orderByDesc('created_at')->limit(50)->get();
+
+        $selectedOrder = null;
+        $reviewedProductIds = [];
+        if ($request->filled('order')) {
+            $selectedOrder = $orderService->getOrderByNumberForUser($request->input('order'), (int) $user->id);
+            if ($selectedOrder) {
+                $selectedOrder->load('items.product', 'payments', 'shippings');
+                $reviewedProductIds = ProductReview::where('order_id', $selectedOrder->id)
+                    ->where('user_id', $user->id)
+                    ->pluck('product_id')
+                    ->all();
+            }
+        }
 
         return view('frontend.account', [
             'user' => $user,
             'orders' => $orders,
+            'selectedOrder' => $selectedOrder,
+            'reviewedProductIds' => $reviewedProductIds,
         ]);
     }
 

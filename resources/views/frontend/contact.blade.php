@@ -4,10 +4,10 @@
 @section('description', __('Contact Us'))
 
 @section('content')
+    <x-frontend.hero-header :title="__('Contact Us')" :subtitle="__('We would love to hear from you.')" setting="hero_contact" />
+
     <section class="bg-white py-16 md:py-20">
         <div class="container mx-auto max-w-2xl px-4">
-            <h1 class="text-4xl font-bold text-slate-900">{{ __('Contact Us') }}</h1>
-            <p class="mt-2 text-slate-600">{{ __('We would love to hear from you.') }}</p>
 
             @if(session('success'))
                 <div class="mt-6 rounded-xl bg-green-100 px-4 py-3 text-green-800" role="alert">{{ session('success') }}</div>
