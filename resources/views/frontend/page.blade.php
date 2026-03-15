@@ -6,13 +6,13 @@
 @section('content')
     <x-frontend.hero-header :title="__($page->page_name)" :subtitle="null" setting="hero_page" />
 
-    <section class="bg-white py-16 md:py-20">
+    <section class="bg-slate-50 py-16 md:py-20">
         <div class="container mx-auto max-w-3xl px-4">
-            <div class="mt-8 prose prose-slate max-w-none text-slate-700">
+            <div class="mt-8 prose prose-slate max-w-none prose-headings:text-brand-black prose-p:text-brand-black/80 prose-li:text-brand-black/80 prose-a:text-brand-teal">
                 @if($content)
                     {!! safe_html($content) !!}
                 @else
-                    <p class="text-slate-500">{{ __('No content yet.') }}</p>
+                    <p class="text-brand-black/60">{{ __('No content yet.') }}</p>
                 @endif
             </div>
         </div>

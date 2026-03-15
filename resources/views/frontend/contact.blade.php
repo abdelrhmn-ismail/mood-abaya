@@ -6,9 +6,53 @@
 @section('content')
     <x-frontend.hero-header :title="__('Contact Us')" :subtitle="__('We would love to hear from you.')" setting="hero_contact" />
 
+    {{-- Q&A / FAQ section with accordions --}}
+    @if(isset($faqs) && $faqs->isNotEmpty())
+    <section class="border-b border-slate-200 bg-brand-white py-14 md:py-16">
+        <div class="container mx-auto max-w-3xl px-4">
+            <h2 class="text-center text-2xl font-bold text-brand-black md:text-3xl">{{ __('Frequently asked questions') }}</h2>
+            <p class="mx-auto mt-2 max-w-xl text-center text-brand-black/70">
+                {{ __('Quick answers to common questions. Can\'t find what you need? Send us a message below.') }}
+            </p>
+            <div class="mt-10 space-y-2" x-data="{ openIndex: null }">
+                @foreach($faqs as $index => $faq)
+                    <div class="rounded-xl border border-slate-200 bg-slate-50/50 transition hover:border-brand-teal/30">
+                        <button type="button"
+                                @click="openIndex = openIndex === {{ $index }} ? null : {{ $index }}"
+                                class="flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+                                :aria-expanded="openIndex === {{ $index }}"
+                                aria-controls="faq-answer-{{ $index }}"
+                                id="faq-question-{{ $index }}">
+                            <span class="font-semibold text-brand-black">{{ $faq->question }}</span>
+                            <span class="material-icons shrink-0 text-brand-teal transition-transform duration-200" :class="{ 'rotate-180': openIndex === {{ $index }} }">expand_more</span>
+                        </button>
+                        <div id="faq-answer-{{ $index }}"
+                             role="region"
+                             aria-labelledby="faq-question-{{ $index }}"
+                             x-show="openIndex === {{ $index }}"
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0"
+                             x-transition:enter-end="opacity-100"
+                             x-transition:leave="transition ease-in duration-150"
+                             x-transition:leave-start="opacity-100"
+                             x-transition:leave-end="opacity-0"
+                             x-cloak
+                             class="border-t border-slate-200">
+                            <div class="px-5 py-4 text-brand-black/80 prose prose-sm max-w-none prose-p:my-2 prose-ul:my-2">
+                                {!! nl2br(e($faq->answer)) !!}
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
     <section class="bg-slate-50 py-16 md:py-20">
         <div class="container mx-auto max-w-2xl px-4">
-            <p class="mb-2 text-center text-brand-black/80">
+            <h2 class="text-center text-xl font-bold text-brand-black md:text-2xl">{{ __('Send us a message') }}</h2>
+            <p class="mb-2 mt-2 text-center text-brand-black/80">
                 {{ __('Have a question about your order or our collection? Send us a message and we will get back to you soon.') }}
             </p>
 
@@ -42,6 +86,21 @@
                     {{ __('Send Message') }}
                 </button>
             </form>
+
+            <div class="mt-12 flex flex-wrap items-center justify-center gap-6 rounded-2xl border border-slate-200 bg-brand-white p-6">
+                <div class="flex items-center gap-3 text-brand-black/80">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-gold/20 text-brand-teal">
+                        <span class="material-icons text-xl">schedule</span>
+                    </span>
+                    <span class="text-sm">{{ __('We typically respond within 24 hours on business days.') }}</span>
+                </div>
+                <div class="flex items-center gap-3 text-brand-black/80">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-teal/10 text-brand-teal">
+                        <span class="material-icons text-xl">support_agent</span>
+                    </span>
+                    <span class="text-sm">{{ __('Need urgent help? Mention it in your message.') }}</span>
+                </div>
+            </div>
         </div>
     </section>
 @endsection
