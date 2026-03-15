@@ -4,9 +4,10 @@
 @section('description', __('About us') . ' – ' . config('app.name') . '. ' . __('Quality abayas, jilbabs and hijabs for the modern modest wardrobe.'))
 
 @section('content')
+    <x-frontend.hero-header :title="__('About Us')" :subtitle="__('Quality abayas, jilbabs and hijabs for the modern modest wardrobe.')" setting="hero_page" />
+
     <section class="bg-slate-50 py-16 md:py-24">
         <div class="container mx-auto max-w-4xl px-4">
-            <h1 class="text-4xl font-bold text-brand-black md:text-5xl">{{ __('About Us') }}</h1>
             <p class="mt-6 text-lg leading-relaxed text-brand-black/80">
                 {{ __('We are dedicated to offering a carefully curated selection of abayas, jilbabs, and hijabs that combine modesty with contemporary style.') }}
             </p>
