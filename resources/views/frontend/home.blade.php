@@ -192,43 +192,6 @@
         </div>
     </section>
 
-    {{-- Why shop with us --}}
-    <section class="bg-brand-white py-16 md:py-20">
-        <div class="container mx-auto px-4">
-            <h2 class="text-center text-3xl font-bold text-brand-black md:text-4xl">{{ __('Why shop with us') }}</h2>
-            <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-                <div class="text-center">
-                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-teal/10 text-brand-teal">
-                        <span class="material-icons text-4xl">check_circle</span>
-                    </div>
-                    <h3 class="mt-4 font-semibold text-brand-black">{{ __('Quality') }}</h3>
-                    <p class="mt-2 text-sm text-brand-black/70">{{ __('Premium materials and craftsmanship in every piece.') }}</p>
-                </div>
-                <div class="text-center">
-                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-gold/20 text-brand-teal">
-                        <span class="material-icons text-4xl">local_shipping</span>
-                    </div>
-                    <h3 class="mt-4 font-semibold text-brand-black">{{ __('Fast delivery') }}</h3>
-                    <p class="mt-2 text-sm text-brand-black/70">{{ __('Quick and reliable shipping across the region.') }}</p>
-                </div>
-                <div class="text-center">
-                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-teal/10 text-brand-teal">
-                        <span class="material-icons text-4xl">assignment_return</span>
-                    </div>
-                    <h3 class="mt-4 font-semibold text-brand-black">{{ __('Easy returns') }}</h3>
-                    <p class="mt-2 text-sm text-brand-black/70">{{ __('Hassle-free returns if you are not satisfied.') }}</p>
-                </div>
-                <div class="text-center">
-                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-gold/20 text-brand-teal">
-                        <span class="material-icons text-4xl">support_agent</span>
-                    </div>
-                    <h3 class="mt-4 font-semibold text-brand-black">{{ __('Support') }}</h3>
-                    <p class="mt-2 text-sm text-brand-black/70">{{ __('Friendly customer care when you need it.') }}</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     {{-- Follow us / CTA --}}
     <section class="bg-brand-white py-16 md:py-20">
         <div class="container mx-auto px-4 text-center">
@@ -244,12 +207,14 @@
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-2xl font-bold md:text-3xl">{{ __('Get 10% off your first order') }}</h2>
             <p class="mx-auto mt-3 max-w-lg text-white/80">{{ __('Subscribe to our newsletter') }}</p>
-            <form class="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row sm:gap-2" data-newsletter="form">
-                <input type="email" placeholder="{{ __('Enter your email') }}" class="flex-1 rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white placeholder-white/60 focus:border-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold/40">
+            <form action="{{ route('newsletter.store') }}" method="POST" class="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row sm:gap-2" data-newsletter="form">
+                @csrf
+                <input type="email" name="email" placeholder="{{ __('Enter your email') }}" required class="flex-1 rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white placeholder-white/60 focus:border-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold/40" aria-label="{{ __('Enter your email') }}">
                 <button type="submit" class="rounded-xl bg-brand-gold px-6 py-3 font-semibold text-brand-black transition hover:bg-brand-gold-dark" data-ripple-light="true">
                     {{ __('Subscribe') }}
                 </button>
             </form>
+            <p class="mx-auto mt-3 min-h-[1.5rem] text-sm text-white/90" data-newsletter="message" aria-live="polite"></p>
         </div>
     </section>
 @endsection

@@ -27,9 +27,10 @@ class HeroImagesSeeder extends Seeder
         'hero_categories' => 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1920',
         'hero_products'   => 'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=1920',
         'hero_search'     => 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=1920',
-        // Cart & Account (softer / lifestyle)
-        'hero_cart'    => 'https://images.unsplash.com/photo-1524504388940-b1c172dc3dc1?w=1920',
-        'hero_account' => 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=1920',
+        // Cart, Checkout & Account (softer / lifestyle)
+        'hero_cart'     => 'https://images.unsplash.com/photo-1524504388940-b1c172dc3dc1?w=1920',
+        'hero_checkout' => 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1920',
+        'hero_account'  => 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=1920',
     ];
 
     public function run(): void

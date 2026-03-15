@@ -43,6 +43,9 @@ Route::get('/contacts', [ContactMessageController::class, 'index'])->name('conta
 Route::post('/contacts/bulk', [ContactMessageController::class, 'bulkAction'])->name('contacts.bulk');
 Route::get('/contacts/{contactMessage}', [ContactMessageController::class, 'show'])->name('contacts.show');
 
+Route::get('/newsletter', [\Modules\Admin\Http\Controllers\NewsletterSubscriberController::class, 'index'])->name('newsletter.index');
+Route::post('/newsletter/bulk', [\Modules\Admin\Http\Controllers\NewsletterSubscriberController::class, 'bulkAction'])->name('newsletter.bulk');
+
 Route::get('/faqs', [FaqController::class, 'index'])->name('faqs.index');
 Route::get('/faqs/create', [FaqController::class, 'create'])->name('faqs.create');
 Route::post('/faqs', [FaqController::class, 'store'])->name('faqs.store');

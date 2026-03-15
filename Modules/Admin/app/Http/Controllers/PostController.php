@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 
 class PostController
@@ -19,9 +20,17 @@ class PostController
         if (!in_array($sort, $allowedSort, true)) {
             $sort = 'published_at';
         }
-        $posts = Post::orderBy($sort, $order)
-            ->paginate(admin_per_page())
-            ->withQueryString();
+        $query = Post::query();
+        if ($sort === 'title') {
+            $driver = Schema::getConnection()->getDriverName();
+            $expr = $driver === 'mysql'
+                ? "JSON_UNQUOTE(JSON_EXTRACT(title, '$.en'))"
+                : "json_extract(title, '$.en')";
+            $query->orderByRaw("{$expr} {$order}");
+        } else {
+            $query->orderBy($sort, $order);
+        }
+        $posts = $query->paginate(admin_per_page())->withQueryString();
 
         return view('admin::posts.index', compact('posts'));
     }
@@ -36,16 +45,31 @@ class PostController
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|array',
+            'title.en' => 'required_with:title|string|max:255',
+            'title.ar' => 'nullable|string|max:255',
             'slug' => 'nullable|string|max:255',
-            'excerpt' => 'nullable|string|max:1000',
-            'body' => 'nullable|string',
+            'excerpt' => 'nullable|array',
+            'excerpt.en' => 'nullable|string|max:1000',
+            'excerpt.ar' => 'nullable|string|max:1000',
+            'body' => 'nullable|array',
+            'body.en' => 'nullable|string',
+            'body.ar' => 'nullable|string',
             'image' => 'nullable|image|max:2048',
             'published_at' => 'nullable|date',
-            'meta_title' => 'nullable|string|max:255',
-            'meta_description' => 'nullable|string|max:500',
+            'meta_title' => 'nullable|array',
+            'meta_title.en' => 'nullable|string|max:255',
+            'meta_title.ar' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|array',
+            'meta_description.en' => 'nullable|string|max:500',
+            'meta_description.ar' => 'nullable|string|max:500',
         ]);
-        $data['slug'] = $data['slug'] ?: Str::slug($data['title']);
+        $data['title'] = array_filter($data['title'] ?? [], fn ($v) => $v !== null && $v !== '');
+        $data['excerpt'] = array_filter($data['excerpt'] ?? [], fn ($v) => $v !== null && $v !== '');
+        $data['body'] = array_filter($data['body'] ?? [], fn ($v) => $v !== null && $v !== '');
+        $data['meta_title'] = array_filter($data['meta_title'] ?? [], fn ($v) => $v !== null && $v !== '');
+        $data['meta_description'] = array_filter($data['meta_description'] ?? [], fn ($v) => $v !== null && $v !== '');
+        $data['slug'] = $data['slug'] ?: Str::slug($data['title']['en'] ?? $data['title']['ar'] ?? 'post');
         $data['slug'] = $this->ensureUniqueSlug($data['slug']);
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('posts', 'public');
@@ -66,16 +90,31 @@ class PostController
     public function update(Request $request, Post $post): RedirectResponse
     {
         $data = $request->validate([
-            'title' => 'required|string|max:255',
+            'title' => 'required|array',
+            'title.en' => 'required_with:title|string|max:255',
+            'title.ar' => 'nullable|string|max:255',
             'slug' => 'nullable|string|max:255',
-            'excerpt' => 'nullable|string|max:1000',
-            'body' => 'nullable|string',
+            'excerpt' => 'nullable|array',
+            'excerpt.en' => 'nullable|string|max:1000',
+            'excerpt.ar' => 'nullable|string|max:1000',
+            'body' => 'nullable|array',
+            'body.en' => 'nullable|string',
+            'body.ar' => 'nullable|string',
             'image' => 'nullable|image|max:2048',
             'published_at' => 'nullable|date',
-            'meta_title' => 'nullable|string|max:255',
-            'meta_description' => 'nullable|string|max:500',
+            'meta_title' => 'nullable|array',
+            'meta_title.en' => 'nullable|string|max:255',
+            'meta_title.ar' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|array',
+            'meta_description.en' => 'nullable|string|max:500',
+            'meta_description.ar' => 'nullable|string|max:500',
         ]);
-        $data['slug'] = $data['slug'] ?: Str::slug($data['title']);
+        $data['title'] = array_filter($data['title'] ?? [], fn ($v) => $v !== null && $v !== '');
+        $data['excerpt'] = array_filter($data['excerpt'] ?? [], fn ($v) => $v !== null && $v !== '');
+        $data['body'] = array_filter($data['body'] ?? [], fn ($v) => $v !== null && $v !== '');
+        $data['meta_title'] = array_filter($data['meta_title'] ?? [], fn ($v) => $v !== null && $v !== '');
+        $data['meta_description'] = array_filter($data['meta_description'] ?? [], fn ($v) => $v !== null && $v !== '');
+        $data['slug'] = $data['slug'] ?: Str::slug($data['title']['en'] ?? $data['title']['ar'] ?? $post->slug);
         $data['slug'] = $this->ensureUniqueSlug($data['slug'], $post->id);
         if ($request->hasFile('image')) {
             if ($post->image) {

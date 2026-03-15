@@ -52,12 +52,7 @@
                 <input type="text" name="postal_code" id="addr_postal" value="{{ old('postal_code') }}" class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/20">
             </div>
             <div>
-                <label for="addr_country" class="mb-1 block text-sm font-medium text-slate-700">{{ __('Country') }}</label>
-                <select name="country" id="addr_country" class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/20">
-                    @foreach(config('phone_codes', []) as $c)
-                        <option value="{{ $c['country_name'] ?? $c['label'] }}" {{ old('country', 'Saudi Arabia') === ($c['country_name'] ?? $c['label']) ? 'selected' : '' }}>{{ $c['flag'] }} {{ $c['country_name'] ?? $c['label'] }}</option>
-                    @endforeach
-                </select>
+                <x-country-select name="country" id="addr_country" :value="old('country', 'Saudi Arabia')" :label="__('Country')" />
             </div>
             <div class="flex items-center sm:col-span-2">
                 <input type="checkbox" name="is_default" id="addr_default" value="1" {{ old('is_default') ? 'checked' : (empty($billingAddresses) ? 'checked' : '') }} class="rounded border-slate-300 text-slate-900 focus:ring-slate-900/20">
@@ -135,12 +130,7 @@
                                 <input type="text" name="postal_code" value="{{ old('postal_code', $addr->postal_code) }}" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm">
                             </div>
                             <div>
-                                <label class="mb-1 block text-sm font-medium text-slate-700">{{ __('Country') }}</label>
-                                <select name="country" class="block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/20">
-                                    @foreach(config('phone_codes', []) as $c)
-                                        <option value="{{ $c['country_name'] ?? $c['label'] }}" {{ old('country', $addr->country) === ($c['country_name'] ?? $c['label']) ? 'selected' : '' }}>{{ $c['flag'] }} {{ $c['country_name'] ?? $c['label'] }}</option>
-                                    @endforeach
-                                </select>
+                                <x-country-select name="country" :id="'addr_country_edit_'.$addr->id" :value="old('country', $addr->country)" :label="__('Country')" />
                             </div>
                             <div class="flex items-center sm:col-span-2">
                                 <input type="checkbox" name="is_default" value="1" {{ $addr->is_default ? 'checked' : '' }} class="rounded border-slate-300 text-slate-900">

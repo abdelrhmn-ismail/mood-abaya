@@ -41,6 +41,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
     {{-- Material Icons --}}
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    {{-- Flag icons for country code selector (phone, address) --}}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
 
     {{-- Ripple effect script --}}
     <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/ripple.js" defer></script>

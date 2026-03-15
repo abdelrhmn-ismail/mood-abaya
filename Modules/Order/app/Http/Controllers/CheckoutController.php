@@ -100,21 +100,25 @@ class CheckoutController extends Controller
                 'country' => $validated['billing_country'] ?? 'Saudi Arabia',
                 'notes' => $notes,
             ];
-            if ($request->boolean('save_billing_address')) {
-                BillingAddress::create([
-                    'user_id' => $request->user()->id,
-                    'label' => null,
-                    'full_name' => $address['full_name'],
-                    'phone' => $address['phone'],
-                    'address_line_1' => $address['address_line_1'],
-                    'address_line_2' => $address['address_line_2'],
-                    'city' => $address['city'],
-                    'state' => $address['state'],
-                    'postal_code' => $address['postal_code'],
-                    'country' => $address['country'],
-                    'is_default' => ! BillingAddress::where('user_id', $request->user()->id)->exists(),
-                ]);
+            // Always save new billing address at checkout so it appears in Account → Addresses
+            $setAsDefault = $request->boolean('save_billing_address');
+            $hasExisting = BillingAddress::where('user_id', $request->user()->id)->exists();
+            if ($setAsDefault && $hasExisting) {
+                BillingAddress::where('user_id', $request->user()->id)->update(['is_default' => false]);
             }
+            BillingAddress::create([
+                'user_id' => $request->user()->id,
+                'label' => null,
+                'full_name' => $address['full_name'],
+                'phone' => $address['phone'],
+                'address_line_1' => $address['address_line_1'],
+                'address_line_2' => $address['address_line_2'],
+                'city' => $address['city'],
+                'state' => $address['state'],
+                'postal_code' => $address['postal_code'],
+                'country' => $address['country'],
+                'is_default' => ! $hasExisting || $setAsDefault,
+            ]);
         }
 
         try {

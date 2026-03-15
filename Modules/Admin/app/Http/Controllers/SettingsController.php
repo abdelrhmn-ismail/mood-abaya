@@ -13,6 +13,7 @@ class SettingsController
     private const HERO_KEYS = [
         'hero_account',
         'hero_cart',
+        'hero_checkout',
         'hero_contact',
         'hero_page',
         'hero_search',
@@ -48,6 +49,7 @@ class SettingsController
             'tinymce_api_key' => 'nullable|string|max:255',
             'hero_account' => 'nullable|string|max:500',
             'hero_cart' => 'nullable|string|max:500',
+            'hero_checkout' => 'nullable|string|max:500',
             'hero_contact' => 'nullable|string|max:500',
             'hero_page' => 'nullable|string|max:500',
             'hero_search' => 'nullable|string|max:500',
@@ -99,6 +101,7 @@ class SettingsController
             'tinymce_api_key',
             'hero_account',
             'hero_cart',
+            'hero_checkout',
             'hero_contact',
             'hero_page',
             'hero_search',

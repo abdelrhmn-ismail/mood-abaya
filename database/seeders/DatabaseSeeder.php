@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             HeroImagesSeeder::class,
             FaqSeeder::class,
             TestimonialSeeder::class,
+            PostSeeder::class,
             AdminUserSeeder::class,
         ]);
     }

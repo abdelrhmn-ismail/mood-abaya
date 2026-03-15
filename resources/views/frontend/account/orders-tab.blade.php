@@ -36,7 +36,7 @@
                         @elseif($selectedOrder->status === 'shipped') bg-indigo-100 text-indigo-800
                         @elseif($selectedOrder->status === 'delivered') bg-emerald-100 text-emerald-800
                         @else bg-slate-100 text-slate-700 @endif">
-                        {{ $selectedOrder->status }}
+                        {{ __($selectedOrder->status) }}
                     </span>
                 </div>
                 {{-- Progress stepper --}}
@@ -125,7 +125,7 @@
                                         {{ __('Reviewed') }}
                                     </p>
                                 @else
-                                    <form action="{{ route('account.order-review.store') }}" method="POST" class="mt-4 border-t border-slate-100 pt-4">
+                                    <form action="{{ route('account.order-review.store') }}" method="POST" class="mt-4 border-t border-slate-100 pt-4" x-data="{ hover: 0, selected: 5 }" @change="if ($event.target.name === 'rating') selected = parseInt($event.target.value)">
                                         @csrf
                                         <input type="hidden" name="order_id" value="{{ $selectedOrder->id }}">
                                         <input type="hidden" name="product_id" value="{{ $item->product_id }}">
@@ -133,7 +133,10 @@
                                         <div class="flex flex-wrap items-center gap-4">
                                             <div class="flex items-center gap-1" role="group" aria-label="{{ __('Rating') }}">
                                                 @for($r = 1; $r <= 5; $r++)
-                                                    <label class="cursor-pointer text-slate-300 hover:text-amber-400 focus-within:text-amber-500">
+                                                    <label class="cursor-pointer focus-within:text-amber-500 transition-colors"
+                                                           @mouseenter="hover = {{ $r }}"
+                                                           @mouseleave="hover = 0"
+                                                           :class="{{ $r }} <= (hover || selected) ? 'text-amber-400' : 'text-slate-300'">
                                                         <input type="radio" name="rating" value="{{ $r }}" class="sr-only" {{ $r == 5 ? 'checked' : '' }}>
                                                         <span class="material-icons text-2xl">star</span>
                                                     </label>
@@ -181,8 +184,14 @@
         {{-- Orders list --}}
         <h2 class="text-lg font-semibold text-slate-900">{{ __('Order History') }}</h2>
         @if($orders->isEmpty())
-            <p class="text-slate-600">{{ __('No orders yet.') }}</p>
-            <a href="{{ route('categories') }}" class="inline-block text-sm font-medium text-slate-700 underline hover:no-underline">{{ __('Continue Shopping') }}</a>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50/50 p-12 text-center">
+                <span class="material-icons text-6xl text-slate-300">receipt_long</span>
+                <p class="mt-4 font-medium text-slate-700">{{ __('No orders yet.') }}</p>
+                <p class="mt-1 text-sm text-slate-500">{{ __('When you place an order, it will appear here.') }}</p>
+                <a href="{{ route('categories') }}" class="mt-6 inline-flex items-center gap-2 rounded-xl bg-brand-teal px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-teal-dark">
+                    {{ __('Browse categories') }}
+                </a>
+            </div>
         @else
             <ul class="space-y-4">
                 @foreach($orders as $order)
@@ -193,7 +202,7 @@
                             @if($order->status === 'pending') bg-amber-100 text-amber-800
                             @elseif($order->status === 'delivered' || $order->status === 'shipped') bg-green-100 text-green-800
                             @else bg-slate-100 text-slate-700 @endif">
-                            {{ $order->status }}
+                            {{ __($order->status) }}
                         </span>
                         <span class="font-semibold text-slate-900">{{ number_format($order->total, 2) }} {{ __('SAR') }}</span>
                         <a href="{{ route('account', ['order' => $order->order_number]) }}#orders" class="text-sm font-medium text-slate-700 underline hover:no-underline">{{ __('View') }}</a>

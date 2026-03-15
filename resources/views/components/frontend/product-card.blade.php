@@ -2,16 +2,9 @@
 
 @php
     $cardImages = $product->getDisplayImages();
-    $firstImage = $cardImages->first();
-    $quickViewImage = $firstImage ? asset('storage/' . $firstImage->image) : '';
 @endphp
 <article class="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-brand-white shadow-sm transition hover:shadow-xl hover:border-brand-teal/20" x-data="{ active: 0 }">
-    <div class="absolute right-2 top-2 z-10 flex gap-1" onclick="event.preventDefault(); event.stopPropagation();">
-        <button type="button" class="rounded-full bg-white/90 p-2 shadow-sm transition hover:bg-white"
-                @click="$dispatch('open-quick-view', { id: {{ $product->id }}, name: {{ json_encode($product->name) }}, price: '{{ number_format($product->price, 2) }}', url: {{ json_encode(route('products.show', $product->slug)) }}, image: {{ json_encode($quickViewImage) }} })"
-                aria-label="{{ __('Quick view') }}">
-            <span class="material-icons text-lg text-slate-700">visibility</span>
-        </button>
+    <div class="absolute right-2 top-2 z-20 flex gap-1 product-card-actions" onclick="event.preventDefault(); event.stopPropagation();">
         @include('frontend.partials.wishlist-button', ['product' => $product])
     </div>
     <a href="{{ route('products.show', $product->slug) }}" class="flex flex-col flex-1 min-h-0">
@@ -57,13 +50,16 @@
         </div>
     </a>
     @if($showAddToCart)
+        @php
+            $inCart = app(\Modules\Cart\Services\CartService::class)->hasInCart($product->id, null);
+        @endphp
         <div class="mt-auto shrink-0 border-t border-slate-100 p-4">
-            <form action="{{ route('cart.store') }}" method="POST">
+            <form action="{{ route('cart.store') }}" method="POST" data-ajax-cart data-in-cart="{{ $inCart ? '1' : '0' }}">
                 @csrf
                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                 <input type="hidden" name="quantity" value="1">
-                <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-teal py-3 text-sm font-semibold text-white transition hover:bg-brand-teal-dark" data-ripple-light="true">
-                    {{ __('Add to Cart') }}
+                <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-teal py-3 text-sm font-semibold text-white transition hover:bg-brand-teal-dark disabled:opacity-70 disabled:cursor-not-allowed" data-ripple-light="true" data-added-label="{{ __('In cart') }}" @if($inCart) disabled @endif>
+                    <span class="cart-btn-text">{{ $inCart ? __('In cart') : __('Add to Cart') }}</span>
                 </button>
             </form>
         </div>

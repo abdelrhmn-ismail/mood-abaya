@@ -43,6 +43,7 @@ class SettingsService
             // Frontend hero/header images
             'hero_account' => Setting::get('hero_account', ''),
             'hero_cart' => Setting::get('hero_cart', ''),
+            'hero_checkout' => Setting::get('hero_checkout', ''),
             'hero_contact' => Setting::get('hero_contact', ''),
             'hero_page' => Setting::get('hero_page', ''),
             'hero_search' => Setting::get('hero_search', ''),
@@ -114,7 +115,7 @@ class SettingsService
             Setting::set('tinymce_api_key', trim((string) ($data['tinymce_api_key'] ?? '')));
         }
         // Frontend hero/header images (simple URL or path strings)
-        foreach (['hero_account', 'hero_cart', 'hero_contact', 'hero_page', 'hero_search', 'hero_categories', 'hero_products', 'hero_home_1', 'hero_home_2', 'hero_home_3'] as $key) {
+        foreach (['hero_account', 'hero_cart', 'hero_checkout', 'hero_contact', 'hero_page', 'hero_search', 'hero_categories', 'hero_products', 'hero_home_1', 'hero_home_2', 'hero_home_3'] as $key) {
             if (array_key_exists($key, $data)) {
                 Setting::set($key, trim((string) ($data[$key] ?? '')));
             }

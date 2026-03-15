@@ -1,0 +1,26 @@
+{
+  "source": "https://salla.sa/moodabaya",
+  "store_name": "Mood.Design",
+  "fetched_at_note": "Product list is loaded by JavaScript on the store; only single product page could be fetched. Add more products to the 'products' array as you export or scrape them.",
+  "products": [
+    {
+      "source_url": "https://salla.sa/moodabaya/yKxaaNa",
+      "name_ar": "عباية كريب بقصّة واسعة مع كسرات خلفية ودانتيل",
+      "name_en": "Crepe abaya with wide cut, back pleats and lace",
+      "slug": "crepe-abaya-wide-cut-back-pleats-lace",
+      "description_ar": "تصميم أنيق مصنوع من قماش الكريب عالي الجودة بقصّة واسعة مريحة تمنح انسيابية جميلة أثناء الحركة.\n\nتضفي الكسرات الخلفية الناعمة بعدًا أنثويًا وحيوية راقية، بينما تضيف تفاصيل الدانتيل لمسة فاخرة بأسلوب هادئ ومتزن.\n\nيجمع التصميم بين الراحة والأناقة، ليكون خيارًا عمليًا للإطلالات اليومية مع الحفاظ على طابع راقٍ.",
+      "description_en": "Elegant design made from high-quality crepe fabric with a wide, comfortable cut that gives a beautiful flow when moving.\n\nThe soft back pleats add a feminine, refined touch, while the lace details add a luxurious finish in a subtle, balanced style.\n\nThis design combines comfort and elegance, making it a practical choice for everyday wear while keeping a refined look.",
+      "price": 400,
+      "compare_at_price": null,
+      "stock_on_salla": "نفدت الكمية",
+      "stock": 0,
+      "sku": "ABY-CREPE-01",
+      "category_slug": "abayas",
+      "short_description": "Crepe abaya, wide cut, back pleats and lace. Comfort and elegance.",
+      "featured": true,
+      "image_urls": [],
+      "moodabaya_images": [10],
+      "notes": "Add product image URLs from Salla (store admin or DevTools) to image_urls. Seeder uses placeholder images if empty. moodabaya_images: use image 10 from storage/app/public/products/moodabaya/ when present."
+    }
+  ]
+}

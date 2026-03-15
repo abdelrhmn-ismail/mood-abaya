@@ -152,7 +152,7 @@
             <div>
                 <h3 class="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">{{ __('Page headers') }}</h3>
                 <div class="grid gap-6 sm:grid-cols-1 lg:grid-cols-3">
-                    @foreach(['hero_account' => __('Account header image'), 'hero_cart' => __('Cart header image'), 'hero_contact' => __('Contact header image'), 'hero_page' => __('Static pages header image'), 'hero_search' => __('Search header image'), 'hero_categories' => __('Categories header image'), 'hero_products' => __('Products header image')] as $key => $label)
+                    @foreach(['hero_account' => __('Account header image'), 'hero_cart' => __('Cart header image'), 'hero_checkout' => __('Checkout header image'), 'hero_contact' => __('Contact header image'), 'hero_page' => __('Static pages header image'), 'hero_search' => __('Search header image'), 'hero_categories' => __('Categories header image'), 'hero_products' => __('Products header image')] as $key => $label)
                         @php $val = $settings[$key] ?? ''; $imgUrl = $heroDisplayUrl($val); @endphp
                         <div class="rounded-xl border border-gray-200 bg-gray-50/50 p-4">
                             <label class="block text-sm font-medium text-gray-700">{{ $label }}</label>

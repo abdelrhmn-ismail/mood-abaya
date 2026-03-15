@@ -13,7 +13,10 @@ class SetLocaleFromSetting
     {
         try {
             if (\Illuminate\Support\Facades\Schema::hasTable('settings')) {
-                $locale = $request->session()->get('locale') ?? Setting::locale();
+                // User's long-lived cookie (from locale switch) > session > admin default (Setting::locale())
+                $locale = $request->cookie('locale')
+                    ?? $request->session()->get('locale')
+                    ?? Setting::locale();
                 if (in_array($locale, ['en', 'ar'], true)) {
                     app()->setLocale($locale);
                 }

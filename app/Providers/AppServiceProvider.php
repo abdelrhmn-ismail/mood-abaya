@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\Wishlist;
+use App\Services\WishlistService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -27,9 +27,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         View::composer(['frontend.layouts.app', 'frontend.partials.navbar'], function ($view) {
-            $view->with('wishlistCount', auth()->check()
-                ? Wishlist::where('user_id', auth()->id())->count()
-                : 0);
+            $view->with('wishlistCount', app(WishlistService::class)->count());
         });
     }
 }

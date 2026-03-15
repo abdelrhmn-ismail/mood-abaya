@@ -55,6 +55,9 @@
                 <a href="{{ route('admin.contacts.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.contacts.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">mail</span> {{ __('Contact messages') }}
                 </a>
+                <a href="{{ route('admin.newsletter.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.newsletter.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
+                    <span class="material-icons text-lg">subscriptions</span> {{ __('Newsletter subscribers') }}
+                </a>
                 <a href="{{ route('admin.faqs.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.faqs.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">help_outline</span> {{ __('FAQ') }}
                 </a>

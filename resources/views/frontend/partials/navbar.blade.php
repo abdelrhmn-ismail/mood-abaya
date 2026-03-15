@@ -45,19 +45,13 @@
                     <a href="{{ route('locale.switch', 'ar') }}" class="block px-4 py-2 text-sm text-brand-black/90 hover:bg-brand-gold/10 {{ app()->getLocale() === 'ar' ? 'bg-brand-gold/20 font-medium' : '' }}">{{ __('Arabic') }}</a>
                 </div>
             </div>
-            @auth
-            <a href="{{ route('account') }}#wishlist" class="flex items-center gap-2 rounded-xl bg-brand-gold/15 px-4 py-2.5 text-sm font-medium text-brand-teal transition hover:bg-brand-gold/25" data-ripple-light="true" aria-label="{{ __('Wishlist') }}">
+            <a href="{{ route('account') }}#wishlist" id="nav-wishlist-link" class="flex items-center gap-2 rounded-xl bg-brand-gold/15 px-4 py-2.5 text-sm font-medium text-brand-teal transition hover:bg-brand-gold/25" data-ripple-light="true" aria-label="{{ __('Wishlist') }}">
                 <span class="material-icons text-xl">favorite</span>
-                @if(isset($wishlistCount) && $wishlistCount > 0)
-                    <span class="rounded-full bg-brand-teal px-2 py-0.5 text-xs text-white">{{ $wishlistCount }}</span>
-                @endif
+                <span id="nav-wishlist-count" class="rounded-full bg-brand-teal px-2 py-0.5 text-xs text-white" style="{{ (isset($wishlistCount) && $wishlistCount > 0) ? '' : 'display:none' }}">{{ $wishlistCount ?? 0 }}</span>
             </a>
-            @endauth
-            <a href="{{ route('account') }}#cart" class="flex items-center gap-2 rounded-xl bg-brand-gold/15 px-4 py-2.5 text-sm font-medium text-brand-teal transition hover:bg-brand-gold/25" data-ripple-light="true" aria-label="{{ site_label('nav_cart') }}">
+            <a href="{{ route('account') }}#cart" id="nav-cart-link" class="flex items-center gap-2 rounded-xl bg-brand-gold/15 px-4 py-2.5 text-sm font-medium text-brand-teal transition hover:bg-brand-gold/25" data-ripple-light="true" aria-label="{{ site_label('nav_cart') }}">
                 <span class="material-icons text-xl">shopping_cart</span>
-                @if(isset($cartCount) && $cartCount > 0)
-                    <span class="rounded-full bg-brand-teal px-2 py-0.5 text-xs text-white">{{ $cartCount }}</span>
-                @endif
+                <span id="nav-cart-count" class="rounded-full bg-brand-teal px-2 py-0.5 text-xs text-white" style="{{ (isset($cartCount) && $cartCount > 0) ? '' : 'display:none' }}">{{ $cartCount ?? 0 }}</span>
             </a>
             @auth
                 {{-- Account dropdown with username --}}
@@ -149,21 +143,15 @@
                 <a href="{{ route('locale.switch', 'ar') }}" class="block rounded-lg px-3 py-2 text-sm {{ app()->getLocale() === 'ar' ? 'bg-brand-gold/20 font-medium text-brand-teal' : 'text-brand-black/80 hover:bg-brand-gold/10' }}">{{ __('Arabic') }}</a>
             </div>
         </div>
-        @auth
-        <a href="{{ route('account') }}#wishlist" class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-brand-teal hover:bg-brand-gold/10">
+        <a href="{{ route('account') }}#wishlist" id="nav-wishlist-link-mobile" class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-brand-teal hover:bg-brand-gold/10">
             <span class="material-icons text-lg">favorite</span>
             {{ __('Wishlist') }}
-            @if(isset($wishlistCount) && $wishlistCount > 0)
-                <span class="rounded-full bg-brand-teal px-2 py-0.5 text-xs text-white">{{ $wishlistCount }}</span>
-            @endif
+            <span id="nav-wishlist-count-mobile" class="rounded-full bg-brand-teal px-2 py-0.5 text-xs text-white" style="{{ (isset($wishlistCount) && $wishlistCount > 0) ? '' : 'display:none' }}">{{ $wishlistCount ?? 0 }}</span>
         </a>
-        @endauth
-        <a href="{{ route('account') }}#cart" class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-brand-teal hover:bg-brand-gold/10">
+        <a href="{{ route('account') }}#cart" id="nav-cart-link-mobile" class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-brand-teal hover:bg-brand-gold/10">
             <span class="material-icons text-lg">shopping_cart</span>
             {{ site_label('nav_cart') }}
-            @if(isset($cartCount) && $cartCount > 0)
-                <span class="rounded-full bg-brand-teal px-2 py-0.5 text-xs text-white">{{ $cartCount }}</span>
-            @endif
+            <span id="nav-cart-count-mobile" class="rounded-full bg-brand-teal px-2 py-0.5 text-xs text-white" style="{{ (isset($cartCount) && $cartCount > 0) ? '' : 'display:none' }}">{{ $cartCount ?? 0 }}</span>
         </a>
         @auth
             {{-- Account dropdown (mobile) with username --}}

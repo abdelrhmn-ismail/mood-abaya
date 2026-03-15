@@ -130,14 +130,14 @@
                                 <span class="material-icons text-slate-400">inventory_2</span>
                                 <span class="text-sm text-slate-500" id="variant-stock">{{ __('Select a variant') }}</span>
                             </div>
-                            <form action="{{ route('cart.store') }}" method="POST" class="inline">
+                            <form action="{{ route('cart.store') }}" method="POST" class="inline" data-ajax-cart>
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 <input type="hidden" name="product_variant_id" :value="variantId">
                                 <input type="hidden" name="quantity" value="1">
-                                <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-brand-teal px-8 py-4 font-semibold text-white shadow-lg transition hover:bg-brand-teal-dark disabled:opacity-50 disabled:pointer-events-none" :disabled="!variantId || (variant && variant.stock < 1)">
+                                <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-brand-teal px-8 py-4 font-semibold text-white shadow-lg transition hover:bg-brand-teal-dark disabled:opacity-50 disabled:pointer-events-none" :disabled="!variantId || (variant && variant.stock < 1)" data-added-label="{{ __('In cart') }}">
                                     <span class="material-icons">shopping_cart</span>
-                                    {{ __('Add to Cart') }}
+                                    <span class="cart-btn-text">{{ __('Add to Cart') }}</span>
                                 </button>
                             </form>
                         </div>
@@ -145,14 +145,17 @@
 
                         {{-- Actions (no variants) --}}
                         @if(!$hasVariants)
+                        @php
+                            $inCartNoVariant = app(\Modules\Cart\Services\CartService::class)->hasInCart($product->id, null);
+                        @endphp
                         <div class="mt-8 flex flex-wrap items-center gap-3">
-                            <form action="{{ route('cart.store') }}" method="POST" class="inline">
+                            <form action="{{ route('cart.store') }}" method="POST" class="inline" data-ajax-cart data-in-cart="{{ $inCartNoVariant ? '1' : '0' }}">
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 <input type="hidden" name="quantity" value="1">
-                                <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-brand-teal px-8 py-4 font-semibold text-white shadow-lg transition hover:bg-brand-teal-dark disabled:opacity-50 disabled:pointer-events-none" @if($product->stock < 1) disabled @endif>
+                                <button type="submit" class="inline-flex items-center gap-2 rounded-xl bg-brand-teal px-8 py-4 font-semibold text-white shadow-lg transition hover:bg-brand-teal-dark disabled:opacity-50 disabled:pointer-events-none" @if($product->stock < 1 || $inCartNoVariant) disabled @endif data-added-label="{{ __('In cart') }}">
                                     <span class="material-icons">shopping_cart</span>
-                                    {{ __('Add to Cart') }}
+                                    <span class="cart-btn-text">{{ $inCartNoVariant ? __('In cart') : __('Add to Cart') }}</span>
                                 </button>
                             </form>
                             <div class="inline-flex">

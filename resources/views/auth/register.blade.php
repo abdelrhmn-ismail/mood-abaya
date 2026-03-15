@@ -50,10 +50,4 @@
             </button>
         </div>
     </form>
-
-    <div class="mt-6 text-center text-sm text-slate-600">
-        <a href="{{ route('login') }}" class="font-medium text-slate-600 hover:text-slate-900 transition">
-            {{ __('Log in') }}
-        </a>
-    </div>
 </x-guest-layout>

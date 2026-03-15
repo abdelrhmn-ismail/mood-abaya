@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\WishlistService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,7 +30,7 @@ class RegisteredUserController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(Request $request, CartService $cartService): RedirectResponse
+    public function store(Request $request, CartService $cartService, WishlistService $wishlistService): RedirectResponse
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -47,8 +48,8 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        // Merge any guest cart items into the new user's cart
         $cartService->mergeGuestCartToUser((int) $user->id);
+        $wishlistService->mergeGuestWishlistToUser((int) $user->id);
 
         return redirect(route('account', absolute: false));
     }

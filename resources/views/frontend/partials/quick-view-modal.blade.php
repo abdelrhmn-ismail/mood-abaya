@@ -28,13 +28,13 @@
                             <a :href="product.url" class="inline-flex items-center gap-1.5 rounded-xl border-2 border-brand-teal px-4 py-2.5 text-sm font-semibold text-brand-teal hover:bg-brand-teal hover:text-white">
                                 {{ __('View product') }}
                             </a>
-                            <form :action="'{{ route('cart.store') }}'" method="POST" class="inline">
+                            <form :action="'{{ route('cart.store') }}'" method="POST" class="inline" data-ajax-cart>
                                 @csrf
                                 <input type="hidden" name="product_id" :value="product.id">
                                 <input type="hidden" name="quantity" value="1">
-                                <button type="submit" class="inline-flex items-center gap-1.5 rounded-xl bg-brand-teal px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-teal-dark">
+                                <button type="submit" class="inline-flex items-center gap-1.5 rounded-xl bg-brand-teal px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-teal-dark" data-added-label="{{ __('In cart') }}">
                                     <span class="material-icons text-lg">shopping_cart</span>
-                                    {{ __('Add to Cart') }}
+                                    <span class="cart-btn-text">{{ __('Add to Cart') }}</span>
                                 </button>
                             </form>
                         </div>

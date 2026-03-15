@@ -30,6 +30,16 @@ document.addEventListener('DOMContentLoaded', function() {
             directionality: document.documentElement.dir || 'ltr',
         });
     }
+    document.querySelectorAll('.locale-tab').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var locale = this.getAttribute('data-locale');
+            document.querySelectorAll('.locale-tab').forEach(function(b) { b.classList.remove('bg-gray-200', 'text-gray-900'); b.classList.add('text-gray-600'); });
+            this.classList.add('bg-gray-200', 'text-gray-900'); this.classList.remove('text-gray-600');
+            document.querySelectorAll('.locale-panel').forEach(function(p) {
+                p.classList.toggle('hidden', p.getAttribute('data-locale') !== locale);
+            });
+        });
+    });
 });
 </script>
 @endpush
