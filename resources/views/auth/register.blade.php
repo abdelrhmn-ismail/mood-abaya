@@ -42,12 +42,18 @@
         </div>
 
         <div class="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
-            <a href="{{ route('login') }}" class="text-sm font-medium text-slate-600 hover:text-slate-900">
+            <a href="{{ route('login') }}" class="text-sm font-medium text-slate-600 hover:text-slate-900 transition">
                 {{ __('Already registered?') }}
             </a>
-            <button type="submit" class="rounded-xl bg-slate-900 px-6 py-3 font-semibold text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2">
+            <button type="submit" class="w-full rounded-xl bg-brand-teal px-6 py-3 font-semibold text-white transition hover:bg-brand-teal-dark focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 sm:w-auto">
                 {{ __('Register') }}
             </button>
         </div>
     </form>
+
+    <div class="mt-6 text-center text-sm text-slate-600">
+        <a href="{{ route('login') }}" class="font-medium text-slate-600 hover:text-slate-900 transition">
+            {{ __('Log in') }}
+        </a>
+    </div>
 </x-guest-layout>

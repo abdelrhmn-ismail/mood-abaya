@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BillingAddress;
 use App\Models\ProductReview;
+use App\Models\Wishlist;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Cart\Services\CartService;
 use Modules\Order\Services\OrderService;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AccountController extends Controller
 {
-    public function index(Request $request, OrderService $orderService): View|RedirectResponse
+    public function index(Request $request, OrderService $orderService, CartService $cartService): View|RedirectResponse
     {
         $user = $request->user();
         if ($user && $user->is_admin) {
@@ -32,11 +35,25 @@ class AccountController extends Controller
             }
         }
 
+        $wishlistItems = Wishlist::where('user_id', $user->id)
+            ->with('product.category')
+            ->latest()
+            ->get();
+
+        $cartItems = $cartService->getCart();
+        $cartTotal = $cartService->getTotal();
+
+        $billingAddresses = BillingAddress::where('user_id', $user->id)->orderByDesc('is_default')->orderBy('label')->get();
+
         return view('frontend.account', [
             'user' => $user,
             'orders' => $orders,
             'selectedOrder' => $selectedOrder,
             'reviewedProductIds' => $reviewedProductIds,
+            'wishlistItems' => $wishlistItems,
+            'cartItems' => $cartItems,
+            'cartTotal' => $cartTotal,
+            'billingAddresses' => $billingAddresses,
         ]);
     }
 

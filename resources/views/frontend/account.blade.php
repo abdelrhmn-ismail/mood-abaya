@@ -12,11 +12,18 @@
                 tab: 'dashboard',
                 initFromHash() {
                     const h = window.location.hash.replace('#','');
-                    if (h === 'account-details' || h === 'orders' || h === 'dashboard') this.tab = h;
+                    if (['account-details', 'orders', 'dashboard', 'wishlist', 'cart', 'addresses'].includes(h)) this.tab = h;
                     const orderParam = new URLSearchParams(window.location.search).get('order');
                     if (orderParam) this.tab = 'orders';
+                },
+                applyHashFromUrl() {
+                    const h = window.location.hash.replace('#','');
+                    if (['account-details', 'orders', 'dashboard', 'wishlist', 'cart', 'addresses'].includes(h)) this.tab = h;
                 }
-            }" x-init="initFromHash()" class="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white shadow-sm lg:flex-row">
+            }" x-init="
+                initFromHash();
+                $watch('tab', value => { const h = value || 'dashboard'; if (window.location.hash.replace('#','') !== h) history.replaceState(null, '', '#' + h); });
+            " @hashchange.window="applyHashFromUrl()" class="flex flex-col gap-6 rounded-2xl border border-slate-200 bg-white shadow-sm lg:flex-row">
                 {{-- Sidebar (left) --}}
                 <aside class="w-full shrink-0 border-b border-slate-200 bg-slate-50/80 lg:w-56 lg:border-b-0 lg:border-r lg:rounded-l-2xl">
                     <nav class="flex flex-row gap-1 p-3 lg:flex-col lg:p-4" role="tablist">
@@ -37,6 +44,33 @@
                                 class="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition">
                             <span class="material-icons text-base">receipt_long</span>
                             <span>{{ __('Orders') }}</span>
+                        </button>
+                        <button type="button"
+                                role="tab"
+                                :aria-selected="tab === 'cart'"
+                                @click="tab = 'cart'"
+                                :class="tab === 'cart' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:bg-white/60 hover:text-slate-900'"
+                                class="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition">
+                            <span class="material-icons text-base">shopping_cart</span>
+                            <span>{{ __('Cart') }}</span>
+                        </button>
+                        <button type="button"
+                                role="tab"
+                                :aria-selected="tab === 'wishlist'"
+                                @click="tab = 'wishlist'"
+                                :class="tab === 'wishlist' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:bg-white/60 hover:text-slate-900'"
+                                class="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition">
+                            <span class="material-icons text-base">favorite</span>
+                            <span>{{ __('Wishlist') }}</span>
+                        </button>
+                        <button type="button"
+                                role="tab"
+                                :aria-selected="tab === 'addresses'"
+                                @click="tab = 'addresses'"
+                                :class="tab === 'addresses' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:bg-white/60 hover:text-slate-900'"
+                                class="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition">
+                            <span class="material-icons text-base">location_on</span>
+                            <span>{{ __('Addresses') }}</span>
                         </button>
                         <button type="button"
                                 role="tab"
@@ -66,6 +100,15 @@
                     </div>
                     <div x-show="tab === 'orders'" x-cloak role="tabpanel" id="tab-orders">
                         @include('frontend.account.orders-tab')
+                    </div>
+                    <div x-show="tab === 'cart'" x-cloak role="tabpanel" id="tab-cart">
+                        @include('frontend.account.cart-tab')
+                    </div>
+                    <div x-show="tab === 'wishlist'" x-cloak role="tabpanel" id="tab-wishlist">
+                        @include('frontend.account.wishlist-tab')
+                    </div>
+                    <div x-show="tab === 'addresses'" x-cloak role="tabpanel" id="tab-addresses">
+                        @include('frontend.account.addresses-tab')
                     </div>
                     <div x-show="tab === 'account-details'" x-cloak role="tabpanel" id="tab-account-details">
                         @include('frontend.account.account-details-tab')

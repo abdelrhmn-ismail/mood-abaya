@@ -3,8 +3,10 @@
 namespace Modules\Order\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\BillingAddress;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 use Modules\Order\Services\CheckoutService;
 
@@ -30,29 +32,83 @@ class CheckoutController extends Controller
             return redirect()->route('cart')->with('error', __('Your cart is empty.'));
         }
 
-        $validated = $request->validate([
-            'full_name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:50'],
-            'address' => ['required', 'string', 'max:500'],
-            'city' => ['required', 'string', 'max:100'],
+        $codes = array_column(config('phone_codes', []), 'code');
+
+        $rules = [
             'notes' => ['nullable', 'string', 'max:1000'],
             'payment_method' => ['required', 'in:cash,bank'],
             'proof' => ['required_if:payment_method,bank', 'nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
-        ]);
-
-        $address = [
-            'full_name' => $validated['full_name'],
-            'phone' => $validated['phone'],
-            'address' => $validated['address'],
-            'city' => $validated['city'],
-            'notes' => $validated['notes'] ?? null,
+            'billing_use' => ['required', 'in:saved,new'],
+            'billing_address_id' => [
+                'required_if:billing_use,saved',
+                'nullable',
+                'integer',
+                Rule::exists('billing_addresses', 'id')->where('user_id', $request->user()->id),
+            ],
+            'billing_full_name' => ['required_if:billing_use,new', 'nullable', 'string', 'max:255'],
+            'billing_phone_country_code' => ['required_if:billing_use,new', 'nullable', 'string', 'in:' . implode(',', $codes)],
+            'billing_phone_number' => ['required_if:billing_use,new', 'nullable', 'string', 'max:20'],
+            'billing_address_line_1' => ['required_if:billing_use,new', 'nullable', 'string', 'max:255'],
+            'billing_address_line_2' => ['nullable', 'string', 'max:255'],
+            'billing_city' => ['required_if:billing_use,new', 'nullable', 'string', 'max:100'],
+            'billing_state' => ['nullable', 'string', 'max:100'],
+            'billing_postal_code' => ['nullable', 'string', 'max:20'],
+            'billing_country' => ['nullable', 'string', 'max:100'],
+            'save_billing_address' => ['nullable', 'boolean'],
         ];
+
+        $validated = $request->validate($rules);
+
+        $notes = $validated['notes'] ?? null;
+
+        if ($validated['billing_use'] === 'saved' && ! empty($validated['billing_address_id'])) {
+            $saved = BillingAddress::where('user_id', $request->user()->id)->findOrFail($validated['billing_address_id']);
+            $address = [
+                'full_name' => $saved->full_name,
+                'phone' => $saved->phone,
+                'address_line_1' => $saved->address_line_1,
+                'address_line_2' => $saved->address_line_2,
+                'city' => $saved->city,
+                'state' => $saved->state,
+                'postal_code' => $saved->postal_code,
+                'country' => $saved->country,
+                'notes' => $notes,
+            ];
+        } else {
+            $address = [
+                'full_name' => $validated['billing_full_name'],
+                'phone' => $request->phoneWithCode('billing_phone'),
+                'address_line_1' => $validated['billing_address_line_1'],
+                'address_line_2' => $validated['billing_address_line_2'] ?? null,
+                'city' => $validated['billing_city'],
+                'state' => $validated['billing_state'] ?? null,
+                'postal_code' => $validated['billing_postal_code'] ?? null,
+                'country' => $validated['billing_country'] ?? 'Saudi Arabia',
+                'notes' => $notes,
+            ];
+            if ($request->boolean('save_billing_address')) {
+                BillingAddress::create([
+                    'user_id' => $request->user()->id,
+                    'label' => null,
+                    'full_name' => $address['full_name'],
+                    'phone' => $address['phone'],
+                    'address_line_1' => $address['address_line_1'],
+                    'address_line_2' => $address['address_line_2'],
+                    'city' => $address['city'],
+                    'state' => $address['state'],
+                    'postal_code' => $address['postal_code'],
+                    'country' => $address['country'],
+                    'is_default' => ! BillingAddress::where('user_id', $request->user()->id)->exists(),
+                ]);
+            }
+        }
 
         try {
             $order = $this->checkoutService->placeOrder(
                 $address,
                 $validated['payment_method'],
-                $request->file('proof')
+                $request->file('proof'),
+                $address
             );
             return redirect()
                 ->route('order.confirmed', $order->order_number)

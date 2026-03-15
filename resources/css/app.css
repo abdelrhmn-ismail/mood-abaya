@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Brand palette: Black #000000, Teal #144034, White #FFFFFF, Gold #D3AE72 */
+:root {
+    --brand-black: #000000;
+    --brand-teal: #144034;
+    --brand-teal-dark: #0f2d26;
+    --brand-white: #FFFFFF;
+    --brand-gold: #D3AE72;
+    --brand-gold-dark: #b8945c;
+}
+
 [x-cloak] {
     display: none !important;
 }

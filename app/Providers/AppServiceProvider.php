@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Wishlist;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +22,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Request::macro('phoneWithCode', function (string $prefix = 'phone'): string {
+            return trim($this->input($prefix . '_country_code', '') . $this->input($prefix . '_number', ''));
+        });
+
+        View::composer(['frontend.layouts.app', 'frontend.partials.navbar'], function ($view) {
+            $view->with('wishlistCount', auth()->check()
+                ? Wishlist::where('user_id', auth()->id())->count()
+                : 0);
+        });
     }
 }

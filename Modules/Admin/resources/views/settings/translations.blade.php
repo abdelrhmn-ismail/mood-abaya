@@ -17,12 +17,12 @@
                     <div>
                         <span class="mb-1 block text-xs font-medium text-gray-500">{{ __('English') }}</span>
                         <input type="text" name="translations[{{ $key }}][en]" value="{{ old("translations.{$key}.en", $vals['en']) }}"
-                               class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20">
+                               class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm shadow-sm focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20">
                     </div>
                     <div>
                         <span class="mb-1 block text-xs font-medium text-gray-500">{{ __('Arabic') }}</span>
                         <input type="text" name="translations[{{ $key }}][ar]" value="{{ old("translations.{$key}.ar", $vals['ar']) }}"
-                               class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20" dir="rtl">
+                               class="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm shadow-sm focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20" dir="rtl">
                     </div>
                 </div>
             </div>

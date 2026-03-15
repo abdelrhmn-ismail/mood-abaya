@@ -7,7 +7,7 @@
 @component('admin::components.card', ['title' => null])
     <p class="mb-4 text-sm text-gray-600">{{ __('Edit static pages: Terms, Privacy, Shipping, Return & Refund.') }}</p>
     @component('admin::components.filter-bar')
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search page name or slug') }}" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search page name or slug') }}" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
     @endcomponent
     <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
         <table class="min-w-full divide-y divide-gray-200">
@@ -25,7 +25,7 @@
                             <span class="ml-2 font-mono text-xs text-gray-500">/page/{{ $page->page_slug }}</span>
                         </td>
                         <td class="px-4 py-3 text-right">
-                            <a href="{{ route('admin.page-contents.edit', $page) }}" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-indigo-600 transition hover:bg-indigo-50">{{ __('Edit') }}</a>
+                            <a href="{{ route('admin.page-contents.edit', $page) }}" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-brand-teal transition hover:bg-brand-gold/10">{{ __('Edit') }}</a>
                             <a href="{{ route('page.show', $page->page_slug) }}" target="_blank" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-100">{{ __('View') }}</a>
                         </td>
                     </tr>

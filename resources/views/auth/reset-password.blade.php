@@ -33,7 +33,7 @@
             @enderror
         </div>
 
-        <button type="submit" class="w-full rounded-xl bg-slate-900 py-3 font-semibold text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 sm:w-auto sm:px-8">
+        <button type="submit" class="w-full rounded-xl bg-brand-teal py-3 font-semibold text-white hover:bg-brand-teal-dark focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 sm:w-auto sm:px-8">
             {{ __('Reset Password') }}
         </button>
     </form>

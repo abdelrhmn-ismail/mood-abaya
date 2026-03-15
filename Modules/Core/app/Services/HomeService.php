@@ -26,4 +26,14 @@ class HomeService
             ->limit($limit)
             ->get();
     }
+
+    public function getFeaturedProducts(int $limit = 4): Collection
+    {
+        return Product::with('category')
+            ->active()
+            ->where('featured', true)
+            ->latest()
+            ->limit($limit)
+            ->get();
+    }
 }

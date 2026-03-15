@@ -24,7 +24,7 @@
                 @endif
 
                 <div class="mt-8 flex flex-wrap justify-center gap-4">
-                    <a href="{{ route('account') }}" class="rounded-xl bg-slate-900 px-6 py-3 font-semibold text-white hover:bg-slate-800">{{ __('View in Account') }}</a>
+                    <a href="{{ route('account') }}" class="rounded-xl bg-brand-teal px-6 py-3 font-semibold text-white hover:bg-brand-teal-dark">{{ __('View in Account') }}</a>
                     <a href="{{ route('categories') }}" class="rounded-xl border border-slate-300 px-6 py-3 font-medium text-slate-700 hover:bg-slate-50">{{ __('Continue Shopping') }}</a>
                 </div>
             </div>

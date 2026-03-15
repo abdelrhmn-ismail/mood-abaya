@@ -9,7 +9,7 @@
     $options = $options ?? []; // for select: [['value' => 'x', 'label' => 'y'], ...]
     $attributes = $attributes ?? []; // placeholder, step, min, max, rows, accept, etc.
     $errorKey = $errorKey ?? $name;
-    $inputClass = 'mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm ';
+    $inputClass = 'mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-brand-teal focus:ring-brand-teal text-sm ';
 @endphp
 <div>
     @if($label)
@@ -35,12 +35,12 @@
         >{{ old($oldKey, $value) }}</textarea>
     @elseif($type === 'checkbox')
         <label class="mt-2 inline-flex items-center">
-            <input type="checkbox" name="{{ $name }}" value="1" {{ old($oldKey, $value) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+            <input type="checkbox" name="{{ $name }}" value="1" {{ old($oldKey, $value) ? 'checked' : '' }} class="rounded border-gray-300 text-brand-teal focus:ring-brand-teal">
             <span class="ml-2 text-sm text-gray-700">{{ $attributes['help'] ?? '' }}</span>
         </label>
     @elseif($type === 'file')
         @if(!empty($attributes['current']))
-            <p class="mb-1 text-sm text-gray-500">{{ __('Current') }}: <a href="{{ $attributes['current_url'] ?? '#' }}" target="_blank" class="text-indigo-600">{{ $attributes['current'] }}</a></p>
+            <p class="mb-1 text-sm text-gray-500">{{ __('Current') }}: <a href="{{ $attributes['current_url'] ?? '#' }}" target="_blank" class="text-brand-teal">{{ $attributes['current'] }}</a></p>
         @endif
         <input type="file" name="{{ $name }}" id="{{ $id }}" accept="{{ $attributes['accept'] ?? 'image/*' }}" class="{{ $inputClass }} text-sm">
     @else

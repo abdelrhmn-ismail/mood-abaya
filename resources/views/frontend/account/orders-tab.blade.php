@@ -22,7 +22,7 @@
             <div class="border-b border-slate-100 bg-gradient-to-br from-slate-50 to-white px-6 py-5">
                 <div class="flex flex-wrap items-center justify-between gap-3">
                     <div class="flex items-center gap-3">
-                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-900 text-white">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-teal text-white">
                             <span class="material-icons text-2xl">receipt_long</span>
                         </div>
                         <div>
@@ -47,7 +47,7 @@
                             <div class="flex flex-col items-center gap-1.5">
                                 <div class="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-300
                                     @if($isDone) border-emerald-500 bg-emerald-500 text-white
-                                    @elseif($isCurrent) border-slate-900 bg-slate-900 text-white ring-4 ring-slate-900/20
+                                    @elseif($isCurrent) border-slate-900 bg-brand-teal text-white ring-4 ring-slate-900/20
                                     @else border-slate-200 bg-white text-slate-400 @endif">
                                     @if($isDone)
                                         <span class="material-icons text-lg">check</span>
@@ -140,7 +140,7 @@
                                                 @endfor
                                             </div>
                                             <input type="text" name="comment" placeholder="{{ __('Your comment (optional)') }}" maxlength="2000" class="min-w-[200px] flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm">
-                                            <button type="submit" class="rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800">{{ __('Submit review') }}</button>
+                                            <button type="submit" class="rounded-xl bg-brand-teal px-4 py-2 text-sm font-medium text-white hover:bg-brand-teal-dark">{{ __('Submit review') }}</button>
                                         </div>
                                         @error('rating')
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -151,7 +151,7 @@
                         </li>
                     @endforeach
                 </ul>
-                <div class="mt-4 flex items-center justify-between rounded-xl bg-slate-900 px-5 py-4 text-white">
+                <div class="mt-4 flex items-center justify-between rounded-xl bg-brand-teal px-5 py-4 text-white">
                     <span class="font-semibold">{{ __('Total') }}</span>
                     <span class="text-xl font-bold">{{ number_format($selectedOrder->total, 2) }} {{ __('SAR') }}</span>
                 </div>

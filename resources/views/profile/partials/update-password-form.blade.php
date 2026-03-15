@@ -34,7 +34,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <button type="submit" class="rounded-xl bg-slate-900 px-5 py-2.5 font-semibold text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2">
+            <button type="submit" class="rounded-xl bg-brand-teal px-5 py-2.5 font-semibold text-white hover:bg-brand-teal-dark focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2">
                 {{ __('Save') }}
             </button>
             @if (session('status') === 'password-updated')

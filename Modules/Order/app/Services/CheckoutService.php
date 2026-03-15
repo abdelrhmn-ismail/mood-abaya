@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Services;
 
+use App\Models\BillingAddress;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\Auth;
@@ -22,13 +23,22 @@ class CheckoutService
     {
         $items = $this->cartService->getCart();
         $total = $this->cartService->getTotal();
+        $billingAddresses = [];
+        if (Auth::id()) {
+            $billingAddresses = BillingAddress::where('user_id', Auth::id())
+                ->orderByDesc('is_default')
+                ->orderBy('label')
+                ->get();
+        }
         return [
             'items' => $items,
             'total' => $total,
+            'billingAddresses' => $billingAddresses,
         ];
     }
 
-    public function placeOrder(array $address, string $paymentMethod, $proofFile = null): Order
+    /** @param array<string, mixed>|null $billingAddress Snapshot to store on order (null = use shipping as billing) */
+    public function placeOrder(array $address, string $paymentMethod, $proofFile = null, ?array $billingAddress = null): Order
     {
         $paymentMethod = $paymentMethod === 'bank' ? 'bank' : 'cash';
         $items = $this->cartService->getCart();
@@ -41,17 +51,22 @@ class CheckoutService
             $proofPath = $this->bankPaymentService->storeProof($proofFile);
         }
 
-        return DB::transaction(function () use ($items, $address, $paymentMethod, $proofPath) {
+        $billingSnapshot = $billingAddress !== null
+            ? json_encode($billingAddress)
+            : null;
+
+        return DB::transaction(function () use ($items, $address, $paymentMethod, $proofPath, $billingSnapshot) {
             $orderNumber = $this->generateOrderNumber();
             $total = 0;
 
             $order = Order::create([
                 'user_id' => Auth::id(),
                 'order_number' => $orderNumber,
-                'status' => $paymentMethod === 'cash' ? 'processing' : 'pending',
+                'status' => 'pending',
                 'payment_method' => $paymentMethod,
                 'payment_status' => $paymentMethod === 'bank' ? 'pending_approval' : 'pending',
                 'shipping_address' => is_array($address) ? json_encode($address) : $address,
+                'billing_address' => $billingSnapshot,
                 'notes' => $address['notes'] ?? null,
                 'total' => 0,
             ]);

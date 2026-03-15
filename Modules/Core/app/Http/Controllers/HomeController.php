@@ -16,7 +16,8 @@ class HomeController extends Controller
     {
         $categories = $this->homeService->getFeaturedCategories();
         $products = $this->homeService->getLatestProducts();
+        $featuredProducts = $this->homeService->getFeaturedProducts();
 
-        return view('frontend.home', compact('categories', 'products'));
+        return view('frontend.home', compact('categories', 'products', 'featuredProducts'));
     }
 }

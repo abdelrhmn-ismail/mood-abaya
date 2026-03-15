@@ -15,22 +15,22 @@
         $hero3 = $heroUrl($heroRaw('hero_home_3', 'https://images.unsplash.com/photo-1583391733982-1cfec2046952?w=1920'));
     @endphp
 
-    {{-- Hero slider (3 images) --}}
-    <section class="relative h-[70vh] min-h-[420px] overflow-hidden bg-slate-900" data-hero-slider>
+    {{-- Hero slider --}}
+    <section class="relative h-[70vh] min-h-[420px] overflow-hidden bg-brand-teal" data-hero-slider>
         <div class="absolute inset-0">
             <div class="absolute inset-0 transition-opacity duration-700 opacity-100" data-hero-slide style="background: url('{{ $hero1 }}') center/cover no-repeat;"></div>
             <div class="absolute inset-0 transition-opacity duration-700 opacity-0 pointer-events-none" data-hero-slide style="background: url('{{ $hero2 }}') center/cover no-repeat;"></div>
             <div class="absolute inset-0 transition-opacity duration-700 opacity-0 pointer-events-none" data-hero-slide style="background: url('{{ $hero3 }}') center/cover no-repeat;"></div>
         </div>
-        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-brand-black/70 via-brand-teal/40 to-transparent"></div>
         <div class="absolute inset-0 flex flex-col items-center justify-center px-4 text-center text-white">
             <h1 class="text-4xl font-bold tracking-tight drop-shadow-lg md:text-5xl lg:text-6xl">{{ __('Welcome to :name', ['name' => config('app.name')]) }}</h1>
             <p class="mt-4 max-w-xl text-lg text-white/95 md:text-xl">{{ __('Quality products for everyone. Shop with confidence.') }}</p>
             <div class="mt-8 flex flex-wrap justify-center gap-4">
-                <a href="{{ route('categories') }}" class="rounded-xl bg-white px-8 py-3.5 text-sm font-semibold text-slate-900 shadow-lg transition hover:bg-white/95 hover:shadow-xl">
+                <a href="{{ route('categories') }}" class="rounded-xl bg-brand-white px-8 py-3.5 text-sm font-semibold text-brand-teal shadow-lg transition hover:bg-brand-gold hover:text-brand-black">
                     {{ __('Shop Now') }}
                 </a>
-                <a href="{{ route('categories') }}#categories" class="rounded-xl border-2 border-white/90 bg-white/10 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
+                <a href="{{ route('categories') }}#categories" class="rounded-xl border-2 border-white/90 bg-white/10 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur transition hover:bg-brand-gold/30 hover:border-brand-gold">
                     {{ __('View Categories') }}
                 </a>
             </div>
@@ -42,46 +42,105 @@
         </div>
     </section>
 
-    {{-- Categories --}}
-    <section id="categories" class="bg-white py-20 md:py-24">
+    {{-- About Us (homepage teaser) --}}
+    <section id="about" class="border-b border-slate-200 bg-brand-white py-16 md:py-20">
         <div class="container mx-auto px-4">
-            <h2 class="text-center text-3xl font-bold text-slate-900 md:text-4xl">{{ __('Shop by Category') }}</h2>
-            <p class="mx-auto mt-3 max-w-2xl text-center text-slate-600">{{ __('Browse our collections') }}</p>
+            <div class="mx-auto max-w-4xl text-center">
+                <h2 class="text-3xl font-bold text-brand-black md:text-4xl">{{ __('About Us') }}</h2>
+                <p class="mt-4 text-lg leading-relaxed text-brand-black/80">
+                    {{ __('We offer a curated selection of abayas, jilbabs, and hijabs for the modern modest wardrobe. Quality fabrics, timeless designs, and a seamless shopping experience.') }}
+                </p>
+                <a href="{{ route('about') }}" class="mt-6 inline-flex items-center gap-2 rounded-xl bg-brand-teal px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-teal-dark">
+                    {{ __('Learn more about us') }}
+                    <span class="material-icons text-lg">arrow_forward</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    {{-- Trust strip --}}
+    <section class="border-b border-slate-200 bg-brand-white py-4">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap items-center justify-center gap-8 md:gap-12">
+                <div class="flex items-center gap-3 text-brand-black/80">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-gold/20 text-brand-teal"><span class="material-icons text-xl">local_shipping</span></span>
+                    <span class="text-sm font-medium">{{ __('Shipping') }}</span>
+                </div>
+                <div class="flex items-center gap-3 text-brand-black/80">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-gold/20 text-brand-teal"><span class="material-icons text-xl">verified_user</span></span>
+                    <span class="text-sm font-medium">{{ __('Secure payment') }}</span>
+                </div>
+                <div class="flex items-center gap-3 text-brand-black/80">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-gold/20 text-brand-teal"><span class="material-icons text-xl">assignment_return</span></span>
+                    <span class="text-sm font-medium">{{ __('Easy returns') }}</span>
+                </div>
+                <div class="flex items-center gap-3 text-brand-black/80">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-gold/20 text-brand-teal"><span class="material-icons text-xl">support_agent</span></span>
+                    <span class="text-sm font-medium">{{ __('Support') }}</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- Discover our collection (banner) --}}
+    <section class="relative overflow-hidden bg-brand-teal py-16 md:py-20">
+        <div class="absolute inset-0 bg-gradient-to-br from-brand-teal-dark/50 to-brand-teal/80"></div>
+        <div class="container relative mx-auto px-4 text-center text-white">
+            <h2 class="text-3xl font-bold md:text-4xl">{{ __('Discover our collection') }}</h2>
+            <p class="mx-auto mt-3 max-w-2xl text-white/90">
+                {{ __('Shop abayas, jilbabs, and hijabs crafted with care. New styles added regularly.') }}
+            </p>
+            <a href="{{ route('categories') }}" class="mt-8 inline-flex items-center gap-2 rounded-xl bg-brand-gold px-8 py-3.5 font-semibold text-brand-black transition hover:bg-brand-gold-dark">
+                {{ __('Browse all categories') }}
+                <span class="material-icons">storefront</span>
+            </a>
+        </div>
+    </section>
+
+    {{-- Categories --}}
+    <section id="categories" class="bg-slate-50 py-20 md:py-24">
+        <div class="container mx-auto px-4">
+            <h2 class="text-center text-3xl font-bold text-brand-black md:text-4xl">{{ __('Shop by Category') }}</h2>
+            <p class="mx-auto mt-3 max-w-2xl text-center text-brand-black/70">{{ __('Browse our collections') }}</p>
             <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 @forelse($categories as $category)
-                    <a href="{{ route('categories.show', $category->slug) }}" class="group relative overflow-hidden rounded-2xl bg-slate-50 shadow-sm transition hover:shadow-xl">
+                    <a href="{{ route('categories.show', $category->slug) }}" class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-brand-white shadow-sm transition hover:shadow-xl hover:border-brand-teal/30">
                         @if($category->image)
                             <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="h-48 w-full object-cover transition duration-300 group-hover:scale-105">
                         @else
-                            <div class="flex h-48 w-full items-center justify-center bg-gradient-to-br from-slate-200 to-slate-100">
-                                <span class="material-icons text-6xl text-slate-400">category</span>
+                            <div class="flex h-48 w-full items-center justify-center bg-gradient-to-br from-brand-teal/10 to-brand-gold/10">
+                                <span class="material-icons text-6xl text-brand-teal/50">category</span>
                             </div>
                         @endif
-                        <div class="p-5">
-                            <h3 class="font-semibold text-slate-900">{{ $category->name }}</h3>
-                            <p class="mt-1 text-sm text-slate-500">{{ $category->products_count }} {{ __('Products') }}</p>
+                        <div class="border-t border-slate-100 bg-brand-white p-5 transition group-hover:bg-brand-gold/5">
+                            <h3 class="font-semibold text-brand-black">{{ $category->name }}</h3>
+                            <p class="mt-1 text-sm text-brand-black/60">{{ $category->products_count }} {{ __('Products') }}</p>
                         </div>
                     </a>
                 @empty
-                    <p class="col-span-full text-center text-slate-600">{{ __('No categories yet.') }}</p>
+                    <p class="col-span-full text-center text-brand-black/70">{{ __('No categories yet.') }}</p>
                 @endforelse
             </div>
         </div>
     </section>
 
+    @if(isset($featuredProducts) && $featuredProducts->isNotEmpty())
     {{-- Featured products --}}
-    <section id="products" class="bg-slate-50 py-20 md:py-24">
+    <section class="bg-brand-white py-20 md:py-24">
         <div class="container mx-auto px-4">
-            <h2 class="text-center text-3xl font-bold text-slate-900 md:text-4xl">{{ __('Featured Products') }}</h2>
-            <p class="mx-auto mt-3 max-w-2xl text-center text-slate-600">{{ __('Handpicked for you') }}</p>
+            <h2 class="text-center text-3xl font-bold text-brand-black md:text-4xl">{{ __('Featured Products') }}</h2>
+            <p class="mx-auto mt-3 max-w-2xl text-center text-brand-black/70">{{ __('Handpicked for you') }}</p>
             <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                @forelse($products as $product)
-                    <article class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-xl">
+                @foreach($featuredProducts as $product)
+                    <article class="relative overflow-hidden rounded-2xl border border-slate-200 bg-brand-white shadow-sm transition hover:shadow-xl hover:border-brand-teal/20">
+                        <div class="absolute right-2 top-2 z-10" onclick="event.preventDefault(); event.stopPropagation();">
+                            @include('frontend.partials.wishlist-button', ['product' => $product])
+                        </div>
                         <a href="{{ route('products.show', $product->slug) }}" class="block">
                             @if($product->image)
                                 <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="aspect-square w-full object-cover transition duration-300 hover:scale-105" loading="lazy">
                             @else
-                                <div class="aspect-square w-full bg-slate-100 flex items-center justify-center">
+                                <div class="aspect-square w-full flex items-center justify-center bg-slate-100">
                                     <span class="material-icons text-6xl text-slate-300">inventory_2</span>
                                 </div>
                             @endif
@@ -89,9 +148,9 @@
                                 @if($product->hasDiscount())
                                     <span class="inline-block rounded bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800">{{ __('Save') }} {{ $product->discountPercent() }}%</span>
                                 @endif
-                                <h3 class="font-semibold text-slate-900">{{ $product->name }}</h3>
+                                <h3 class="font-semibold text-brand-black">{{ $product->name }}</h3>
                                 <div class="mt-2 flex flex-wrap items-baseline gap-1.5">
-                                    <span class="text-lg font-bold text-slate-800">{{ number_format($product->price, 2) }} {{ __('SAR') }}</span>
+                                    <span class="text-lg font-bold text-brand-teal">{{ number_format($product->price, 2) }} {{ __('SAR') }}</span>
                                     @if($product->hasDiscount())
                                         <span class="text-sm text-slate-500 line-through">{{ number_format($product->compare_at_price, 2) }} {{ __('SAR') }}</span>
                                     @endif
@@ -103,19 +162,73 @@
                                 @csrf
                                 <input type="hidden" name="product_id" value="{{ $product->id }}">
                                 <input type="hidden" name="quantity" value="1">
-                                <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 py-3 text-sm font-semibold text-white transition hover:bg-slate-800" data-ripple-light="true">
+                                <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-teal py-3 text-sm font-semibold text-white transition hover:bg-brand-teal-dark" data-ripple-light="true">
+                                    {{ __('Add to Cart') }}
+                                </button>
+                            </form>
+                        </div>
+                    </article>
+                @endforeach
+            </div>
+            <div class="mt-12 text-center">
+                <a href="{{ route('categories') }}" class="inline-flex items-center gap-2 rounded-xl border-2 border-brand-teal px-6 py-3 text-sm font-semibold text-brand-teal transition hover:bg-brand-teal hover:text-white">
+                    {{ __('View All Products') }}
+                </a>
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- New arrivals / Latest products --}}
+    <section id="products" class="bg-slate-50 py-20 md:py-24">
+        <div class="container mx-auto px-4">
+            <h2 class="text-center text-3xl font-bold text-brand-black md:text-4xl">{{ isset($featuredProducts) && $featuredProducts->isNotEmpty() ? __('New arrivals') : __('Featured Products') }}</h2>
+            <p class="mx-auto mt-3 max-w-2xl text-center text-brand-black/70">{{ isset($featuredProducts) && $featuredProducts->isNotEmpty() ? __('Just landed') : __('Handpicked for you') }}</p>
+            <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                @forelse($products as $product)
+                    <article class="relative overflow-hidden rounded-2xl border border-slate-200 bg-brand-white shadow-sm transition hover:shadow-xl hover:border-brand-teal/20">
+                        <div class="absolute right-2 top-2 z-10" onclick="event.preventDefault(); event.stopPropagation();">
+                            @include('frontend.partials.wishlist-button', ['product' => $product])
+                        </div>
+                        <a href="{{ route('products.show', $product->slug) }}" class="block">
+                            @if($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="aspect-square w-full object-cover transition duration-300 hover:scale-105" loading="lazy">
+                            @else
+                                <div class="aspect-square w-full flex items-center justify-center bg-slate-100">
+                                    <span class="material-icons text-6xl text-slate-300">inventory_2</span>
+                                </div>
+                            @endif
+                            <div class="p-5">
+                                @if($product->hasDiscount())
+                                    <span class="inline-block rounded bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800">{{ __('Save') }} {{ $product->discountPercent() }}%</span>
+                                @endif
+                                <h3 class="font-semibold text-brand-black">{{ $product->name }}</h3>
+                                <div class="mt-2 flex flex-wrap items-baseline gap-1.5">
+                                    <span class="text-lg font-bold text-brand-teal">{{ number_format($product->price, 2) }} {{ __('SAR') }}</span>
+                                    @if($product->hasDiscount())
+                                        <span class="text-sm text-slate-500 line-through">{{ number_format($product->compare_at_price, 2) }} {{ __('SAR') }}</span>
+                                    @endif
+                                </div>
+                            </div>
+                        </a>
+                        <div class="border-t border-slate-100 p-4">
+                            <form action="{{ route('cart.store') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-brand-teal py-3 text-sm font-semibold text-white transition hover:bg-brand-teal-dark" data-ripple-light="true">
                                     {{ __('Add to Cart') }}
                                 </button>
                             </form>
                         </div>
                     </article>
                 @empty
-                    <p class="col-span-full text-center text-slate-600">{{ __('No products yet.') }}</p>
+                    <p class="col-span-full text-center text-brand-black/70">{{ __('No products yet.') }}</p>
                 @endforelse
             </div>
             @if(isset($products) && $products->isNotEmpty())
                 <div class="mt-12 text-center">
-                    <a href="{{ route('categories') }}" class="inline-flex items-center gap-2 rounded-xl border-2 border-slate-900 px-6 py-3 text-sm font-semibold text-slate-900 transition hover:bg-slate-900 hover:text-white">
+                    <a href="{{ route('categories') }}" class="inline-flex items-center gap-2 rounded-xl border-2 border-brand-teal px-6 py-3 text-sm font-semibold text-brand-teal transition hover:bg-brand-teal hover:text-white">
                         {{ __('View All Products') }}
                     </a>
                 </div>
@@ -123,14 +236,85 @@
         </div>
     </section>
 
+    {{-- Stats / social proof --}}
+    <section class="border-y border-slate-200 bg-slate-50 py-12 md:py-14">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-12">
+                <div class="text-center">
+                    <p class="text-3xl font-bold text-brand-teal md:text-4xl">{{ __('Quality first') }}</p>
+                    <p class="mt-1 text-sm font-medium text-brand-black/70">{{ __('Every piece we sell') }}</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-3xl font-bold text-brand-teal md:text-4xl">{{ __('Fast shipping') }}</p>
+                    <p class="mt-1 text-sm font-medium text-brand-black/70">{{ __('Across the region') }}</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-3xl font-bold text-brand-teal md:text-4xl">{{ __('Easy returns') }}</p>
+                    <p class="mt-1 text-sm font-medium text-brand-black/70">{{ __('Hassle-free policy') }}</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-3xl font-bold text-brand-teal md:text-4xl">{{ __('Support') }}</p>
+                    <p class="mt-1 text-sm font-medium text-brand-black/70">{{ __('We are here for you') }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- Why shop with us --}}
+    <section class="bg-brand-white py-16 md:py-20">
+        <div class="container mx-auto px-4">
+            <h2 class="text-center text-3xl font-bold text-brand-black md:text-4xl">{{ __('Why shop with us') }}</h2>
+            <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                <div class="text-center">
+                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-teal/10 text-brand-teal">
+                        <span class="material-icons text-4xl">check_circle</span>
+                    </div>
+                    <h3 class="mt-4 font-semibold text-brand-black">{{ __('Quality') }}</h3>
+                    <p class="mt-2 text-sm text-brand-black/70">{{ __('Premium materials and craftsmanship in every piece.') }}</p>
+                </div>
+                <div class="text-center">
+                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-gold/20 text-brand-teal">
+                        <span class="material-icons text-4xl">local_shipping</span>
+                    </div>
+                    <h3 class="mt-4 font-semibold text-brand-black">{{ __('Fast delivery') }}</h3>
+                    <p class="mt-2 text-sm text-brand-black/70">{{ __('Quick and reliable shipping across the region.') }}</p>
+                </div>
+                <div class="text-center">
+                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-teal/10 text-brand-teal">
+                        <span class="material-icons text-4xl">assignment_return</span>
+                    </div>
+                    <h3 class="mt-4 font-semibold text-brand-black">{{ __('Easy returns') }}</h3>
+                    <p class="mt-2 text-sm text-brand-black/70">{{ __('Hassle-free returns if you are not satisfied.') }}</p>
+                </div>
+                <div class="text-center">
+                    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-brand-gold/20 text-brand-teal">
+                        <span class="material-icons text-4xl">support_agent</span>
+                    </div>
+                    <h3 class="mt-4 font-semibold text-brand-black">{{ __('Support') }}</h3>
+                    <p class="mt-2 text-sm text-brand-black/70">{{ __('Friendly customer care when you need it.') }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- Follow us / CTA --}}
+    <section class="bg-brand-white py-16 md:py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-2xl font-bold text-brand-black md:text-3xl">{{ __('Stay in the loop') }}</h2>
+            <p class="mx-auto mt-3 max-w-xl text-brand-black/70">
+                {{ __('Subscribe for new arrivals, exclusive offers, and styling tips.') }}
+            </p>
+        </div>
+    </section>
+
     {{-- CTA / Newsletter --}}
-    <section class="bg-slate-900 py-20 text-white">
+    <section class="bg-brand-teal py-20 text-white">
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-2xl font-bold md:text-3xl">{{ __('Get 10% off your first order') }}</h2>
-            <p class="mx-auto mt-3 max-w-lg text-slate-300">{{ __('Subscribe to our newsletter') }}</p>
+            <p class="mx-auto mt-3 max-w-lg text-white/80">{{ __('Subscribe to our newsletter') }}</p>
             <form class="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row sm:gap-2" data-newsletter="form">
-                <input type="email" placeholder="{{ __('Enter your email') }}" class="flex-1 rounded-xl border border-slate-600 bg-white/5 px-4 py-3 text-white placeholder-slate-400 focus:border-white focus:outline-none focus:ring-2 focus:ring-white/30">
-                <button type="submit" class="rounded-xl bg-white px-6 py-3 font-semibold text-slate-900 transition hover:bg-slate-100" data-ripple-light="true">
+                <input type="email" placeholder="{{ __('Enter your email') }}" class="flex-1 rounded-xl border border-white/30 bg-white/10 px-4 py-3 text-white placeholder-white/60 focus:border-brand-gold focus:outline-none focus:ring-2 focus:ring-brand-gold/40">
+                <button type="submit" class="rounded-xl bg-brand-gold px-6 py-3 font-semibold text-brand-black transition hover:bg-brand-gold-dark" data-ripple-light="true">
                     {{ __('Subscribe') }}
                 </button>
             </form>

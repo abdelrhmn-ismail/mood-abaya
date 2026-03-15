@@ -21,7 +21,7 @@
                     <h2 class="mt-6 text-xl font-semibold text-slate-900">{{ __('Your cart is empty') }}</h2>
                     <p class="mt-2 text-slate-600">{{ __('Your cart is empty.') }} {{ __('Add items from our shop to get started.') }}</p>
                     <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-                        <a href="{{ route('categories') }}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-6 py-3.5 font-semibold text-white shadow-sm transition hover:bg-slate-800">
+                        <a href="{{ route('categories') }}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-brand-teal px-6 py-3.5 font-semibold text-white shadow-sm transition hover:bg-brand-teal-dark">
                             <span class="material-icons text-xl">storefront</span>
                             {{ __('Continue Shopping') }}
                         </a>
@@ -77,7 +77,7 @@
                             <a href="{{ route('categories') }}" class="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-2.5 font-medium text-slate-700 shadow-sm transition hover:bg-slate-50">
                                 {{ __('Continue Shopping') }}
                             </a>
-                            <a href="{{ route('checkout') }}" class="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-6 py-2.5 font-semibold text-white shadow-sm transition hover:bg-slate-800">
+                            <a href="{{ route('checkout') }}" class="inline-flex items-center gap-2 rounded-xl bg-brand-teal px-6 py-2.5 font-semibold text-white shadow-sm transition hover:bg-brand-teal-dark">
                                 <span class="material-icons text-lg">shopping_bag</span>
                                 {{ __('Proceed to Checkout') }}
                             </a>

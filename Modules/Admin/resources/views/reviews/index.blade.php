@@ -11,19 +11,19 @@
     <p class="mb-4 text-sm text-gray-500">{{ __('Product reviews from completed orders. Hide a review to prevent it from showing on the product page.') }}</p>
 
     @component('admin::components.filter-bar')
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search comment') }}" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-        <select name="rating" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search comment') }}" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
+        <select name="rating" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
             <option value="">{{ __('All ratings') }}</option>
             @for($r = 1; $r <= 5; $r++)
                 <option value="{{ $r }}" {{ request('rating') === (string)$r ? 'selected' : '' }}>{{ $r }} ★</option>
             @endfor
         </select>
-        <select name="visible" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+        <select name="visible" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
             <option value="">{{ __('All visibility') }}</option>
             <option value="1" {{ request('visible') === '1' ? 'selected' : '' }}>{{ __('Visible') }}</option>
             <option value="0" {{ request('visible') === '0' ? 'selected' : '' }}>{{ __('Hidden') }}</option>
         </select>
-        <select name="product_id" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+        <select name="product_id" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
             <option value="">{{ __('All products') }}</option>
             @foreach($products ?? [] as $p)
                 <option value="{{ $p->id }}" {{ request('product_id') == $p->id ? 'selected' : '' }}>{{ $p->name }}</option>
@@ -35,20 +35,20 @@
         @csrf
         <div class="mb-3 flex flex-wrap items-center gap-3 rounded-lg border border-gray-200 bg-slate-50/50 px-4 py-2">
             <span class="text-sm text-slate-600" data-bulk-count>{{ __('Select rows below, then choose an action.') }}</span>
-            <select name="action" required class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+            <select name="action" required class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
                 <option value="">{{ __('Bulk action') }}</option>
                 <option value="show">{{ __('Show') }}</option>
                 <option value="hide">{{ __('Hide') }}</option>
                 <option value="delete">{{ __('Delete') }}</option>
             </select>
-            <button type="submit" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700" data-bulk-apply>{{ __('Apply') }}</button>
+            <button type="submit" class="rounded-lg bg-brand-teal px-4 py-2 text-sm font-medium text-white hover:bg-brand-teal-dark" data-bulk-apply>{{ __('Apply') }}</button>
         </div>
     <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
         <table class="min-w-full">
             <thead>
                 <tr class="border-b border-gray-200 bg-slate-50/80">
                     <th class="w-10 px-3 py-3">
-                        <input type="checkbox" class="reviews-select-all rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" aria-label="{{ __('Select all') }}">
+                        <input type="checkbox" class="reviews-select-all rounded border-gray-300 text-brand-teal focus:ring-brand-teal" aria-label="{{ __('Select all') }}">
                     </th>
                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-600">{{ __('Product') }}</th>
                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-600">{{ __('User') }}</th>
@@ -63,10 +63,10 @@
                 @forelse($reviews as $review)
                     <tr class="hover:bg-slate-50/50">
                         <td class="w-10 px-3 py-3">
-                            <input type="checkbox" name="ids[]" value="{{ $review->id }}" class="reviews-row-cb rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                            <input type="checkbox" name="ids[]" value="{{ $review->id }}" class="reviews-row-cb rounded border-gray-300 text-brand-teal focus:ring-brand-teal">
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-900">
-                            <a href="{{ route('admin.products.edit', $review->product) }}" class="font-medium text-indigo-600 hover:underline">{{ $review->product?->name ?? '—' }}</a>
+                            <a href="{{ route('admin.products.edit', $review->product) }}" class="font-medium text-brand-teal hover:underline">{{ $review->product?->name ?? '—' }}</a>
                         </td>
                         <td class="px-4 py-3 text-sm text-gray-700">{{ $review->user?->name ?? '—' }}</td>
                         <td class="px-4 py-3 font-mono text-sm text-gray-700">{{ $review->order?->order_number ?? '—' }}</td>

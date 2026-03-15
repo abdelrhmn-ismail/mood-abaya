@@ -35,18 +35,20 @@
 
         <div class="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
             @if (Route::has('password.request'))
-                <a href="{{ route('password.request') }}" class="text-sm font-medium text-slate-600 hover:text-slate-900">
+                <a href="{{ route('password.request') }}" class="text-sm font-medium text-slate-600 hover:text-slate-900 transition">
                     {{ __('Forgot your password?') }}
                 </a>
+            @else
+                <span></span>
             @endif
-            <button type="submit" class="rounded-xl bg-slate-900 px-6 py-3 font-semibold text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2">
+            <button type="submit" class="w-full rounded-xl bg-brand-teal px-6 py-3 font-semibold text-white transition hover:bg-brand-teal-dark focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2 sm:w-auto">
                 {{ __('Log in') }}
             </button>
         </div>
     </form>
 
     <div class="mt-6 text-center text-sm text-slate-600">
-        <a href="{{ route('register') }}" class="font-medium text-slate-700 hover:text-slate-900">
+        <a href="{{ route('register') }}" class="font-medium text-slate-600 hover:text-slate-900 transition">
             {{ __('Register') }}
         </a>
     </div>

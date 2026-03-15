@@ -12,7 +12,7 @@
     {{-- Tabs --}}
     <div class="border-b border-gray-200">
         <nav class="-mb-px flex gap-4" role="tablist">
-            <button type="button" class="settings-tab border-b-2 border-indigo-600 px-1 py-3 text-sm font-medium text-indigo-600" data-tab="general" role="tab">{{ __('General') }}</button>
+            <button type="button" class="settings-tab border-b-2 border-brand-teal px-1 py-3 text-sm font-medium text-brand-teal" data-tab="general" role="tab">{{ __('General') }}</button>
             <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="seo" role="tab">{{ __('SEO') }}</button>
             <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="labels" role="tab">{{ __('Site labels') }}</button>
             <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="frontend" role="tab">{{ __('Frontend') }}</button>
@@ -49,7 +49,7 @@
                         </div>
                     @endif
                     <div class="mt-2">
-                        <input type="file" name="logo_file" accept="image/*,.svg" class="block w-full text-sm text-gray-500 file:mr-2 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-indigo-700 hover:file:bg-indigo-100">
+                        <input type="file" name="logo_file" accept="image/*,.svg" class="block w-full text-sm text-gray-500 file:mr-2 file:rounded-lg file:border-0 file:bg-brand-gold/20 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand-teal hover:file:bg-brand-gold/30">
                     </div>
                     <input type="text" name="site_logo" value="{{ old('site_logo', $logoVal) }}" placeholder="{{ __('Or paste image URL') }}" class="mt-2 block w-full rounded-lg border border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                 </div>
@@ -63,7 +63,7 @@
                         </div>
                     @endif
                     <div class="mt-2">
-                        <input type="file" name="favicon_file" accept=".ico,image/png,image/x-icon" class="block w-full text-sm text-gray-500 file:mr-2 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-indigo-700 hover:file:bg-indigo-100">
+                        <input type="file" name="favicon_file" accept=".ico,image/png,image/x-icon" class="block w-full text-sm text-gray-500 file:mr-2 file:rounded-lg file:border-0 file:bg-brand-gold/20 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand-teal hover:file:bg-brand-gold/30">
                     </div>
                     <input type="text" name="favicon" value="{{ old('favicon', $favVal) }}" placeholder="{{ __('Or paste image URL') }}" class="mt-2 block w-full rounded-lg border border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                 </div>
@@ -157,7 +157,7 @@
                                 </div>
                             @endif
                             <div class="mt-2">
-                                <input type="file" name="hero_file_{{ $key }}" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-2 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-indigo-700 hover:file:bg-indigo-100">
+                                <input type="file" name="hero_file_{{ $key }}" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-2 file:rounded-lg file:border-0 file:bg-brand-gold/20 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand-teal hover:file:bg-brand-gold/30">
                             </div>
                             <input type="text" name="{{ $key }}" value="{{ old($key, $val) }}" placeholder="{{ __('Or paste image URL') }}" class="mt-2 block w-full rounded-lg border border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         </div>
@@ -179,7 +179,7 @@
                                 </div>
                             @endif
                             <div class="mt-2">
-                                <input type="file" name="hero_file_{{ $key }}" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-2 file:rounded-lg file:border-0 file:bg-indigo-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-indigo-700 hover:file:bg-indigo-100">
+                                <input type="file" name="hero_file_{{ $key }}" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-2 file:rounded-lg file:border-0 file:bg-brand-gold/20 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand-teal hover:file:bg-brand-gold/30">
                             </div>
                             <input type="text" name="{{ $key }}" value="{{ old($key, $val) }}" placeholder="{{ __('Or paste image URL') }}" class="mt-2 block w-full rounded-lg border border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                         </div>
@@ -192,7 +192,7 @@
     {{-- Tab: Editor (TinyMCE) --}}
     <div id="tab-editor" class="settings-panel hidden space-y-4">
         <h2 class="text-lg font-semibold text-gray-900">{{ __('Editor') }}</h2>
-        <p class="text-sm text-gray-500">{{ __('TinyMCE API key is required for the rich text editor on product and category descriptions. Get a free key at') }} <a href="https://www.tiny.cloud/auth/signup/" target="_blank" rel="noopener" class="text-indigo-600 hover:underline">tiny.cloud</a>.</p>
+        <p class="text-sm text-gray-500">{{ __('TinyMCE API key is required for the rich text editor on product and category descriptions. Get a free key at') }} <a href="https://www.tiny.cloud/auth/signup/" target="_blank" rel="noopener" class="text-brand-teal hover:underline">tiny.cloud</a>.</p>
         @include('admin::components.form-field', [
             'name' => 'tinymce_api_key',
             'label' => __('TinyMCE API key'),
@@ -218,10 +218,10 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', function() {
             var tab = this.getAttribute('data-tab');
             tabs.forEach(function(b) {
-                b.classList.remove('border-indigo-600', 'text-indigo-600');
+                b.classList.remove('border-brand-teal', 'text-brand-teal');
                 b.classList.add('border-transparent', 'text-gray-500');
             });
-            this.classList.add('border-indigo-600', 'text-indigo-600');
+            this.classList.add('border-brand-teal', 'text-brand-teal');
             this.classList.remove('border-transparent', 'text-gray-500');
             panels.forEach(function(p) {
                 p.classList.add('hidden');

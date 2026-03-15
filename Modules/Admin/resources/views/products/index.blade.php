@@ -11,19 +11,19 @@
 @endcomponent
 
 @component('admin::components.filter-bar')
-    <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search') }}" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-    <select name="category_id" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+    <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search') }}" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
+    <select name="category_id" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
         <option value="">{{ __('All categories') }}</option>
         @foreach($categories as $cat)
             <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
         @endforeach
     </select>
-    <select name="active" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+    <select name="active" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
         <option value="">{{ __('All statuses') }}</option>
         <option value="1" {{ request('active') === '1' ? 'selected' : '' }}>{{ __('Active') }}</option>
         <option value="0" {{ request('active') === '0' ? 'selected' : '' }}>{{ __('Inactive') }}</option>
     </select>
-    <select name="featured" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+    <select name="featured" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
         <option value="">{{ __('All featured') }}</option>
         <option value="1" {{ request('featured') === '1' ? 'selected' : '' }}>{{ __('Featured') }}</option>
         <option value="0" {{ request('featured') === '0' ? 'selected' : '' }}>{{ __('Not featured') }}</option>

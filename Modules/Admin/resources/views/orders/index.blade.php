@@ -5,8 +5,8 @@
 
 @section('content')
 @component('admin::components.filter-bar')
-    <input type="text" name="order_number" value="{{ request('order_number') }}" placeholder="{{ __('Order #') }}" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-    <select name="status" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+    <input type="text" name="order_number" value="{{ request('order_number') }}" placeholder="{{ __('Order #') }}" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
+    <select name="status" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
         <option value="">{{ __('All statuses') }}</option>
         <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>pending</option>
         <option value="processing" {{ request('status') === 'processing' ? 'selected' : '' }}>processing</option>
@@ -14,7 +14,7 @@
         <option value="delivered" {{ request('status') === 'delivered' ? 'selected' : '' }}>delivered</option>
         <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>cancelled</option>
     </select>
-    <select name="payment_status" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+    <select name="payment_status" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
         <option value="">{{ __('All payment statuses') }}</option>
         <option value="pending" {{ request('payment_status') === 'pending' ? 'selected' : '' }}>pending</option>
         <option value="pending_approval" {{ request('payment_status') === 'pending_approval' ? 'selected' : '' }}>pending_approval</option>

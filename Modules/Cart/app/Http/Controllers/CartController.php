@@ -5,7 +5,6 @@ namespace Modules\Cart\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 use Modules\Cart\Services\CartService;
 
 class CartController extends Controller
@@ -14,12 +13,9 @@ class CartController extends Controller
         private CartService $cartService
     ) {}
 
-    public function index(): View
+    public function index(): RedirectResponse
     {
-        $items = $this->cartService->getCart();
-        $total = $this->cartService->getTotal();
-
-        return view('frontend.cart', compact('items', 'total'));
+        return redirect()->route('account')->withFragment('cart');
     }
 
     public function store(Request $request): RedirectResponse
@@ -32,19 +28,19 @@ class CartController extends Controller
             (int) $request->product_id,
             (int) ($request->quantity ?? 1)
         );
-        return redirect()->route('cart')->with('success', __('Item added to cart.'));
+        return redirect()->route('account')->withFragment('cart')->with('success', __('Item added to cart.'));
     }
 
     public function update(Request $request, int $item): RedirectResponse
     {
         $request->validate(['quantity' => ['required', 'integer', 'min:0', 'max:999']]);
         $this->cartService->updateQuantity($item, (int) $request->quantity);
-        return redirect()->route('cart')->with('success', __('Cart updated.'));
+        return redirect()->route('account')->withFragment('cart')->with('success', __('Cart updated.'));
     }
 
     public function destroy(int $item): RedirectResponse
     {
         $this->cartService->removeItem($item);
-        return redirect()->route('cart')->with('success', __('Item removed from cart.'));
+        return redirect()->route('account')->withFragment('cart')->with('success', __('Item removed from cart.'));
     }
 }

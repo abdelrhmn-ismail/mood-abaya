@@ -50,13 +50,13 @@
     @csrf
     <div class="flex flex-wrap items-center gap-3 border-b border-gray-200 bg-slate-50/50 px-5 py-3">
         <span class="text-sm text-slate-600" data-bulk-count>{{ __('Select rows below, then choose an action.') }}</span>
-        <select name="action" required class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+        <select name="action" required class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
             <option value="">{{ __('Bulk action') }}</option>
             @foreach($bulk_actions as $opt)
                 <option value="{{ $opt['value'] ?? $opt[0] }}">{{ $opt['label'] ?? $opt[1] ?? $opt['value'] ?? $opt[0] }}</option>
             @endforeach
         </select>
-        <button type="submit" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700" data-bulk-apply>{{ __('Apply') }}</button>
+        <button type="submit" class="rounded-lg bg-brand-teal px-4 py-2 text-sm font-medium text-white hover:bg-brand-teal-dark" data-bulk-apply>{{ __('Apply') }}</button>
     </div>
 @endif
 <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
@@ -66,7 +66,7 @@
                 <tr class="border-b border-gray-200 bg-slate-50/80">
                     @if($hasBulk)
                         <th scope="col" class="w-10 px-3 py-4">
-                            <input type="checkbox" class="bulk-select-all rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" aria-label="{{ __('Select all') }}">
+                            <input type="checkbox" class="bulk-select-all rounded border-gray-300 text-brand-teal focus:ring-brand-teal" aria-label="{{ __('Select all') }}">
                         </th>
                     @endif
                     @foreach($columns as $col)
@@ -92,7 +92,7 @@
                     <tr class="{{ $rowClass }}">
                         @if($hasBulk)
                             <td class="w-10 px-3 py-4">
-                                <input type="checkbox" name="ids[]" value="{{ data_get($row, $row_key) }}" class="bulk-row-checkbox rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                <input type="checkbox" name="ids[]" value="{{ data_get($row, $row_key) }}" class="bulk-row-checkbox rounded border-gray-300 text-brand-teal focus:ring-brand-teal">
                             </td>
                         @endif
                         @foreach($columns as $col)
@@ -110,7 +110,7 @@
                                         </a>
                                     @endif
                                     @if(!empty($actions['edit_route']))
-                                        <a href="{{ route($actions['edit_route'], $row) }}" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-indigo-600 transition hover:bg-indigo-50" title="{{ __('Edit') }}">
+                                        <a href="{{ route($actions['edit_route'], $row) }}" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-brand-teal transition hover:bg-brand-gold/10" title="{{ __('Edit') }}">
                                             <span class="material-icons text-lg">edit</span>
                                             <span class="hidden sm:inline text-sm font-medium">{{ __('Edit') }}</span>
                                         </a>

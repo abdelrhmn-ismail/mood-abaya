@@ -6,12 +6,15 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name') }}</title>
     @vite(['resources/css/app.css'])
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/ripple.js" defer></script>
     @stack('styles')
 </head>
-<body class="min-h-screen bg-slate-50 text-slate-900 antialiased" data-ripple-light="true">
+<body class="min-h-screen bg-slate-50 text-slate-900 antialiased {{ app()->getLocale() === 'ar' ? 'font-cairo' : 'font-cinzel' }}" data-ripple-light="true">
     @include('frontend.partials.navbar')
 
     <main class="min-h-[60vh] py-16 md:py-20">
