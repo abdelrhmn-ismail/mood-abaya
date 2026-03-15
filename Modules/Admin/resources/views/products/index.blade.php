@@ -18,6 +18,16 @@
             <option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
         @endforeach
     </select>
+    <select name="active" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+        <option value="">{{ __('All statuses') }}</option>
+        <option value="1" {{ request('active') === '1' ? 'selected' : '' }}>{{ __('Active') }}</option>
+        <option value="0" {{ request('active') === '0' ? 'selected' : '' }}>{{ __('Inactive') }}</option>
+    </select>
+    <select name="featured" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+        <option value="">{{ __('All featured') }}</option>
+        <option value="1" {{ request('featured') === '1' ? 'selected' : '' }}>{{ __('Featured') }}</option>
+        <option value="0" {{ request('featured') === '0' ? 'selected' : '' }}>{{ __('Not featured') }}</option>
+    </select>
 @endcomponent
 
 @include('admin::components.table', [
@@ -35,6 +45,12 @@
         'delete_route' => 'admin.products.destroy',
         'delete_confirm' => __('Delete this product?'),
     ],
+    'bulk_actions' => [
+        ['value' => 'activate', 'label' => __('Activate')],
+        ['value' => 'deactivate', 'label' => __('Deactivate')],
+        ['value' => 'delete', 'label' => __('Delete')],
+    ],
+    'bulk_form_action' => route('admin.products.bulk'),
     'pagination' => $products,
 ])
 @endsection

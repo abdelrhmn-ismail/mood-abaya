@@ -9,9 +9,16 @@ use Illuminate\View\View;
 
 class PageContentController
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $pages = PageContent::orderBy('page_name')->get();
+        $query = PageContent::orderBy('page_name');
+        if (!empty($request->get('search'))) {
+            $term = '%' . $request->get('search') . '%';
+            $query->where(function ($q) use ($term) {
+                $q->where('page_name', 'like', $term)->orWhere('page_slug', 'like', $term);
+            });
+        }
+        $pages = $query->get();
 
         return view('admin::page-contents.index', compact('pages'));
     }

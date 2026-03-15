@@ -6,6 +6,9 @@
 @section('content')
 @component('admin::components.card', ['title' => null])
     <p class="mb-4 text-sm text-gray-600">{{ __('Edit static pages: Terms, Privacy, Shipping, Return & Refund.') }}</p>
+    @component('admin::components.filter-bar')
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="{{ __('Search page name or slug') }}" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+    @endcomponent
     <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-slate-50/80">

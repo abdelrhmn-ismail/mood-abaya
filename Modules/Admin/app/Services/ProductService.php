@@ -24,8 +24,29 @@ class ProductService
                     ->orWhere('slug', 'like', $term);
             });
         }
+        if (isset($filters['active']) && $filters['active'] !== '') {
+            $query->where('active', (bool) $filters['active']);
+        }
+        if (isset($filters['featured']) && $filters['featured'] !== '') {
+            $query->where('featured', (bool) $filters['featured']);
+        }
 
         return $query->paginate($perPage);
+    }
+
+    public function bulkActivate(array $ids): int
+    {
+        return Product::whereIn('id', $ids)->update(['active' => true]);
+    }
+
+    public function bulkDeactivate(array $ids): int
+    {
+        return Product::whereIn('id', $ids)->update(['active' => false]);
+    }
+
+    public function bulkDelete(array $ids): int
+    {
+        return Product::whereIn('id', $ids)->delete();
     }
 
     public function create(array $data): Product

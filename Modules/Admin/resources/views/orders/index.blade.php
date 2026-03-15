@@ -37,6 +37,14 @@
     'actions' => [
         'view_route' => 'admin.orders.show',
     ],
+    'bulk_actions' => [
+        ['value' => 'pending', 'label' => __('Set status: Pending')],
+        ['value' => 'processing', 'label' => __('Set status: Processing')],
+        ['value' => 'shipped', 'label' => __('Set status: Shipped')],
+        ['value' => 'delivered', 'label' => __('Set status: Delivered')],
+        ['value' => 'cancelled', 'label' => __('Set status: Cancelled')],
+    ],
+    'bulk_form_action' => route('admin.orders.bulk'),
     'pagination' => $orders,
 ])
 @endsection

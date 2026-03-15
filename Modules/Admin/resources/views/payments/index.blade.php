@@ -32,6 +32,12 @@
     'actions' => [
         'view_route' => 'admin.payments.show',
     ],
+    'bulk_actions' => [
+        ['value' => 'approve', 'label' => __('Approve (bank pending)')],
+        ['value' => 'reject', 'label' => __('Reject (bank pending)')],
+        ['value' => 'mark_paid', 'label' => __('Mark as paid')],
+    ],
+    'bulk_form_action' => route('admin.payments.bulk'),
     'pagination' => $payments,
 ])
 @endsection

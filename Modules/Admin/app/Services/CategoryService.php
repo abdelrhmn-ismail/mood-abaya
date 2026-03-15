@@ -3,6 +3,7 @@
 namespace Modules\Admin\Services;
 
 use App\Models\Category;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 
@@ -12,6 +13,41 @@ class CategoryService
     {
         $locale = config('app.fallback_locale', 'en');
         return Category::orderBy('sort_order')->orderBy("name->{$locale}")->get();
+    }
+
+    public function getForIndex(array $filters = [], int $perPage = 20): LengthAwarePaginator
+    {
+        $locale = config('app.fallback_locale', 'en');
+        $query = Category::orderBy('sort_order')->orderBy("name->{$locale}");
+
+        if (isset($filters['search']) && $filters['search'] !== '') {
+            $term = '%' . $filters['search'] . '%';
+            $query->where(function ($q) use ($term) {
+                $q->where('name->en', 'like', $term)
+                    ->orWhere('name->ar', 'like', $term)
+                    ->orWhere('slug', 'like', $term);
+            });
+        }
+        if (isset($filters['active']) && $filters['active'] !== '') {
+            $query->where('active', (bool) $filters['active']);
+        }
+
+        return $query->paginate($perPage);
+    }
+
+    public function bulkActivate(array $ids): int
+    {
+        return Category::whereIn('id', $ids)->update(['active' => true]);
+    }
+
+    public function bulkDeactivate(array $ids): int
+    {
+        return Category::whereIn('id', $ids)->update(['active' => false]);
+    }
+
+    public function bulkDelete(array $ids): int
+    {
+        return Category::whereIn('id', $ids)->delete();
     }
 
     public function create(array $data): Category

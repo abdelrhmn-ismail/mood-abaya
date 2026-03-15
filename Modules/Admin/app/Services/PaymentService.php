@@ -45,4 +45,43 @@ class PaymentService
     {
         $this->mainPaymentService->markAsPaid($payment);
     }
+
+    public function bulkApprove(array $ids): int
+    {
+        $count = 0;
+        /** @var Payment $payment */
+        foreach (Payment::whereIn('id', $ids)->get() as $payment) {
+            if ($payment->method === 'bank' && $payment->status === 'pending_approval') {
+                $this->mainPaymentService->approveBankPayment($payment);
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    public function bulkReject(array $ids): int
+    {
+        $count = 0;
+        /** @var Payment $payment */
+        foreach (Payment::whereIn('id', $ids)->get() as $payment) {
+            if ($payment->method === 'bank' && $payment->status === 'pending_approval') {
+                $this->mainPaymentService->rejectBankPayment($payment);
+                $count++;
+            }
+        }
+        return $count;
+    }
+
+    public function bulkMarkPaid(array $ids): int
+    {
+        $count = 0;
+        $payments = Payment::whereIn('id', $ids)->get();
+        foreach ($payments as $payment) {
+            if ($payment instanceof Payment && $payment->status !== 'paid') {
+                $this->mainPaymentService->markAsPaid($payment);
+                $count++;
+            }
+        }
+        return $count;
+    }
 }

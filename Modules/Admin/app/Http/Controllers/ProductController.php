@@ -18,10 +18,31 @@ class ProductController
 
     public function index(Request $request): View
     {
-        $products = $this->productService->getAll($request->only('category_id', 'search'));
+        $products = $this->productService->getAll($request->only('category_id', 'search', 'active', 'featured'));
         $categories = $this->categoryService->getAll();
 
         return view('admin::products.index', compact('products', 'categories'));
+    }
+
+    public function bulkAction(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:products,id',
+            'action' => 'required|in:activate,deactivate,delete',
+        ]);
+        $ids = $request->input('ids');
+        $action = $request->input('action');
+        $count = 0;
+        if ($action === 'activate') {
+            $count = $this->productService->bulkActivate($ids);
+        } elseif ($action === 'deactivate') {
+            $count = $this->productService->bulkDeactivate($ids);
+        } elseif ($action === 'delete') {
+            $count = $this->productService->bulkDelete($ids);
+        }
+        return redirect()->route('admin.products.index', $request->only('category_id', 'search', 'active', 'featured'))
+            ->with('success', __(':count record(s) updated.', ['count' => $count]));
     }
 
     public function create(): View

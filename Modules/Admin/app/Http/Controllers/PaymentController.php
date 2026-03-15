@@ -57,4 +57,25 @@ class PaymentController
 
         return redirect()->route('admin.orders.show', $payment->order)->with('success', __('Payment marked as paid.'));
     }
+
+    public function bulkAction(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:payments,id',
+            'action' => 'required|in:approve,reject,mark_paid',
+        ]);
+        $ids = $request->input('ids');
+        $action = $request->input('action');
+        $count = 0;
+        if ($action === 'approve') {
+            $count = $this->paymentService->bulkApprove($ids);
+        } elseif ($action === 'reject') {
+            $count = $this->paymentService->bulkReject($ids);
+        } elseif ($action === 'mark_paid') {
+            $count = $this->paymentService->bulkMarkPaid($ids);
+        }
+        return redirect()->route('admin.payments.index', $request->only('status', 'method'))
+            ->with('success', __(':count payment(s) updated.', ['count' => $count]));
+    }
 }

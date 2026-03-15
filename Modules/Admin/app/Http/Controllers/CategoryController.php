@@ -14,11 +14,32 @@ class CategoryController
         private CategoryService $categoryService
     ) {}
 
-    public function index(): View
+    public function index(Request $request): View
     {
-        $categories = $this->categoryService->getAll();
+        $categories = $this->categoryService->getForIndex($request->only('search', 'active'));
 
         return view('admin::categories.index', compact('categories'));
+    }
+
+    public function bulkAction(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:categories,id',
+            'action' => 'required|in:activate,deactivate,delete',
+        ]);
+        $ids = $request->input('ids');
+        $action = $request->input('action');
+        $count = 0;
+        if ($action === 'activate') {
+            $count = $this->categoryService->bulkActivate($ids);
+        } elseif ($action === 'deactivate') {
+            $count = $this->categoryService->bulkDeactivate($ids);
+        } elseif ($action === 'delete') {
+            $count = $this->categoryService->bulkDelete($ids);
+        }
+        return redirect()->route('admin.categories.index')
+            ->with('success', __(':count record(s) updated.', ['count' => $count]));
     }
 
     public function create(): View

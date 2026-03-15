@@ -52,4 +52,16 @@ class OrderController
 
         return redirect()->route('admin.orders.show', $order)->with('success', __('Shipping updated.'));
     }
+
+    public function bulkAction(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:orders,id',
+            'action' => 'required|in:pending,processing,shipped,delivered,cancelled',
+        ]);
+        $count = $this->orderService->bulkUpdateStatus($request->input('ids'), $request->input('action'));
+        return redirect()->route('admin.orders.index', $request->only('status', 'payment_status', 'order_number'))
+            ->with('success', __(':count order(s) updated.', ['count' => $count]));
+    }
 }

@@ -34,4 +34,9 @@ class OrderService
     {
         $order->update(['status' => $status]);
     }
+
+    public function bulkUpdateStatus(array $ids, string $status): int
+    {
+        return Order::whereIn('id', $ids)->update(['status' => $status]);
+    }
 }
