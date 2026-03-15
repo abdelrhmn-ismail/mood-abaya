@@ -53,10 +53,38 @@
                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-600">{{ __('Product') }}</th>
                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-600">{{ __('User') }}</th>
                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-600">{{ __('Order') }}</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-600">{{ __('Rating') }}</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-600">
+                        <a href="{{ admin_sort_url('rating') }}" class="inline-flex items-center gap-1 transition hover:text-brand-teal">
+                            {{ __('Rating') }}
+                            @if(request('sort') === 'rating')
+                                <span class="material-icons text-base">{{ request('order', 'desc') === 'asc' ? 'arrow_drop_up' : 'arrow_drop_down' }}</span>
+                            @else
+                                <span class="material-icons text-base opacity-50">unfold_more</span>
+                            @endif
+                        </a>
+                    </th>
                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-600">{{ __('Comment') }}</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-600">{{ __('Visible') }}</th>
-                    <th class="px-4 py-3 text-right text-xs font-semibold uppercase text-gray-600">{{ __('Actions') }}</th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-600">
+                        <a href="{{ admin_sort_url('is_visible') }}" class="inline-flex items-center gap-1 transition hover:text-brand-teal">
+                            {{ __('Visible') }}
+                            @if(request('sort') === 'is_visible')
+                                <span class="material-icons text-base">{{ request('order', 'desc') === 'asc' ? 'arrow_drop_up' : 'arrow_drop_down' }}</span>
+                            @else
+                                <span class="material-icons text-base opacity-50">unfold_more</span>
+                            @endif
+                        </a>
+                    </th>
+                    <th class="px-4 py-3 text-right text-xs font-semibold uppercase text-gray-600">
+                        <a href="{{ admin_sort_url('created_at') }}" class="inline-flex items-center gap-1 transition hover:text-brand-teal ml-auto">
+                            {{ __('Date') }}
+                            @if(request('sort') === 'created_at' || !request('sort'))
+                                <span class="material-icons text-base">{{ request('order', 'desc') === 'asc' ? 'arrow_drop_up' : 'arrow_drop_down' }}</span>
+                            @else
+                                <span class="material-icons text-base opacity-50">unfold_more</span>
+                            @endif
+                        </a>
+                    </th>
+                    <th scope="col" class="px-4 py-3 text-right text-xs font-semibold uppercase text-gray-600">{{ __('Actions') }}</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
@@ -83,6 +111,7 @@
                                 <span class="rounded-full bg-gray-200 px-2 py-0.5 text-xs font-medium text-gray-600">{{ __('Hidden') }}</span>
                             @endif
                         </td>
+                        <td class="px-4 py-3 text-sm text-gray-600">{{ $review->created_at?->format('Y-m-d H:i') ?? '—' }}</td>
                         <td class="px-4 py-3 text-right">
                             <button type="button" class="rounded-lg px-3 py-2 text-sm font-medium admin-review-toggle {{ $review->is_visible ? 'text-amber-600 hover:bg-amber-50' : 'text-green-600 hover:bg-green-50' }}" data-url="{{ route('admin.reviews.toggle-visibility', $review) }}">
                                 {{ $review->is_visible ? __('Hide') : __('Show') }}
@@ -91,7 +120,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="px-4 py-12 text-center text-gray-500">{{ __('No reviews yet.') }}</td>
+                        <td colspan="9" class="px-4 py-12 text-center text-gray-500">{{ __('No reviews yet.') }}</td>
                     </tr>
                 @endforelse
             </tbody>

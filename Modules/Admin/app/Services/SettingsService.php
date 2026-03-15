@@ -51,6 +51,36 @@ class SettingsService
             'hero_home_1' => Setting::get('hero_home_1', ''),
             'hero_home_2' => Setting::get('hero_home_2', ''),
             'hero_home_3' => Setting::get('hero_home_3', ''),
+            // Contact & social
+            'whatsapp_url' => Setting::get('whatsapp_url', ''),
+            'instagram_url' => Setting::get('instagram_url', ''),
+            'facebook_url' => Setting::get('facebook_url', ''),
+            'twitter_url' => Setting::get('twitter_url', ''),
+            'contact_email' => Setting::get('contact_email', ''),
+            'contact_email_secondary' => Setting::get('contact_email_secondary', ''),
+            'contact_location' => Setting::get('contact_location', ''),
+            'contact_phone' => Setting::get('contact_phone', ''),
+            'contact_phone_secondary' => Setting::get('contact_phone_secondary', ''),
+            // Custom code (header/footer) for tracking, pixels, media team
+            'custom_code_header' => Setting::get('custom_code_header', ''),
+            'custom_code_footer' => Setting::get('custom_code_footer', ''),
+            // Announcement bar (popup)
+            'announcement_bar_enabled' => Setting::get('announcement_bar_enabled', '0'),
+            'announcement_bar_text' => Setting::get('announcement_bar_text', ''),
+            'announcement_bar_link' => Setting::get('announcement_bar_link', ''),
+            // Shipping
+            'shipping_type' => Setting::get('shipping_type', 'flat'),
+            'shipping_flat_rate' => Setting::get('shipping_flat_rate', '0'),
+            'shipping_free_over' => Setting::get('shipping_free_over', ''),
+            'shipping_zones' => Setting::get('shipping_zones', ''),
+            // Maintenance
+            'maintenance_mode_enabled' => Setting::get('maintenance_mode_enabled', '0'),
+            'maintenance_coming_back_at' => Setting::get('maintenance_coming_back_at', ''),
+            'maintenance_ip_allowlist' => Setting::get('maintenance_ip_allowlist', ''),
+            // Trust badges (footer / checkout)
+            'trust_badge_1' => Setting::get('trust_badge_1', ''),
+            'trust_badge_2' => Setting::get('trust_badge_2', ''),
+            'trust_badge_3' => Setting::get('trust_badge_3', ''),
         ];
     }
 
@@ -85,6 +115,50 @@ class SettingsService
         }
         // Frontend hero/header images (simple URL or path strings)
         foreach (['hero_account', 'hero_cart', 'hero_contact', 'hero_page', 'hero_search', 'hero_categories', 'hero_products', 'hero_home_1', 'hero_home_2', 'hero_home_3'] as $key) {
+            if (array_key_exists($key, $data)) {
+                Setting::set($key, trim((string) ($data[$key] ?? '')));
+            }
+        }
+        $contactSocialKeys = [
+            'whatsapp_url', 'instagram_url', 'facebook_url', 'twitter_url',
+            'contact_email', 'contact_email_secondary', 'contact_location',
+            'contact_phone', 'contact_phone_secondary',
+        ];
+        foreach ($contactSocialKeys as $key) {
+            if (array_key_exists($key, $data)) {
+                Setting::set($key, trim((string) ($data[$key] ?? '')));
+            }
+        }
+        foreach (['custom_code_header', 'custom_code_footer'] as $key) {
+            if (array_key_exists($key, $data)) {
+                Setting::set($key, (string) ($data[$key] ?? ''));
+            }
+        }
+        if (array_key_exists('announcement_bar_enabled', $data)) {
+            Setting::set('announcement_bar_enabled', ($data['announcement_bar_enabled'] ?? false) ? '1' : '0');
+        }
+        if (array_key_exists('announcement_bar_text', $data)) {
+            Setting::set('announcement_bar_text', trim((string) ($data['announcement_bar_text'] ?? '')));
+        }
+        if (array_key_exists('announcement_bar_link', $data)) {
+            Setting::set('announcement_bar_link', trim((string) ($data['announcement_bar_link'] ?? '')));
+        }
+        foreach (['shipping_type', 'shipping_flat_rate', 'shipping_free_over', 'shipping_zones'] as $key) {
+            if (array_key_exists($key, $data)) {
+                $v = $data[$key];
+                Setting::set($key, is_array($v) ? json_encode($v) : (string) $v);
+            }
+        }
+        if (array_key_exists('maintenance_mode_enabled', $data)) {
+            Setting::set('maintenance_mode_enabled', ($data['maintenance_mode_enabled'] ?? false) ? '1' : '0');
+        }
+        if (array_key_exists('maintenance_coming_back_at', $data)) {
+            Setting::set('maintenance_coming_back_at', trim((string) ($data['maintenance_coming_back_at'] ?? '')));
+        }
+        if (array_key_exists('maintenance_ip_allowlist', $data)) {
+            Setting::set('maintenance_ip_allowlist', trim((string) ($data['maintenance_ip_allowlist'] ?? '')));
+        }
+        foreach (['trust_badge_1', 'trust_badge_2', 'trust_badge_3'] as $key) {
             if (array_key_exists($key, $data)) {
                 Setting::set($key, trim((string) ($data[$key] ?? '')));
             }

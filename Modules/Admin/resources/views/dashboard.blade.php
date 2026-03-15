@@ -8,15 +8,20 @@
     {{-- Overview --}}
     <p class="text-gray-600">{{ __('Last 7 days') }} · {{ __('This month') }}</p>
 
-    {{-- Main KPI cards --}}
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    {{-- Main KPI cards: orders today, orders this week, low stock, pending bank payments, unread messages --}}
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         @include('admin::components.stat-card', [
-            'label' => __('Total orders'),
-            'value' => number_format($counts['orders']),
+            'label' => __('Orders today'),
+            'value' => number_format($ordersToday),
             'url' => route('admin.orders.index'),
         ])
         @include('admin::components.stat-card', [
-            'label' => __('Pending payments'),
+            'label' => __('Orders this week'),
+            'value' => number_format($ordersThisWeek),
+            'url' => route('admin.orders.index'),
+        ])
+        @include('admin::components.stat-card', [
+            'label' => __('Pending bank payments'),
             'value' => number_format($counts['pending_payments']),
             'url' => route('admin.payments.index'),
         ])
@@ -26,8 +31,9 @@
             'url' => route('admin.contacts.index'),
         ])
         @include('admin::components.stat-card', [
-            'label' => __('Orders this week'),
-            'value' => number_format($ordersThisWeek),
+            'label' => __('Low stock products'),
+            'value' => number_format($lowStockProducts->count()),
+            'url' => route('admin.products.index'),
         ])
     </div>
 

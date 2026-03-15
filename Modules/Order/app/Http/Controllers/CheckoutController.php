@@ -4,6 +4,7 @@ namespace Modules\Order\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\BillingAddress;
+use App\Services\ShippingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -13,12 +14,14 @@ use Modules\Order\Services\CheckoutService;
 class CheckoutController extends Controller
 {
     public function __construct(
-        private CheckoutService $checkoutService
+        private CheckoutService $checkoutService,
+        private ShippingService $shippingService
     ) {}
 
-    public function show(): View|RedirectResponse
+    public function show(Request $request): View|RedirectResponse
     {
-        $data = $this->checkoutService->getCheckoutData();
+        $zoneId = $request->query('shipping_zone_id');
+        $data = $this->checkoutService->getCheckoutData($zoneId);
         if ($data['items']->isEmpty()) {
             return redirect()->route('cart')->with('error', __('Your cart is empty.'));
         }
@@ -55,9 +58,20 @@ class CheckoutController extends Controller
             'billing_postal_code' => ['nullable', 'string', 'max:20'],
             'billing_country' => ['nullable', 'string', 'max:100'],
             'save_billing_address' => ['nullable', 'boolean'],
+            'shipping_zone_id' => ['nullable', 'string', 'max:50'],
         ];
 
         $validated = $request->validate($rules);
+
+        $subtotal = $this->checkoutService->getCheckoutData()['subtotal'];
+        $zoneId = $validated['shipping_zone_id'] ?? null;
+        if ($this->shippingService->getType() === 'zones' && $zoneId === null) {
+            $zones = $this->shippingService->getZones();
+            $zoneId = $zones[0]['id'] ?? null;
+        }
+        $shipping = $this->shippingService->calculate($subtotal, $zoneId);
+        $shippingAmount = $shipping['amount'];
+        $shippingLabel = $shipping['label'];
 
         $notes = $validated['notes'] ?? null;
 
@@ -108,7 +122,9 @@ class CheckoutController extends Controller
                 $address,
                 $validated['payment_method'],
                 $request->file('proof'),
-                $address
+                $address,
+                $shippingAmount,
+                $shippingLabel
             );
             return redirect()
                 ->route('order.confirmed', $order->order_number)

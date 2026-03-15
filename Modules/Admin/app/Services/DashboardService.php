@@ -44,6 +44,12 @@ class DashboardService
             ->sum('total');
     }
 
+    /** Number of orders today. */
+    public function getOrdersToday(): int
+    {
+        return Order::whereDate('created_at', Carbon::today())->count();
+    }
+
     /** Number of orders in the last 7 days. */
     public function getOrdersThisWeek(): int
     {

@@ -15,11 +15,11 @@
 
 @include('admin::components.table', [
     'columns' => [
-        ['label' => __('Name'), 'key' => 'name'],
-        ['label' => __('Email'), 'key' => 'email'],
-        ['label' => __('Subject'), 'key' => 'subject', 'limit' => 40],
-        ['label' => __('Read'), 'key' => 'read_at', 'format' => 'boolean'],
-        ['label' => __('Date'), 'key' => 'created_at', 'format' => 'datetime'],
+        ['label' => __('Name'), 'key' => 'name', 'sort_key' => 'name'],
+        ['label' => __('Email'), 'key' => 'email', 'sort_key' => 'email'],
+        ['label' => __('Subject'), 'key' => 'subject', 'limit' => 40, 'sort_key' => 'subject'],
+        ['label' => __('Read'), 'key' => 'read_at', 'format' => 'boolean', 'sort_key' => 'read_at'],
+        ['label' => __('Date'), 'key' => 'created_at', 'format' => 'datetime', 'sort_key' => 'created_at'],
     ],
     'rows' => $messages,
     'emptyMessage' => __('No messages yet.'),

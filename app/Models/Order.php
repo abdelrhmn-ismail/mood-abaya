@@ -18,12 +18,15 @@ class Order extends Model
         'billing_address',
         'notes',
         'total',
+        'shipping_amount',
+        'shipping_label',
     ];
 
     protected function casts(): array
     {
         return [
             'total' => 'decimal:2',
+            'shipping_amount' => 'decimal:2',
         ];
     }
 

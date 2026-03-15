@@ -21,16 +21,24 @@
         <option value="paid" {{ request('payment_status') === 'paid' ? 'selected' : '' }}>paid</option>
         <option value="rejected" {{ request('payment_status') === 'rejected' ? 'selected' : '' }}>rejected</option>
     </select>
+    <div class="flex items-center gap-2">
+        <a href="{{ route('admin.orders.export', request()->query()) }}" class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50">
+            <span class="material-icons text-lg">download</span> {{ __('Export CSV') }}
+        </a>
+        <a href="{{ route('admin.orders.export', array_merge(request()->query(), ['with_items' => 1])) }}" class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50">
+            <span class="material-icons text-lg">download</span> {{ __('Export CSV with items') }}
+        </a>
+    </div>
 @endcomponent
 
 @include('admin::components.table', [
     'columns' => [
-        ['label' => __('Order #'), 'key' => 'order_number', 'class' => 'font-mono'],
-        ['label' => __('Customer'), 'key' => 'user.name'],
-        ['label' => __('Total'), 'key' => 'total', 'format' => 'price'],
-        ['label' => __('Payment'), 'key' => 'payment_method', 'key2' => 'payment_status', 'glue' => ' / '],
-        ['label' => __('Status'), 'key' => 'status'],
-        ['label' => __('Date'), 'key' => 'created_at', 'format' => 'datetime'],
+        ['label' => __('Order #'), 'key' => 'order_number', 'class' => 'font-mono', 'sort_key' => 'order_number'],
+        ['label' => __('Customer'), 'key' => 'user.name', 'sort_key' => 'user_name'],
+        ['label' => __('Total'), 'key' => 'total', 'format' => 'price', 'sort_key' => 'total'],
+        ['label' => __('Payment'), 'key' => 'payment_method', 'key2' => 'payment_status', 'glue' => ' / ', 'sort_key' => 'payment_status'],
+        ['label' => __('Status'), 'key' => 'status', 'sort_key' => 'status'],
+        ['label' => __('Date'), 'key' => 'created_at', 'format' => 'datetime', 'sort_key' => 'created_at'],
     ],
     'rows' => $orders,
     'emptyMessage' => __('No orders found.'),

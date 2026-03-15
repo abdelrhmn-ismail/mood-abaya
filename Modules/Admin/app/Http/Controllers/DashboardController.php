@@ -13,6 +13,7 @@ class DashboardController
         $recentOrders = $dashboardService->getRecentOrders();
         $totalRevenue = $dashboardService->getTotalRevenue();
         $revenueThisMonth = $dashboardService->getRevenueThisMonth();
+        $ordersToday = $dashboardService->getOrdersToday();
         $ordersThisWeek = $dashboardService->getOrdersThisWeek();
         $ordersLast7Days = $dashboardService->getOrdersLast7Days();
         $lowStockProducts = $dashboardService->getLowStockProducts();
@@ -23,6 +24,7 @@ class DashboardController
             'recentOrders' => $recentOrders,
             'totalRevenue' => $totalRevenue,
             'revenueThisMonth' => $revenueThisMonth,
+            'ordersToday' => $ordersToday,
             'ordersThisWeek' => $ordersThisWeek,
             'ordersLast7Days' => $ordersLast7Days,
             'lowStockProducts' => $lowStockProducts,

@@ -70,8 +70,25 @@
                         </th>
                     @endif
                     @foreach($columns as $col)
-                        <th scope="col" class="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-600">
-                            {{ $col['label'] ?? '' }}
+                        @php
+                            $sortKey = $col['sort_key'] ?? null;
+                            $isSortable = $sortKey !== null;
+                            $isActiveSort = $isSortable && request('sort') === $sortKey;
+                            $currentOrder = request('order', 'desc');
+                        @endphp
+                        <th scope="col" class="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-600 {{ $isSortable ? 'whitespace-nowrap' : '' }}">
+                            @if($isSortable)
+                                <a href="{{ admin_sort_url($sortKey) }}" class="inline-flex items-center gap-1 transition hover:text-brand-teal">
+                                    {{ $col['label'] ?? '' }}
+                                    @if($isActiveSort)
+                                        <span class="material-icons text-base" aria-hidden="true">{{ $currentOrder === 'asc' ? 'arrow_drop_up' : 'arrow_drop_down' }}</span>
+                                    @else
+                                        <span class="material-icons text-base opacity-50" aria-hidden="true">unfold_more</span>
+                                    @endif
+                                </a>
+                            @else
+                                {{ $col['label'] ?? '' }}
+                            @endif
                         </th>
                     @endforeach
                     @if($hasActions)
@@ -138,8 +155,29 @@
 </div>
 
 @if($pagination && method_exists($pagination, 'links'))
-    <div class="mt-4">
-        {{ $pagination->withQueryString()->links() }}
+    <div class="mt-4 flex flex-wrap items-center justify-between gap-4">
+        <form method="GET" action="{{ request()->url() }}" class="flex items-center gap-2">
+            @foreach(request()->query() as $key => $value)
+                @if($key !== 'per_page')
+                    @if(is_array($value))
+                        @foreach($value as $v)
+                            <input type="hidden" name="{{ $key }}[]" value="{{ $v }}">
+                        @endforeach
+                    @else
+                        <input type="hidden" name="{{ $key }}" value="{{ $value }}">
+                    @endif
+                @endif
+            @endforeach
+            <label for="admin-per-page-{{ md5(request()->url()) }}" class="text-sm text-slate-600">{{ __('Per page') }}</label>
+            <select name="per_page" id="admin-per-page-{{ md5(request()->url()) }}" onchange="this.form.submit()" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
+                @foreach(\admin_per_page_options() as $n)
+                    <option value="{{ $n }}" {{ $pagination->perPage() == $n ? 'selected' : '' }}>{{ $n }}</option>
+                @endforeach
+            </select>
+        </form>
+        <div>
+            {{ $pagination->withQueryString()->links() }}
+        </div>
     </div>
 @endif
 

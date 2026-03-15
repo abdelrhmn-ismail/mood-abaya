@@ -3,15 +3,17 @@
 namespace Modules\Admin\Services;
 
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 
 class ProductService
 {
-    public function getAll(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    /** @param  array{category_id?: int, search?: string, active?: string, featured?: string, sort?: string, order?: string}  $filters */
+    public function getAll(array $filters = [], int $perPage = 20): LengthAwarePaginator
     {
-        $query = Product::with('category')->latest();
+        $query = Product::with('category');
 
         if (!empty($filters['category_id'])) {
             $query->where('category_id', $filters['category_id']);
@@ -29,6 +31,19 @@ class ProductService
         }
         if (isset($filters['featured']) && $filters['featured'] !== '') {
             $query->where('featured', (bool) $filters['featured']);
+        }
+
+        $sort = $filters['sort'] ?? 'created_at';
+        $order = isset($filters['order']) && strtolower($filters['order']) === 'asc' ? 'asc' : 'desc';
+        $allowedSort = ['name', 'price', 'stock', 'active', 'created_at', 'id'];
+        if (!in_array($sort, $allowedSort, true)) {
+            $sort = 'created_at';
+        }
+        if ($sort === 'name') {
+            $locale = config('app.fallback_locale', 'en');
+            $query->orderBy("name->{$locale}", $order);
+        } else {
+            $query->orderBy($sort, $order);
         }
 
         return $query->paginate($perPage);
@@ -90,6 +105,7 @@ class ProductService
             'active' => $data['active'],
             'featured' => $data['featured'],
         ]);
+        $this->syncGalleryImages($product, $data['gallery_images'] ?? []);
         return $product;
     }
 
@@ -162,7 +178,26 @@ class ProductService
             $product->image = $data['image'];
         }
         $product->save();
+        if (array_key_exists('delete_image_ids', $data) && is_array($data['delete_image_ids'])) {
+            $product->images()->whereIn('id', $data['delete_image_ids'])->delete();
+        }
+        $this->syncGalleryImages($product, $data['gallery_images'] ?? []);
         return $product;
+    }
+
+    /**
+     * @param  array<int, UploadedFile>  $files
+     */
+    private function syncGalleryImages(Product $product, array $files): void
+    {
+        $sortOrder = (int) $product->images()->max('sort_order');
+        foreach ($files as $file) {
+            if (!$file instanceof UploadedFile || !$file->isValid()) {
+                continue;
+            }
+            $path = $file->store('products', 'public');
+            $product->images()->create(['image' => $path, 'sort_order' => ++$sortOrder]);
+        }
     }
 
     public function delete(Product $product): void

@@ -4,11 +4,15 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Database\Seeder;
 
 class ProductSeeder extends Seeder
 {
     use CreatesTestImages;
+
+    /** Number of gallery images to seed per product (in addition to main image). */
+    private const GALLERY_IMAGES_PER_PRODUCT = 3;
 
     public function run(): void
     {
@@ -71,12 +75,32 @@ class ProductSeeder extends Seeder
             $imagePath = $this->createTestImage('products', $slug);
             $data['image'] = $imagePath;
             $data['active'] = true;
-            Product::updateOrCreate(
+            $product = Product::updateOrCreate(
                 [
                     'category_id' => $data['category_id'],
                     'slug' => $slug,
                 ],
                 $data
+            );
+
+            $this->seedProductGallery($product, $slug);
+        }
+    }
+
+    private function seedProductGallery(Product $product, string $slug): void
+    {
+        if ($product->images()->count() >= self::GALLERY_IMAGES_PER_PRODUCT) {
+            return;
+        }
+        for ($i = 1; $i <= self::GALLERY_IMAGES_PER_PRODUCT; $i++) {
+            $key = "{$slug}-gallery-{$i}";
+            $path = $this->createTestImage('products', $key);
+            ProductImage::updateOrCreate(
+                [
+                    'product_id' => $product->id,
+                    'sort_order' => $i,
+                ],
+                ['image' => $path]
             );
         }
     }

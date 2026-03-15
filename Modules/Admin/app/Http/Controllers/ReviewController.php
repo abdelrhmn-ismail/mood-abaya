@@ -11,7 +11,7 @@ class ReviewController
 {
     public function index(Request $request): View
     {
-        $query = ProductReview::with(['product', 'user', 'order'])->orderByDesc('created_at');
+        $query = ProductReview::with(['product', 'user', 'order']);
 
         if (request('rating') !== null && request('rating') !== '') {
             $query->where('rating', (int) request('rating'));
@@ -29,7 +29,16 @@ class ReviewController
             });
         }
 
-        $reviews = $query->paginate(20);
+        $sort = $request->get('sort', 'created_at');
+        $order = strtolower($request->get('order', 'desc')) === 'asc' ? 'asc' : 'desc';
+        $allowedSort = ['id', 'rating', 'is_visible', 'created_at'];
+        if (in_array($sort, $allowedSort, true)) {
+            $query->orderBy($sort, $order);
+        } else {
+            $query->orderByDesc('created_at');
+        }
+
+        $reviews = $query->paginate(admin_per_page())->withQueryString();
         $products = \App\Models\Product::orderBy('id')->get(['id', 'name']);
 
         return view('admin::reviews.index', compact('reviews', 'products'));
@@ -60,7 +69,7 @@ class ReviewController
         } elseif ($action === 'delete') {
             $count = ProductReview::whereIn('id', $ids)->delete();
         }
-        return redirect()->route('admin.reviews.index', $request->only('rating', 'visible', 'product_id', 'search'))
+        return redirect()->route('admin.reviews.index', $request->only('rating', 'visible', 'product_id', 'search', 'per_page', 'sort', 'order'))
             ->with('success', __(':count record(s) updated.', ['count' => $count]));
     }
 }

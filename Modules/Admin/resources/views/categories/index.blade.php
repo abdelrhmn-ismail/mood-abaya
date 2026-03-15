@@ -21,10 +21,10 @@
 
 @include('admin::components.table', [
     'columns' => [
-        ['label' => __('Name'), 'key' => 'name'],
-        ['label' => __('Slug'), 'key' => 'slug', 'class' => 'font-mono'],
-        ['label' => __('Sort'), 'key' => 'sort_order'],
-        ['label' => __('Active'), 'key' => 'active', 'format' => 'boolean'],
+        ['label' => __('Name'), 'key' => 'name', 'sort_key' => 'name'],
+        ['label' => __('Slug'), 'key' => 'slug', 'class' => 'font-mono', 'sort_key' => 'slug'],
+        ['label' => __('Sort'), 'key' => 'sort_order', 'sort_key' => 'sort_order'],
+        ['label' => __('Active'), 'key' => 'active', 'format' => 'boolean', 'sort_key' => 'active'],
     ],
     'rows' => $categories,
     'emptyMessage' => __('No categories yet.'),

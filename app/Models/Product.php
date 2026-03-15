@@ -75,6 +75,66 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('sort_order');
+    }
+
+    /** All images for display: main image first, then gallery images. */
+    public function getDisplayImages(): \Illuminate\Support\Collection
+    {
+        $list = collect();
+        if ($this->image) {
+            $list->push((object) ['image' => $this->image, 'is_main' => true]);
+        }
+        foreach ($this->images as $img) {
+            $list->push((object) ['image' => $img->image, 'is_main' => false]);
+        }
+        return $list->isEmpty() ? collect() : $list;
+    }
+
+    /** First image URL (main or first gallery) for cards/thumbnails. */
+    public function getFirstImageAttribute(): ?string
+    {
+        $first = $this->getDisplayImages()->first();
+        return $first ? $first->image : null;
+    }
+
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class)->orderBy('sort_order');
+    }
+
+    /** Whether this product has variants (size/color etc.). */
+    public function hasVariants(): bool
+    {
+        return $this->variants()->exists();
+    }
+
+    /** Option names for variant selector (e.g. ["Size", "Color"]) derived from first variant's attributes. */
+    public function getVariantOptionNames(): array
+    {
+        $first = $this->variants()->first();
+        if (! $first || empty($first->attributes) || ! is_array($first->attributes)) {
+            return [];
+        }
+        return array_keys($first->attributes);
+    }
+
+    /** Find variant by attributes (e.g. ["Size" => "M", "Color" => "Black"]). */
+    public function findVariantByAttributes(array $attributes): ?ProductVariant
+    {
+        if (empty($attributes)) {
+            return null;
+        }
+        foreach ($this->variants as $v) {
+            if (is_array($v->attributes) && $v->attributes === $attributes) {
+                return $v;
+            }
+        }
+        return null;
+    }
+
     public function reviews(): HasMany
     {
         return $this->hasMany(ProductReview::class);

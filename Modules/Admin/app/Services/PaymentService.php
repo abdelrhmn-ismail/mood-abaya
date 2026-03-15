@@ -12,15 +12,25 @@ class PaymentService
         private MainPaymentService $mainPaymentService
     ) {}
 
-    public function getPayments(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    /** @param  array{status?: string, method?: string, sort?: string, order?: string}  $filters */
+    public function getPayments(array $filters = [], int $perPage = 20): LengthAwarePaginator
     {
-        $query = Payment::with('order.user')->latest();
+        $query = Payment::with('order.user');
 
         if (!empty($filters['status'])) {
             $query->where('status', $filters['status']);
         }
         if (!empty($filters['method'])) {
             $query->where('method', $filters['method']);
+        }
+
+        $sort = $filters['sort'] ?? 'created_at';
+        $order = isset($filters['order']) && strtolower($filters['order']) === 'asc' ? 'asc' : 'desc';
+        $allowedSort = ['id', 'method', 'status', 'created_at'];
+        if (in_array($sort, $allowedSort, true)) {
+            $query->orderBy($sort, $order);
+        } else {
+            $query->latest();
         }
 
         return $query->paginate($perPage);

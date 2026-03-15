@@ -90,6 +90,8 @@
                     </ul>
                 </div>
 
+                @include('frontend.partials.testimonials-block')
+
                 {{-- CTA --}}
                 <div class="flex flex-wrap items-center justify-center gap-4 border-t border-slate-200 pt-12">
                     <a href="{{ route('categories') }}" class="inline-flex items-center gap-2 rounded-xl bg-brand-teal px-6 py-3 font-semibold text-white transition hover:bg-brand-teal-dark">

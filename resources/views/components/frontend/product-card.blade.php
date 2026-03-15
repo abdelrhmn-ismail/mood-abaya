@@ -1,20 +1,49 @@
 @props(['product', 'showAddToCart' => true])
 
-<article class="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-brand-white shadow-sm transition hover:shadow-xl hover:border-brand-teal/20">
-    <div class="absolute right-2 top-2 z-10" onclick="event.preventDefault(); event.stopPropagation();">
+@php
+    $cardImages = $product->getDisplayImages();
+    $firstImage = $cardImages->first();
+    $quickViewImage = $firstImage ? asset('storage/' . $firstImage->image) : '';
+@endphp
+<article class="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-brand-white shadow-sm transition hover:shadow-xl hover:border-brand-teal/20" x-data="{ active: 0 }">
+    <div class="absolute right-2 top-2 z-10 flex gap-1" onclick="event.preventDefault(); event.stopPropagation();">
+        <button type="button" class="rounded-full bg-white/90 p-2 shadow-sm transition hover:bg-white"
+                @click="$dispatch('open-quick-view', { id: {{ $product->id }}, name: {{ json_encode($product->name) }}, price: '{{ number_format($product->price, 2) }}', url: {{ json_encode(route('products.show', $product->slug)) }}, image: {{ json_encode($quickViewImage) }} })"
+                aria-label="{{ __('Quick view') }}">
+            <span class="material-icons text-lg text-slate-700">visibility</span>
+        </button>
         @include('frontend.partials.wishlist-button', ['product' => $product])
     </div>
     <a href="{{ route('products.show', $product->slug) }}" class="flex flex-col flex-1 min-h-0">
-        @if($product->image)
-            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="aspect-square w-full shrink-0 object-cover transition duration-300 group-hover:scale-105" loading="lazy">
-        @else
+        @if($cardImages->isEmpty())
             <div class="aspect-square w-full shrink-0 flex items-center justify-center bg-slate-100">
                 <span class="material-icons text-6xl text-slate-300">inventory_2</span>
+            </div>
+        @else
+            <div class="relative aspect-square w-full shrink-0 overflow-hidden bg-slate-100">
+                @foreach($cardImages as $index => $item)
+                    <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $product->name }}"
+                         class="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105 {{ $index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' }}"
+                         :class="active === {{ $index }} ? 'opacity-100 z-10' : 'opacity-0 z-0'"
+                         loading="lazy">
+                @endforeach
+                @if($cardImages->count() > 1)
+                    <div class="absolute bottom-2 left-0 right-0 z-20 flex justify-center gap-1.5" onclick="event.preventDefault(); event.stopPropagation();">
+                        @foreach($cardImages as $index => $item)
+                            <button type="button" class="h-1.5 w-1.5 rounded-full transition focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2"
+                                    :class="active === {{ $index }} ? 'bg-brand-teal scale-125' : 'bg-white/80 hover:bg-white'"
+                                    @click.prevent="active = {{ $index }}"
+                                    aria-label="{{ __('Image') }} {{ $index + 1 }}"></button>
+                        @endforeach
+                    </div>
+                @endif
             </div>
         @endif
         <div class="border-t border-slate-100 flex min-h-[7.5rem] flex-col p-5 transition group-hover:bg-brand-gold/5">
             @if($product->hasDiscount())
-                <span class="inline-block rounded bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-800">{{ __('Save') }} {{ $product->discountPercent() }}%</span>
+                <span class="inline-flex w-fit items-center gap-1 self-start rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-800">
+                    <span class="material-icons text-lg">local_offer</span> {{ __('Save') }} {{ $product->discountPercent() }}%
+                </span>
             @else
                 <span class="inline-block h-5" aria-hidden="true"></span>
             @endif

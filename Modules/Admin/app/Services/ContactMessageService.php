@@ -7,9 +7,10 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ContactMessageService
 {
-    public function getMessages(array $filters = [], int $perPage = 15): LengthAwarePaginator
+    /** @param  array{read?: string, search?: string, sort?: string, order?: string}  $filters */
+    public function getMessages(array $filters = [], int $perPage = 20): LengthAwarePaginator
     {
-        $query = ContactMessage::latest();
+        $query = ContactMessage::query();
         if (isset($filters['read']) && $filters['read'] !== '') {
             if ($filters['read']) {
                 $query->whereNotNull('read_at');
@@ -24,6 +25,14 @@ class ContactMessageService
                     ->orWhere('email', 'like', $term)
                     ->orWhere('subject', 'like', $term);
             });
+        }
+        $sort = $filters['sort'] ?? 'created_at';
+        $order = isset($filters['order']) && strtolower($filters['order']) === 'asc' ? 'asc' : 'desc';
+        $allowedSort = ['name', 'email', 'subject', 'created_at', 'read_at'];
+        if (in_array($sort, $allowedSort, true)) {
+            $query->orderBy($sort, $order);
+        } else {
+            $query->latest();
         }
         return $query->paginate($perPage);
     }

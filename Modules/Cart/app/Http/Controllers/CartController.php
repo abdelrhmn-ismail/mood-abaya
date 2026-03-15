@@ -23,10 +23,12 @@ class CartController extends Controller
         $request->validate([
             'product_id' => ['required', 'integer', 'exists:products,id'],
             'quantity' => ['nullable', 'integer', 'min:1', 'max:999'],
+            'product_variant_id' => ['nullable', 'integer', 'exists:product_variants,id'],
         ]);
         $this->cartService->addItem(
             (int) $request->product_id,
-            (int) ($request->quantity ?? 1)
+            (int) ($request->quantity ?? 1),
+            $request->filled('product_variant_id') ? (int) $request->product_variant_id : null
         );
         return redirect()->route('account')->withFragment('cart')->with('success', __('Item added to cart.'));
     }

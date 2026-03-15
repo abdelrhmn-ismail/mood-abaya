@@ -30,8 +30,11 @@
                         </a>
                         <div class="min-w-0 flex-1">
                             <a href="{{ route('products.show', $product->slug) }}" class="font-semibold text-slate-900 hover:underline">{{ $product->name }}</a>
-                            <p class="mt-0.5 text-sm text-slate-500">{{ number_format($product->price, 2) }} {{ __('SAR') }} {{ __('each') }}</p>
-                            <p class="mt-1 font-semibold text-slate-800">{{ __('Qty') }}: {{ $item->quantity }} · {{ number_format($product->price * $item->quantity, 2) }} {{ __('SAR') }}</p>
+                            @if($item->productVariant)
+                                <p class="mt-0.5 text-xs text-slate-500">{{ $item->productVariant->getDisplayName() }}</p>
+                            @endif
+                            <p class="mt-0.5 text-sm text-slate-500">{{ number_format($item->getEffectivePrice(), 2) }} {{ __('SAR') }} {{ __('each') }}</p>
+                            <p class="mt-1 font-semibold text-slate-800">{{ __('Qty') }}: {{ $item->quantity }} · {{ number_format($item->getEffectivePrice() * $item->quantity, 2) }} {{ __('SAR') }}</p>
                         </div>
                         <div class="flex flex-wrap items-center gap-2 shrink-0">
                             <form action="{{ route('cart.update', $item->id) }}" method="POST" class="flex items-center gap-2">

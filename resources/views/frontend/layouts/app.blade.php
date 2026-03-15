@@ -46,9 +46,17 @@
     <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/ripple.js" defer></script>
 
     @stack('styles')
+    @php $headerCode = \App\Models\Setting::get('custom_code_header', ''); @endphp
+    @if(trim($headerCode) !== '')
+        {!! $headerCode !!}
+    @endif
 </head>
 <body class="min-h-screen bg-brand-white text-brand-black antialiased {{ app()->getLocale() === 'ar' ? 'font-cairo' : 'font-cinzel' }}" data-ripple-light="true">
+    @include('frontend.partials.announcement-bar')
+
     @include('frontend.partials.navbar')
+
+    @include('frontend.partials.banners')
 
     <main class="flex-1">
         @yield('content')
@@ -56,8 +64,17 @@
 
     @include('frontend.partials.footer')
 
+    @include('frontend.partials.floating-social')
+
+    @include('frontend.partials.cookie-consent')
+    @include('frontend.partials.quick-view-modal')
+
     {{-- Frontend JS (navbar, newsletter) --}}
     @vite(['resources/js/frontend.js'])
     @stack('scripts')
+    @php $footerCode = \App\Models\Setting::get('custom_code_footer', ''); @endphp
+    @if(trim($footerCode) !== '')
+        {!! $footerCode !!}
+    @endif
 </body>
 </html>

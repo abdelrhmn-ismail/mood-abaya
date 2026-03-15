@@ -32,11 +32,11 @@
 
 @include('admin::components.table', [
     'columns' => [
-        ['label' => __('Name'), 'key' => 'name'],
+        ['label' => __('Name'), 'key' => 'name', 'sort_key' => 'name'],
         ['label' => __('Category'), 'key' => 'category.name'],
-        ['label' => __('Price'), 'key' => 'price', 'format' => 'price'],
-        ['label' => __('Stock'), 'key' => 'stock'],
-        ['label' => __('Active'), 'key' => 'active', 'format' => 'boolean'],
+        ['label' => __('Price'), 'key' => 'price', 'format' => 'price', 'sort_key' => 'price'],
+        ['label' => __('Stock'), 'key' => 'stock', 'sort_key' => 'stock'],
+        ['label' => __('Active'), 'key' => 'active', 'format' => 'boolean', 'sort_key' => 'active'],
     ],
     'rows' => $products,
     'emptyMessage' => __('No products yet.'),

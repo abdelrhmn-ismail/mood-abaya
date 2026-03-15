@@ -18,7 +18,10 @@ class ProductController
 
     public function index(Request $request): View
     {
-        $products = $this->productService->getAll($request->only('category_id', 'search', 'active', 'featured'));
+        $products = $this->productService->getAll(
+            $request->only('category_id', 'search', 'active', 'featured', 'sort', 'order'),
+            admin_per_page()
+        );
         $categories = $this->categoryService->getAll();
 
         return view('admin::products.index', compact('products', 'categories'));
@@ -41,7 +44,7 @@ class ProductController
         } elseif ($action === 'delete') {
             $count = $this->productService->bulkDelete($ids);
         }
-        return redirect()->route('admin.products.index', $request->only('category_id', 'search', 'active', 'featured'))
+        return redirect()->route('admin.products.index', $request->only('category_id', 'search', 'active', 'featured', 'per_page', 'sort', 'order'))
             ->with('success', __(':count record(s) updated.', ['count' => $count]));
     }
 
@@ -74,6 +77,8 @@ class ProductController
             'price' => 'required|numeric|min:0',
             'compare_at_price' => 'nullable|numeric|min:0',
             'image' => 'nullable|image|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|max:2048',
             'stock' => 'nullable|integer|min:0',
             'min_order_qty' => 'nullable|integer|min:1',
             'max_order_qty' => 'nullable|integer|min:1',
@@ -89,6 +94,7 @@ class ProductController
         $data['active'] = $request->boolean('active');
         $data['featured'] = $request->boolean('featured');
         $data['stock'] = (int) ($data['stock'] ?? 0);
+        $data['gallery_images'] = $request->file('images') ?? [];
         $this->productService->create($data);
 
         return redirect()->route('admin.products.index')->with('success', __('Product created.'));
@@ -96,6 +102,7 @@ class ProductController
 
     public function edit(Product $product): View
     {
+        $product->load('images', 'variants');
         $categories = $this->categoryService->getAll();
 
         return view('admin::products.edit', compact('product', 'categories'));
@@ -123,6 +130,10 @@ class ProductController
             'price' => 'required|numeric|min:0',
             'compare_at_price' => 'nullable|numeric|min:0',
             'image' => 'nullable|image|max:2048',
+            'images' => 'nullable|array',
+            'images.*' => 'image|max:2048',
+            'delete_image_ids' => 'nullable|array',
+            'delete_image_ids.*' => 'integer|exists:product_images,id',
             'stock' => 'nullable|integer|min:0',
             'min_order_qty' => 'nullable|integer|min:1',
             'max_order_qty' => 'nullable|integer|min:1',
@@ -140,6 +151,8 @@ class ProductController
         if (isset($data['stock'])) {
             $data['stock'] = (int) $data['stock'];
         }
+        $data['gallery_images'] = $request->file('images') ?? [];
+        $data['delete_image_ids'] = $request->input('delete_image_ids', []);
         $this->productService->update($product, $data);
 
         return redirect()->route('admin.products.index')->with('success', __('Product updated.'));

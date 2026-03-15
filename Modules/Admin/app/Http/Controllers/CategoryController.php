@@ -16,7 +16,10 @@ class CategoryController
 
     public function index(Request $request): View
     {
-        $categories = $this->categoryService->getForIndex($request->only('search', 'active'));
+        $categories = $this->categoryService->getForIndex(
+            $request->only('search', 'active', 'sort', 'order'),
+            admin_per_page()
+        );
 
         return view('admin::categories.index', compact('categories'));
     }
@@ -38,7 +41,7 @@ class CategoryController
         } elseif ($action === 'delete') {
             $count = $this->categoryService->bulkDelete($ids);
         }
-        return redirect()->route('admin.categories.index')
+        return redirect()->route('admin.categories.index', $request->only('search', 'active', 'per_page', 'sort', 'order'))
             ->with('success', __(':count record(s) updated.', ['count' => $count]));
     }
 

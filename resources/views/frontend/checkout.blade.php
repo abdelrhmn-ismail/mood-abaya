@@ -140,9 +140,40 @@
                                 </li>
                             @endforeach
                         </ul>
-                        <p class="mt-4 flex justify-between text-lg font-bold text-brand-black">
-                            {{ __('Total') }}: {{ number_format($total, 2) }} {{ __('SAR') }}
+                        <p class="mt-3 flex justify-between text-sm text-slate-600">
+                            <span>{{ __('Subtotal') }}</span>
+                            <span id="checkout-subtotal">{{ number_format($subtotal, 2) }} {{ __('SAR') }}</span>
                         </p>
+                        @if($shippingType === 'zones' && count($shippingZones) > 0)
+                            <div class="mt-2">
+                                <label for="shipping_zone_id" class="mb-1 block text-sm font-medium text-slate-700">{{ __('Delivery area') }}</label>
+                                <select name="shipping_zone_id" id="shipping_zone_id" class="block w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-brand-black focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20" data-zones='@json($shippingZones)' data-subtotal="{{ $subtotal }}">
+                                    @foreach($shippingZones as $z)
+                                        <option value="{{ $z['id'] }}" data-amount="{{ $z['amount'] }}" {{ $loop->first ? 'selected' : '' }}>{{ $z['label'] }} — {{ number_format($z['amount'], 2) }} {{ __('SAR') }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @else
+                            @if($shippingType === 'free_over' && $shippingFreeOver && $subtotal < $shippingFreeOver)
+                                <p class="mt-1 text-xs text-brand-teal">{{ __('Free shipping on orders over') }} {{ number_format($shippingFreeOver, 0) }} {{ __('SAR') }}</p>
+                            @endif
+                            <input type="hidden" name="shipping_zone_id" value="">
+                        @endif
+                        <p class="mt-2 flex justify-between text-sm text-slate-600">
+                            <span>{{ __('Shipping') }}@if($shippingLabel && $shippingLabel !== __('Shipping')) ({{ $shippingLabel }})@endif</span>
+                            <span id="checkout-shipping">@if($shippingAmount > 0){{ number_format($shippingAmount, 2) }} {{ __('SAR') }}@else{{ __('Free') }}@endif</span>
+                        </p>
+                        <p class="mt-4 flex justify-between text-lg font-bold text-brand-black">
+                            {{ __('Total') }}: <span id="checkout-total">{{ number_format($total, 2) }}</span> {{ __('SAR') }}
+                        </p>
+                        @php $checkoutBadges = array_filter(trust_badges()); @endphp
+                        @if(!empty($checkoutBadges))
+                            <div class="mt-4 flex flex-wrap items-center justify-center gap-4 border-t border-slate-100 pt-4 text-xs text-slate-500">
+                                @foreach($checkoutBadges as $badge)
+                                    <span class="flex items-center gap-1"><span class="material-icons text-base text-brand-teal">verified</span> {{ $badge }}</span>
+                                @endforeach
+                            </div>
+                        @endif
                         <button type="submit" class="mt-6 w-full rounded-xl bg-brand-teal py-3.5 font-semibold text-white hover:bg-brand-teal-dark">
                             {{ __('Place Order') }}
                         </button>
@@ -204,6 +235,22 @@
             form.querySelectorAll('input[name="billing_use"]').forEach(function (radio) {
                 radio.addEventListener('change', updateFromRadios);
             });
+        })();
+        // Shipping zone change: update displayed shipping and total
+        (function () {
+            var sel = document.getElementById('shipping_zone_id');
+            if (!sel) return;
+            var subtotal = parseFloat(sel.getAttribute('data-subtotal')) || 0;
+            function updateTotals() {
+                var opt = sel.options[sel.selectedIndex];
+                var amount = opt ? parseFloat(opt.getAttribute('data-amount')) || 0 : 0;
+                var total = subtotal + amount;
+                var shipEl = document.getElementById('checkout-shipping');
+                var totalEl = document.getElementById('checkout-total');
+                if (shipEl) shipEl.textContent = amount > 0 ? amount.toFixed(2) + ' {{ __("SAR") }}' : '{{ __("Free") }}';
+                if (totalEl) totalEl.textContent = total.toFixed(2);
+            }
+            sel.addEventListener('change', updateTotals);
         })();
     </script>
     @endpush

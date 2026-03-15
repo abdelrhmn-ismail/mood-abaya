@@ -58,6 +58,8 @@
         </div>
     </section>
 
+    @include('frontend.partials.testimonials-block')
+
     {{-- Trust strip --}}
     <section class="border-b border-slate-200 bg-brand-white py-4">
         <div class="container mx-auto px-4">

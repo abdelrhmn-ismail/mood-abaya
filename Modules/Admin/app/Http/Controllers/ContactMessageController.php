@@ -16,7 +16,10 @@ class ContactMessageController
 
     public function index(Request $request): View
     {
-        $messages = $this->contactMessageService->getMessages($request->only('read', 'search'));
+        $messages = $this->contactMessageService->getMessages(
+            $request->only('read', 'search', 'sort', 'order'),
+            admin_per_page()
+        );
 
         return view('admin::contacts.index', compact('messages'));
     }
@@ -43,7 +46,7 @@ class ContactMessageController
         } elseif ($action === 'delete') {
             $count = $this->contactMessageService->bulkDelete($ids);
         }
-        return redirect()->route('admin.contacts.index', $request->only('read', 'search'))
+        return redirect()->route('admin.contacts.index', $request->only('read', 'search', 'per_page', 'sort', 'order'))
             ->with('success', __(':count record(s) updated.', ['count' => $count]));
     }
 }

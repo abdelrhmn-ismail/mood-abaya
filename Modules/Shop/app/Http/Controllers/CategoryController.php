@@ -28,8 +28,14 @@ class CategoryController extends Controller
             abort(404);
         }
 
-        $products = $this->categoryService->getProductsByCategory($category);
+        $filters = [
+            'sort' => $request->get('sort', 'name_asc'),
+            'in_stock' => $request->boolean('in_stock'),
+            'price_min' => $request->get('price_min'),
+            'price_max' => $request->get('price_max'),
+        ];
+        $products = $this->categoryService->getProductsByCategory($category, $filters);
 
-        return view('frontend.category', compact('category', 'products'));
+        return view('frontend.category', compact('category', 'products', 'filters'));
     }
 }

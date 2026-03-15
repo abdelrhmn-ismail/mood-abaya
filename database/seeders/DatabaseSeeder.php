@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
             PageContentSeeder::class,
             HeroImagesSeeder::class,
             FaqSeeder::class,
+            TestimonialSeeder::class,
             AdminUserSeeder::class,
         ]);
     }

@@ -20,7 +20,7 @@ class HomeService
 
     public function getLatestProducts(int $limit = 8): Collection
     {
-        return Product::with('category')
+        return Product::with(['category', 'images'])
             ->active()
             ->latest()
             ->limit($limit)
@@ -29,7 +29,7 @@ class HomeService
 
     public function getFeaturedProducts(int $limit = 4): Collection
     {
-        return Product::with('category')
+        return Product::with(['category', 'images'])
             ->active()
             ->where('featured', true)
             ->latest()

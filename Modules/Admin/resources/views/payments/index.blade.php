@@ -21,11 +21,11 @@
 
 @include('admin::components.table', [
     'columns' => [
-        ['label' => __('ID'), 'key' => 'id'],
+        ['label' => __('ID'), 'key' => 'id', 'sort_key' => 'id'],
         ['label' => __('Order'), 'key' => 'order.order_number', 'class' => 'font-mono'],
-        ['label' => __('Method'), 'key' => 'method'],
-        ['label' => __('Status'), 'key' => 'status'],
-        ['label' => __('Date'), 'key' => 'created_at', 'format' => 'datetime'],
+        ['label' => __('Method'), 'key' => 'method', 'sort_key' => 'method'],
+        ['label' => __('Status'), 'key' => 'status', 'sort_key' => 'status'],
+        ['label' => __('Date'), 'key' => 'created_at', 'format' => 'datetime', 'sort_key' => 'created_at'],
     ],
     'rows' => $payments,
     'emptyMessage' => __('No payments found.'),

@@ -16,6 +16,12 @@
             <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="seo" role="tab">{{ __('SEO') }}</button>
             <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="labels" role="tab">{{ __('Site labels') }}</button>
             <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="frontend" role="tab">{{ __('Frontend') }}</button>
+            <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="contact-social" role="tab">{{ __('Contact & Social') }}</button>
+            <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="announcement" role="tab">{{ __('Announcement bar') }}</button>
+            <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="shipping" role="tab">{{ __('Shipping') }}</button>
+            <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="maintenance" role="tab">{{ __('Maintenance') }}</button>
+            <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="trust-badges" role="tab">{{ __('Trust badges') }}</button>
+            <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="custom-code" role="tab">{{ __('Custom code') }}</button>
             <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="editor" role="tab">{{ __('Editor') }}</button>
         </nav>
     </div>
@@ -185,6 +191,140 @@
                         </div>
                     @endforeach
                 </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Tab: Contact & Social --}}
+    <div id="tab-contact-social" class="settings-panel hidden space-y-6">
+        <h2 class="text-lg font-semibold text-gray-900">{{ __('Contact & Social') }}</h2>
+        <p class="text-sm text-gray-500">{{ __('These values appear in the footer, contact page, and as floating social icons. Leave blank to hide.') }}</p>
+        <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
+            <div>
+                <h3 class="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">{{ __('Social links') }}</h3>
+                <div class="space-y-3">
+                    @include('admin::components.form-field', ['name' => 'whatsapp_url', 'label' => __('WhatsApp URL'), 'type' => 'text', 'value' => $settings['whatsapp_url'] ?? '', 'attributes' => ['placeholder' => 'https://wa.me/966501234567']])
+                    @include('admin::components.form-field', ['name' => 'instagram_url', 'label' => __('Instagram URL'), 'type' => 'text', 'value' => $settings['instagram_url'] ?? '', 'attributes' => ['placeholder' => 'https://instagram.com/yourstore']])
+                    @include('admin::components.form-field', ['name' => 'facebook_url', 'label' => __('Facebook URL'), 'type' => 'text', 'value' => $settings['facebook_url'] ?? '', 'attributes' => ['placeholder' => 'https://facebook.com/yourpage']])
+                    @include('admin::components.form-field', ['name' => 'twitter_url', 'label' => __('Twitter / X URL'), 'type' => 'text', 'value' => $settings['twitter_url'] ?? '', 'attributes' => ['placeholder' => 'https://twitter.com/yourstore']])
+                </div>
+            </div>
+            <div>
+                <h3 class="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">{{ __('Contact info') }}</h3>
+                <div class="space-y-3">
+                    @include('admin::components.form-field', ['name' => 'contact_email', 'label' => __('Email'), 'type' => 'text', 'value' => $settings['contact_email'] ?? '', 'attributes' => ['placeholder' => 'info@example.com']])
+                    @include('admin::components.form-field', ['name' => 'contact_email_secondary', 'label' => __('Email (secondary)'), 'type' => 'text', 'value' => $settings['contact_email_secondary'] ?? '', 'attributes' => ['placeholder' => 'support@example.com']])
+                    @include('admin::components.form-field', ['name' => 'contact_phone', 'label' => __('Phone'), 'type' => 'text', 'value' => $settings['contact_phone'] ?? '', 'attributes' => ['placeholder' => '+966 50 123 4567']])
+                    @include('admin::components.form-field', ['name' => 'contact_phone_secondary', 'label' => __('Phone (secondary)'), 'type' => 'text', 'value' => $settings['contact_phone_secondary'] ?? '', 'attributes' => ['placeholder' => '+966 11 234 5678']])
+                    @include('admin::components.form-field', ['name' => 'contact_location', 'label' => __('Address / Location'), 'type' => 'textarea', 'value' => $settings['contact_location'] ?? '', 'attributes' => ['rows' => 3, 'placeholder' => __('Full address or area')]])
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Tab: Announcement bar (popup) --}}
+    <div id="tab-announcement" class="settings-panel hidden space-y-6">
+        <h2 class="text-lg font-semibold text-gray-900">{{ __('Announcement bar') }}</h2>
+        <p class="text-sm text-gray-500">{{ __('A dismissible bar at the top of the site (e.g. "10% off first order"). Hidden once per session when the user closes it.') }}</p>
+        @include('admin::components.form-field', [
+            'name' => 'announcement_bar_enabled',
+            'label' => '',
+            'type' => 'checkbox',
+            'value' => ($settings['announcement_bar_enabled'] ?? '0') === '1',
+            'attributes' => ['help' => __('Show announcement bar')],
+        ])
+        @include('admin::components.form-field', [
+            'name' => 'announcement_bar_text',
+            'label' => __('Announcement text'),
+            'type' => 'text',
+            'value' => $settings['announcement_bar_text'] ?? '',
+            'attributes' => ['placeholder' => __('e.g. 10% off your first order')],
+        ])
+        @include('admin::components.form-field', [
+            'name' => 'announcement_bar_link',
+            'label' => __('Link (optional)'),
+            'type' => 'text',
+            'value' => $settings['announcement_bar_link'] ?? '',
+            'attributes' => ['placeholder' => 'https://'],
+        ])
+    </div>
+
+    {{-- Tab: Shipping --}}
+    <div id="tab-shipping" class="settings-panel hidden space-y-6">
+        <h2 class="text-lg font-semibold text-gray-900">{{ __('Shipping') }}</h2>
+        <p class="text-sm text-gray-500">{{ __('Configure how shipping cost is calculated at checkout.') }}</p>
+        @include('admin::components.form-field', [
+            'name' => 'shipping_type',
+            'label' => __('Shipping type'),
+            'type' => 'select',
+            'value' => $settings['shipping_type'] ?? 'flat',
+            'options' => [
+                ['value' => 'flat', 'label' => __('Flat rate')],
+                ['value' => 'free_over', 'label' => __('Free over amount')],
+                ['value' => 'zones', 'label' => __('Zones (e.g. Riyadh vs rest of KSA)')],
+            ],
+        ])
+        @include('admin::components.form-field', ['name' => 'shipping_flat_rate', 'label' => __('Flat rate (SAR)'), 'type' => 'number', 'value' => $settings['shipping_flat_rate'] ?? '0', 'attributes' => ['step' => '0.01', 'min' => 0]])
+        @include('admin::components.form-field', ['name' => 'shipping_free_over', 'label' => __('Free shipping over (SAR)'), 'type' => 'number', 'value' => $settings['shipping_free_over'] ?? '', 'attributes' => ['step' => '0.01', 'min' => 0, 'placeholder' => __('Leave empty to disable')]])
+        <div>
+            <label for="shipping_zones" class="block text-sm font-medium text-gray-700">{{ __('Shipping zones (JSON)') }}</label>
+            <p class="mt-0.5 text-xs text-gray-500">{{ __('When type is Zones, paste JSON array: [{"id":"riyadh","label":"Riyadh","amount":15},{"id":"other","label":"Rest of KSA","amount":25}]') }}</p>
+            <textarea name="shipping_zones" id="shipping_zones" rows="4" class="mt-1 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">{{ old('shipping_zones', $settings['shipping_zones'] ?? '') }}</textarea>
+        </div>
+    </div>
+
+    {{-- Tab: Maintenance mode --}}
+    <div id="tab-maintenance" class="settings-panel hidden space-y-6">
+        <h2 class="text-lg font-semibold text-gray-900">{{ __('Maintenance mode') }}</h2>
+        <p class="text-sm text-gray-500">{{ __('When enabled, visitors see a "Coming back soon" page. Admin and allowlisted IPs can still access the site.') }}</p>
+        @include('admin::components.form-field', [
+            'name' => 'maintenance_mode_enabled',
+            'label' => '',
+            'type' => 'checkbox',
+            'value' => ($settings['maintenance_mode_enabled'] ?? '0') === '1',
+            'attributes' => ['help' => __('Enable maintenance mode')],
+        ])
+        @include('admin::components.form-field', [
+            'name' => 'maintenance_coming_back_at',
+            'label' => __('Coming back at (optional)'),
+            'type' => 'text',
+            'value' => $settings['maintenance_coming_back_at'] ?? '',
+            'attributes' => ['placeholder' => 'e.g. 2025-03-20 14:00'],
+        ])
+        <div>
+            <label for="maintenance_ip_allowlist" class="block text-sm font-medium text-gray-700">{{ __('IP allowlist') }}</label>
+            <p class="mt-0.5 text-xs text-gray-500">{{ __('Comma or newline-separated IPs that can access the site during maintenance. Leave empty to allow only admin.') }}</p>
+            <textarea name="maintenance_ip_allowlist" id="maintenance_ip_allowlist" rows="4" class="mt-1 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal" placeholder="192.168.1.1, 10.0.0.1">{{ old('maintenance_ip_allowlist', $settings['maintenance_ip_allowlist'] ?? '') }}</textarea>
+        </div>
+    </div>
+
+    {{-- Tab: Trust badges (footer / checkout line) --}}
+    <div id="tab-trust-badges" class="settings-panel hidden space-y-6">
+        <h2 class="text-lg font-semibold text-gray-900">{{ __('Trust badges') }}</h2>
+        <p class="text-sm text-gray-500">{{ __('Optional line shown in footer and checkout, e.g. "Secure payment", "Free shipping over X SAR", "Easy returns".') }}</p>
+        @include('admin::components.form-field', ['name' => 'trust_badge_1', 'label' => __('Badge 1'), 'type' => 'text', 'value' => $settings['trust_badge_1'] ?? '', 'attributes' => ['placeholder' => 'e.g. Secure payment']])
+        @include('admin::components.form-field', ['name' => 'trust_badge_2', 'label' => __('Badge 2'), 'type' => 'text', 'value' => $settings['trust_badge_2'] ?? '', 'attributes' => ['placeholder' => 'e.g. Free shipping over 200 SAR']])
+        @include('admin::components.form-field', ['name' => 'trust_badge_3', 'label' => __('Badge 3'), 'type' => 'text', 'value' => $settings['trust_badge_3'] ?? '', 'attributes' => ['placeholder' => 'e.g. Easy returns']])
+    </div>
+
+    {{-- Tab: Custom code (header/footer) for tracking, pixels, media team --}}
+    <div id="tab-custom-code" class="settings-panel hidden space-y-6">
+        <h2 class="text-lg font-semibold text-gray-900">{{ __('Custom code') }}</h2>
+        <p class="text-sm text-gray-500">{{ __('Add tracking scripts, pixels, analytics, or any HTML/JS for the media or social team. Code is injected on every frontend page. Only add code from trusted sources.') }}</p>
+        <div class="space-y-6">
+            <div class="rounded-xl border border-gray-200 bg-amber-50/50 p-4">
+                <label for="custom_code_header" class="block text-sm font-medium text-gray-900">{{ __('Header code') }}</label>
+                <p class="mt-0.5 text-xs text-gray-600">{{ __('Pasted inside &lt;head&gt;. Use for: Google Tag Manager head snippet, meta tags, Facebook Pixel, TikTok Pixel, etc.') }}</p>
+                <textarea name="custom_code_header" id="custom_code_header" rows="8" class="mt-2 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal"
+                    placeholder="<!-- e.g. Google Tag Manager -->
+<script>(function(w,d,s,l,i){...})(window,document,'script','dataLayer','GTM-XXXX');</script>">{{ old('custom_code_header', $settings['custom_code_header'] ?? '') }}</textarea>
+            </div>
+            <div class="rounded-xl border border-gray-200 bg-amber-50/50 p-4">
+                <label for="custom_code_footer" class="block text-sm font-medium text-gray-900">{{ __('Footer code') }}</label>
+                <p class="mt-0.5 text-xs text-gray-600">{{ __('Pasted just before &lt;/body&gt;. Use for: GTM noscript, analytics, chat widgets, or any script that should load at page bottom.') }}</p>
+                <textarea name="custom_code_footer" id="custom_code_footer" rows="8" class="mt-2 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal"
+                    placeholder="<!-- e.g. Chat widget or GTM noscript -->
+<noscript><iframe src='...'></iframe></noscript>">{{ old('custom_code_footer', $settings['custom_code_footer'] ?? '') }}</textarea>
             </div>
         </div>
     </div>

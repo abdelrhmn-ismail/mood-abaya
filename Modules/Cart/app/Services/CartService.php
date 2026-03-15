@@ -22,7 +22,7 @@ class CartService
                 }
             });
 
-        return $query->get();
+        return $query->with('productVariant')->get();
     }
 
     public function getItemCount(): int
@@ -37,42 +37,57 @@ class CartService
         return (int) $query->sum('quantity');
     }
 
-    public function addItem(int $productId, int $quantity = 1): CartItem
+    public function addItem(int $productId, int $quantity = 1, ?int $variantId = null): CartItem
     {
-        $product = Product::active()->findOrFail($productId);
-        $quantity = max(1, min($quantity, (int) $product->stock ?: 999));
+        $product = Product::active()->with('variants')->findOrFail($productId);
+        $variant = null;
+        if ($variantId) {
+            $variant = $product->variants->firstWhere('id', $variantId);
+            if (! $variant) {
+                abort(404, 'Variant not found');
+            }
+            $quantity = max(1, min($quantity, (int) $variant->stock ?: 999));
+        } else {
+            $quantity = max(1, min($quantity, (int) $product->stock ?: 999));
+        }
+
+        $matchVariant = fn ($q) => $variantId ? $q->where('product_variant_id', $variantId) : $q->whereNull('product_variant_id');
 
         if (Auth::check()) {
             $item = CartItem::where('user_id', Auth::id())
                 ->where('product_id', $productId)
+                ->when(true, $matchVariant)
                 ->first();
             if ($item) {
                 $item->increment('quantity', $quantity);
-                return $item->fresh(['product']);
+                return $item->fresh(['product', 'productVariant']);
             }
             return CartItem::create([
                 'user_id' => Auth::id(),
                 'session_id' => null,
                 'product_id' => $productId,
+                'product_variant_id' => $variantId,
                 'quantity' => $quantity,
-            ])->load('product');
+            ])->load(['product', 'productVariant']);
         }
 
         $item = CartItem::where('session_id', $this->getSessionId())
             ->whereNull('user_id')
             ->where('product_id', $productId)
+            ->when(true, $matchVariant)
             ->first();
         if ($item) {
             $item->increment('quantity', $quantity);
-            return $item->fresh(['product']);
+            return $item->fresh(['product', 'productVariant']);
         }
 
         return CartItem::create([
             'user_id' => null,
             'session_id' => $this->getSessionId(),
             'product_id' => $productId,
+            'product_variant_id' => $variantId,
             'quantity' => $quantity,
-        ])->load('product');
+        ])->load(['product', 'productVariant']);
     }
 
     public function updateQuantity(int $itemId, int $quantity): ?CartItem
@@ -105,7 +120,7 @@ class CartService
         $items = $this->getCart();
         $total = 0;
         foreach ($items as $item) {
-            $total += $item->product->price * $item->quantity;
+            $total += $item->getEffectivePrice() * $item->quantity;
         }
         return round((float) $total, 2);
     }

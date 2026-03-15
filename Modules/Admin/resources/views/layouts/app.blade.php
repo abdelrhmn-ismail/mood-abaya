@@ -49,17 +49,32 @@
                 <a href="{{ route('admin.categories.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.categories.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">category</span> {{ __('Categories') }}
                 </a>
+                <a href="{{ route('admin.users.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.users.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
+                    <span class="material-icons text-lg">people</span> {{ __('Users') }}
+                </a>
                 <a href="{{ route('admin.contacts.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.contacts.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">mail</span> {{ __('Contact messages') }}
                 </a>
                 <a href="{{ route('admin.faqs.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.faqs.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">help_outline</span> {{ __('FAQ') }}
                 </a>
+                <a href="{{ route('admin.posts.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.posts.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
+                    <span class="material-icons text-lg">newspaper</span> {{ __('Blog / News') }}
+                </a>
+                <a href="{{ route('admin.banners.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.banners.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
+                    <span class="material-icons text-lg">campaign</span> {{ __('Banners') }}
+                </a>
+                <a href="{{ route('admin.testimonials.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.testimonials.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
+                    <span class="material-icons text-lg">format_quote</span> {{ __('Testimonials') }}
+                </a>
                 <a href="{{ route('admin.page-contents.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.page-contents.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">article</span> {{ __('Page content') }}
                 </a>
                 <a href="{{ route('admin.reviews.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.reviews.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">star</span> {{ __('Reviews') }}
+                </a>
+                <a href="{{ route('admin.presentations.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.presentations.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
+                    <span class="material-icons text-lg">slideshow</span> {{ __('Presentation') }}
                 </a>
                 <a href="{{ url('/') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-brand-gold/20" target="_blank">
                     <span class="material-icons text-lg">storefront</span> {{ __('View store') }}

@@ -2,11 +2,18 @@
 
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
 // Frontend routes (/, /about, /categories, /cart, /contact, etc.) are registered by Core, Shop, Contact, Cart modules.
 
+Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 Route::get('/page/{slug}', [PageController::class, 'show'])->name('page.show')->where('slug', '[a-z0-9\-]+');
+
+Route::post('/announcement-dismiss', function () {
+    session()->put('announcement_bar_dismissed', true);
+    return back();
+})->name('announcement.dismiss');
 
 Route::get('/locale/{locale}', function (string $locale) {
     if (in_array($locale, ['en', 'ar'], true)) {

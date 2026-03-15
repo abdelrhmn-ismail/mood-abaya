@@ -15,10 +15,11 @@ class CategoryService
         return Category::orderBy('sort_order')->orderBy("name->{$locale}")->get();
     }
 
+    /** @param  array{search?: string, active?: string, sort?: string, order?: string}  $filters */
     public function getForIndex(array $filters = [], int $perPage = 20): LengthAwarePaginator
     {
         $locale = config('app.fallback_locale', 'en');
-        $query = Category::orderBy('sort_order')->orderBy("name->{$locale}");
+        $query = Category::query();
 
         if (isset($filters['search']) && $filters['search'] !== '') {
             $term = '%' . $filters['search'] . '%';
@@ -30,6 +31,18 @@ class CategoryService
         }
         if (isset($filters['active']) && $filters['active'] !== '') {
             $query->where('active', (bool) $filters['active']);
+        }
+
+        $sort = $filters['sort'] ?? 'sort_order';
+        $order = isset($filters['order']) && strtolower($filters['order']) === 'asc' ? 'asc' : 'desc';
+        $allowedSort = ['sort_order', 'name', 'slug', 'active', 'created_at'];
+        if (!in_array($sort, $allowedSort, true)) {
+            $sort = 'sort_order';
+        }
+        if ($sort === 'name') {
+            $query->orderBy("name->{$locale}", $order);
+        } else {
+            $query->orderBy($sort, $order);
         }
 
         return $query->paginate($perPage);

@@ -53,7 +53,12 @@
     @include('admin::components.form-field', ['name' => 'og_image', 'label' => __('OG image URL'), 'type' => 'text', 'value' => old('og_image', ''), 'attributes' => ['placeholder' => 'https://']])
     @include('admin::components.form-field', ['name' => 'price', 'label' => __('Price (SAR)'), 'type' => 'number', 'value' => old('price', ''), 'required' => true, 'attributes' => ['step' => '0.01', 'min' => 0]])
     @include('admin::components.form-field', ['name' => 'compare_at_price', 'label' => __('Compare at price (SAR)'), 'type' => 'number', 'value' => old('compare_at_price', ''), 'attributes' => ['step' => '0.01', 'min' => 0, 'placeholder' => __('Original price for discount display')]])
-    @include('admin::components.form-field', ['name' => 'image', 'label' => __('Image'), 'type' => 'file', 'value' => '', 'attributes' => ['accept' => 'image/*']])
+    @include('admin::components.form-field', ['name' => 'image', 'label' => __('Main image'), 'type' => 'file', 'value' => '', 'attributes' => ['accept' => 'image/*']])
+    <div>
+        <label class="mb-2 block text-sm font-medium text-gray-700">{{ __('Gallery images') }}</label>
+        <input type="file" name="images[]" accept="image/*" multiple class="block w-full text-sm text-gray-500 file:mr-4 file:rounded file:border-0 file:bg-gray-100 file:px-4 file:py-2 file:text-sm file:font-medium file:text-gray-700 hover:file:bg-gray-200">
+        <p class="mt-1 text-xs text-gray-500">{{ __('Optional. Add multiple product images.') }}</p>
+    </div>
     @include('admin::components.form-field', ['name' => 'stock', 'label' => __('Stock'), 'type' => 'number', 'value' => old('stock', 0), 'attributes' => ['min' => 0]])
     @include('admin::components.form-field', ['name' => 'min_order_qty', 'label' => __('Min. order qty'), 'type' => 'number', 'value' => old('min_order_qty', 1), 'attributes' => ['min' => 1]])
     @include('admin::components.form-field', ['name' => 'max_order_qty', 'label' => __('Max. order qty'), 'type' => 'number', 'value' => old('max_order_qty', ''), 'attributes' => ['min' => 1, 'placeholder' => __('Leave empty for no limit')]])

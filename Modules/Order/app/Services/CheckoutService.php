@@ -5,6 +5,7 @@ namespace Modules\Order\Services;
 use App\Models\BillingAddress;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Services\ShippingService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Modules\Cart\Services\CartService;
@@ -16,13 +17,14 @@ class CheckoutService
     public function __construct(
         private CartService $cartService,
         private PaymentService $paymentService,
-        private BankPaymentService $bankPaymentService
+        private BankPaymentService $bankPaymentService,
+        private ShippingService $shippingService
     ) {}
 
-    public function getCheckoutData(): array
+    public function getCheckoutData(?string $shippingZoneId = null): array
     {
         $items = $this->cartService->getCart();
-        $total = $this->cartService->getTotal();
+        $subtotal = $this->cartService->getTotal();
         $billingAddresses = [];
         if (Auth::id()) {
             $billingAddresses = BillingAddress::where('user_id', Auth::id())
@@ -30,15 +32,26 @@ class CheckoutService
                 ->orderBy('label')
                 ->get();
         }
+        $shipping = $this->shippingService->calculate($subtotal, $shippingZoneId);
+        $shippingAmount = $shipping['amount'];
+        $shippingLabel = $shipping['label'];
+        $total = round($subtotal + $shippingAmount, 2);
+        $shippingZones = $this->shippingService->getType() === 'zones' ? $this->shippingService->getZones() : [];
         return [
             'items' => $items,
+            'subtotal' => $subtotal,
+            'shippingAmount' => $shippingAmount,
+            'shippingLabel' => $shippingLabel,
+            'shippingZones' => $shippingZones,
+            'shippingType' => $this->shippingService->getType(),
+            'shippingFreeOver' => $this->shippingService->getFreeOver(),
             'total' => $total,
             'billingAddresses' => $billingAddresses,
         ];
     }
 
     /** @param array<string, mixed>|null $billingAddress Snapshot to store on order (null = use shipping as billing) */
-    public function placeOrder(array $address, string $paymentMethod, $proofFile = null, ?array $billingAddress = null): Order
+    public function placeOrder(array $address, string $paymentMethod, $proofFile = null, ?array $billingAddress = null, float $shippingAmount = 0, ?string $shippingLabel = null): Order
     {
         $paymentMethod = $paymentMethod === 'bank' ? 'bank' : 'cash';
         $items = $this->cartService->getCart();
@@ -55,9 +68,9 @@ class CheckoutService
             ? json_encode($billingAddress)
             : null;
 
-        return DB::transaction(function () use ($items, $address, $paymentMethod, $proofPath, $billingSnapshot) {
+        return DB::transaction(function () use ($items, $address, $paymentMethod, $proofPath, $billingSnapshot, $shippingAmount, $shippingLabel) {
             $orderNumber = $this->generateOrderNumber();
-            $total = 0;
+            $subtotal = 0;
 
             $order = Order::create([
                 'user_id' => Auth::id(),
@@ -69,13 +82,15 @@ class CheckoutService
                 'billing_address' => $billingSnapshot,
                 'notes' => $address['notes'] ?? null,
                 'total' => 0,
+                'shipping_amount' => $shippingAmount,
+                'shipping_label' => $shippingLabel,
             ]);
 
             foreach ($items as $cartItem) {
-                $price = $cartItem->product->price;
+                $price = $cartItem->getEffectivePrice();
                 $qty = $cartItem->quantity;
                 $lineTotal = round($price * $qty, 2);
-                $total += $lineTotal;
+                $subtotal += $lineTotal;
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $cartItem->product_id,
@@ -84,7 +99,7 @@ class CheckoutService
                 ]);
             }
 
-            $order->update(['total' => round($total, 2)]);
+            $order->update(['total' => round($subtotal + $shippingAmount, 2)]);
 
             $this->paymentService->createPaymentForOrder($order, $paymentMethod, $proofPath);
 

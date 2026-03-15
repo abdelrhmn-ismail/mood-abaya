@@ -16,7 +16,10 @@ class PaymentController
 
     public function index(Request $request): View
     {
-        $payments = $this->paymentService->getPayments($request->only('status', 'method'));
+        $payments = $this->paymentService->getPayments(
+            $request->only('status', 'method'),
+            admin_per_page()
+        );
 
         return view('admin::payments.index', compact('payments'));
     }
@@ -75,7 +78,7 @@ class PaymentController
         } elseif ($action === 'mark_paid') {
             $count = $this->paymentService->bulkMarkPaid($ids);
         }
-        return redirect()->route('admin.payments.index', $request->only('status', 'method'))
+        return redirect()->route('admin.payments.index', $request->only('status', 'method', 'per_page', 'sort', 'order'))
             ->with('success', __(':count payment(s) updated.', ['count' => $count]));
     }
 }
