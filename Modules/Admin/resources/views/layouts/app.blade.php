@@ -52,6 +52,9 @@
                 <a href="{{ route('admin.contacts.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.contacts.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">mail</span> {{ __('Contact messages') }}
                 </a>
+                <a href="{{ route('admin.faqs.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.faqs.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
+                    <span class="material-icons text-lg">help_outline</span> {{ __('FAQ') }}
+                </a>
                 <a href="{{ route('admin.page-contents.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.page-contents.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">article</span> {{ __('Page content') }}
                 </a>

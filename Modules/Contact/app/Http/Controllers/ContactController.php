@@ -3,6 +3,7 @@
 namespace Modules\Contact\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Faq;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -16,7 +17,9 @@ class ContactController extends Controller
 
     public function showForm(): View
     {
-        return view('frontend.contact');
+        $faqs = Faq::active()->ordered()->get();
+
+        return view('frontend.contact', compact('faqs'));
     }
 
     public function submit(Request $request): RedirectResponse

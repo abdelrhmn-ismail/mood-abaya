@@ -13,6 +13,7 @@
                 <a href="{{ route('home') }}" class="text-sm font-medium text-brand-black/80 hover:text-brand-teal">{{ site_label('nav_home') }}</a>
                 <a href="{{ route('categories') }}" class="text-sm font-medium text-brand-black/80 hover:text-brand-teal">{{ site_label('nav_categories') }}</a>
                 <a href="{{ route('home') }}#products" class="text-sm font-medium text-brand-black/80 hover:text-brand-teal">{{ site_label('nav_products') }}</a>
+                <a href="{{ route('about') }}" class="text-sm font-medium text-brand-black/80 hover:text-brand-teal">{{ __('About Us') }}</a>
                 <a href="{{ route('contact') }}" class="text-sm font-medium text-brand-black/80 hover:text-brand-teal">{{ site_label('nav_contact') }}</a>
             </div>
             <form action="{{ route('search') }}" method="GET" class="w-full min-w-0 max-w-[200px] lg:max-w-[240px]" role="search">
@@ -133,6 +134,7 @@
         <a href="{{ route('home') }}" class="rounded-lg px-3 py-2.5 text-sm font-medium text-brand-black/90 hover:bg-brand-gold/10">{{ site_label('nav_home') }}</a>
         <a href="{{ route('categories') }}" class="rounded-lg px-3 py-2.5 text-sm font-medium text-brand-black/90 hover:bg-brand-gold/10">{{ site_label('nav_categories') }}</a>
         <a href="{{ route('home') }}#products" class="rounded-lg px-3 py-2.5 text-sm font-medium text-brand-black/90 hover:bg-brand-gold/10">{{ site_label('nav_products') }}</a>
+        <a href="{{ route('about') }}" class="rounded-lg px-3 py-2.5 text-sm font-medium text-brand-black/90 hover:bg-brand-gold/10">{{ __('About Us') }}</a>
         <a href="{{ route('contact') }}" class="rounded-lg px-3 py-2.5 text-sm font-medium text-brand-black/90 hover:bg-brand-gold/10">{{ site_label('nav_contact') }}</a>
         {{-- Language dropdown (mobile) --}}
         <div class="relative border-b border-slate-100 px-3 py-2" x-data="{ localeOpenMobile: false }" @click.outside="localeOpenMobile = false">

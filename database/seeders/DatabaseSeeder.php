@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             PageContentSeeder::class,
             HeroImagesSeeder::class,
+            FaqSeeder::class,
             AdminUserSeeder::class,
         ]);
     }
