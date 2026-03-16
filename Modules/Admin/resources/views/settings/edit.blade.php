@@ -14,25 +14,14 @@
         <nav class="-mb-px flex gap-4" role="tablist">
             <button type="button" class="settings-tab border-b-2 border-brand-teal px-1 py-3 text-sm font-medium text-brand-teal" data-tab="general" role="tab">{{ __('General') }}</button>
             <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="seo" role="tab">{{ __('SEO') }}</button>
-            <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="labels" role="tab">{{ __('Site labels') }}</button>
-            <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="frontend" role="tab">{{ __('Frontend') }}</button>
             <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="contact-social" role="tab">{{ __('Contact & Social') }}</button>
-            <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="announcement" role="tab">{{ __('Announcement bar') }}</button>
             <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="shipping" role="tab">{{ __('Shipping') }}</button>
-            <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="maintenance" role="tab">{{ __('Maintenance') }}</button>
-            <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="trust-badges" role="tab">{{ __('Trust badges') }}</button>
             <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="custom-code" role="tab">{{ __('Custom code') }}</button>
             <button type="button" class="settings-tab border-b-2 border-transparent px-1 py-3 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" data-tab="editor" role="tab">{{ __('Editor') }}</button>
         </nav>
     </div>
 
     {{-- Tab: General --}}
-    @php
-        $brandingDisplayUrl = function ($val) {
-            if (empty($val)) return null;
-            return str_starts_with($val, 'http') ? $val : \Illuminate\Support\Facades\Storage::url($val);
-        };
-    @endphp
     <div id="tab-general" class="settings-panel space-y-6">
         <h2 class="text-lg font-semibold text-gray-900">{{ __('General') }}</h2>
         @include('admin::components.form-field', [
@@ -42,43 +31,19 @@
             'value' => $settings['locale'] ?? 'en',
             'options' => [['value' => 'en', 'label' => __('English')], ['value' => 'ar', 'label' => __('Arabic')]],
         ])
+        @include('admin::components.form-field', [
+            'name' => 'site_name',
+            'label' => __('Site name'),
+            'type' => 'text',
+            'value' => $settings['site_name'] ?? '',
+            'attributes' => ['placeholder' => config('app.name')],
+        ])
         <div class="border-t border-gray-200 pt-6">
-            <h3 class="mb-3 text-sm font-medium text-gray-700">{{ __('Branding') }}</h3>
-            <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2">
-                <div class="rounded-xl border border-gray-200 bg-gray-50/50 p-4">
-                    <label class="block text-sm font-medium text-gray-700">{{ __('Site logo') }}</label>
-                    <p class="mt-0.5 text-xs text-gray-500">{{ __('Shown in navbar and footer (logo only, no text).') }} {{ __('Recommended dimensions') }}: 180×50</p>
-                    @php $logoVal = $settings['site_logo'] ?? ''; $logoUrl = $brandingDisplayUrl($logoVal); @endphp
-                    @if($logoUrl)
-                        <div class="mt-2 flex items-center gap-2 overflow-hidden rounded-lg border border-gray-200 bg-white p-2">
-                            <img src="{{ $logoUrl }}" alt="" class="max-h-12 max-w-[180px] object-contain" loading="lazy">
-                        </div>
-                    @endif
-                    <div class="mt-2">
-                        <input type="file" name="logo_file" accept="image/*,.svg" class="block w-full text-sm text-gray-500 file:mr-2 file:rounded-lg file:border-0 file:bg-brand-gold/20 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand-teal hover:file:bg-brand-gold/30">
-                    </div>
-                    <input type="text" name="site_logo" value="{{ old('site_logo', $logoVal) }}" placeholder="{{ __('Or paste image URL') }}" class="mt-2 block w-full rounded-lg border border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                </div>
-                <div class="rounded-xl border border-gray-200 bg-gray-50/50 p-4">
-                    <label class="block text-sm font-medium text-gray-700">{{ __('Favicon') }}</label>
-                    <p class="mt-0.5 text-xs text-gray-500">{{ __('Browser tab icon.') }} {{ __('Recommended') }}: 32×32 .ico or .png</p>
-                    @php $favVal = $settings['favicon'] ?? ''; $favUrl = $brandingDisplayUrl($favVal); @endphp
-                    @if($favUrl)
-                        <div class="mt-2 flex items-center gap-2">
-                            <img src="{{ $favUrl }}" alt="" class="h-8 w-8 object-contain" loading="lazy">
-                        </div>
-                    @endif
-                    <div class="mt-2">
-                        <input type="file" name="favicon_file" accept=".ico,image/png,image/x-icon" class="block w-full text-sm text-gray-500 file:mr-2 file:rounded-lg file:border-0 file:bg-brand-gold/20 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand-teal hover:file:bg-brand-gold/30">
-                    </div>
-                    <input type="text" name="favicon" value="{{ old('favicon', $favVal) }}" placeholder="{{ __('Or paste image URL') }}" class="mt-2 block w-full rounded-lg border border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                </div>
-            </div>
-            <div class="mt-4">
-                <label for="footer_tagline" class="block text-sm font-medium text-gray-700">{{ __('Footer tagline') }}</label>
-                <p class="mt-0.5 text-xs text-gray-500">{{ __('Short text under the logo in the footer.') }}</p>
-                <input type="text" name="footer_tagline" id="footer_tagline" value="{{ old('footer_tagline', $settings['footer_tagline'] ?? '') }}" placeholder="{{ __('Quality products for everyone. Shop with confidence.') }}" class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-            </div>
+            <h3 class="mb-2 text-sm font-medium text-gray-700">{{ __('Titles and labels') }}</h3>
+            <p class="mb-3 text-sm text-gray-500">{{ __('Edit navbar and footer text (Home, Categories, Contact, etc.) and other language strings in both English and Arabic.') }}</p>
+            <a href="{{ route('admin.translations.index') }}" class="inline-flex items-center gap-1.5 rounded-lg bg-brand-teal/10 px-4 py-2 text-sm font-medium text-brand-teal transition hover:bg-brand-teal/20">
+                <span class="material-icons text-lg">translate</span> {{ __('Open Translations') }}
+            </a>
         </div>
     </div>
 
@@ -116,85 +81,6 @@
         ])
     </div>
 
-    {{-- Tab: Site labels --}}
-    <div id="tab-labels" class="settings-panel hidden space-y-4">
-        <h2 class="text-lg font-semibold text-gray-900">{{ __('Site labels') }}</h2>
-        <p class="text-sm text-gray-500">{{ __('Navbar & footer words (leave blank to use default translation)') }}</p>
-        @php $labels = $settings['labels'] ?? []; @endphp
-        <div class="grid gap-4 sm:grid-cols-2">
-            <div class="sm:col-span-2">
-                <label for="label_site_name" class="block text-sm font-medium text-gray-700">{{ __('Site name') }}</label>
-                <input type="text" name="labels[site_name]" id="label_site_name" value="{{ old('labels.site_name', $labels['site_name'] ?? '') }}" placeholder="{{ config('app.name') }}" class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-            </div>
-            @foreach(['nav_home' => 'Home', 'nav_categories' => 'Categories', 'nav_products' => 'Products', 'nav_contact' => 'Contact', 'nav_cart' => 'Cart', 'nav_login' => 'Login', 'nav_register' => 'Register', 'nav_account' => 'Account', 'nav_logout' => 'Logout', 'nav_admin' => 'Admin'] as $key => $placeholder)
-                <div>
-                    <label for="label_{{ $key }}" class="block text-sm font-medium text-gray-700">{{ $placeholder }}</label>
-                    <input type="text" name="labels[{{ $key }}]" id="label_{{ $key }}" value="{{ old('labels.'.$key, $labels[$key] ?? '') }}" placeholder="{{ $placeholder }}" class="mt-1 block w-full rounded-lg border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                </div>
-            @endforeach
-        </div>
-    </div>
-
-    {{-- Tab: Frontend (hero/header images) --}}
-    @php
-        $heroDisplayUrl = function ($val) {
-            if (empty($val)) return null;
-            return str_starts_with($val, 'http') ? $val : \Illuminate\Support\Facades\Storage::url($val);
-        };
-    @endphp
-    <div id="tab-frontend" class="settings-panel hidden space-y-6">
-        <div>
-            <h2 class="text-lg font-semibold text-gray-900">{{ __('Frontend') }}</h2>
-            <p class="mt-1 text-sm text-gray-500">{{ __("Configure header images for key frontend pages and the home hero slider. Upload an image or paste a URL.") }}</p>
-        </div>
-        <div class="space-y-6">
-            {{-- Page headers --}}
-            <div>
-                <h3 class="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">{{ __('Page headers') }}</h3>
-                <div class="grid gap-6 sm:grid-cols-1 lg:grid-cols-3">
-                    @foreach(['hero_account' => __('Account header image'), 'hero_cart' => __('Cart header image'), 'hero_checkout' => __('Checkout header image'), 'hero_contact' => __('Contact header image'), 'hero_page' => __('Static pages header image'), 'hero_search' => __('Search header image'), 'hero_categories' => __('Categories header image'), 'hero_products' => __('Products header image')] as $key => $label)
-                        @php $val = $settings[$key] ?? ''; $imgUrl = $heroDisplayUrl($val); @endphp
-                        <div class="rounded-xl border border-gray-200 bg-gray-50/50 p-4">
-                            <label class="block text-sm font-medium text-gray-700">{{ $label }}</label>
-                            <p class="mt-0.5 text-xs text-gray-500">{{ __('Recommended dimensions') }}: 1920×600</p>
-                            @if($imgUrl)
-                                <div class="mt-2 overflow-hidden rounded-lg border border-gray-200 bg-white">
-                                    <img src="{{ $imgUrl }}" alt="" class="h-28 w-full object-cover" loading="lazy">
-                                </div>
-                            @endif
-                            <div class="mt-2">
-                                <input type="file" name="hero_file_{{ $key }}" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-2 file:rounded-lg file:border-0 file:bg-brand-gold/20 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand-teal hover:file:bg-brand-gold/30">
-                            </div>
-                            <input type="text" name="{{ $key }}" value="{{ old($key, $val) }}" placeholder="{{ __('Or paste image URL') }}" class="mt-2 block w-full rounded-lg border border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-            {{-- Home hero slider (3 images) --}}
-            <div>
-                <h3 class="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">{{ __('Home hero slider') }}</h3>
-                <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-3">
-                    @foreach(['hero_home_1' => __('Home hero image 1'), 'hero_home_2' => __('Home hero image 2'), 'hero_home_3' => __('Home hero image 3')] as $key => $label)
-                        @php $val = $settings[$key] ?? ''; $imgUrl = $heroDisplayUrl($val); @endphp
-                        <div class="rounded-xl border border-gray-200 bg-gray-50/50 p-4">
-                            <label class="block text-sm font-medium text-gray-700">{{ $label }}</label>
-                            <p class="mt-0.5 text-xs text-gray-500">{{ __('Recommended dimensions') }}: 1920×1080</p>
-                            @if($imgUrl)
-                                <div class="mt-2 overflow-hidden rounded-lg border border-gray-200 bg-white">
-                                    <img src="{{ $imgUrl }}" alt="" class="h-28 w-full object-cover" loading="lazy">
-                                </div>
-                            @endif
-                            <div class="mt-2">
-                                <input type="file" name="hero_file_{{ $key }}" accept="image/*" class="block w-full text-sm text-gray-500 file:mr-2 file:rounded-lg file:border-0 file:bg-brand-gold/20 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-brand-teal hover:file:bg-brand-gold/30">
-                            </div>
-                            <input type="text" name="{{ $key }}" value="{{ old($key, $val) }}" placeholder="{{ __('Or paste image URL') }}" class="mt-2 block w-full rounded-lg border border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    </div>
-
     {{-- Tab: Contact & Social --}}
     <div id="tab-contact-social" class="settings-panel hidden space-y-6">
         <h2 class="text-lg font-semibold text-gray-900">{{ __('Contact & Social') }}</h2>
@@ -222,33 +108,6 @@
         </div>
     </div>
 
-    {{-- Tab: Announcement bar (popup) --}}
-    <div id="tab-announcement" class="settings-panel hidden space-y-6">
-        <h2 class="text-lg font-semibold text-gray-900">{{ __('Announcement bar') }}</h2>
-        <p class="text-sm text-gray-500">{{ __('A dismissible bar at the top of the site (e.g. "10% off first order"). Hidden once per session when the user closes it.') }}</p>
-        @include('admin::components.form-field', [
-            'name' => 'announcement_bar_enabled',
-            'label' => '',
-            'type' => 'checkbox',
-            'value' => ($settings['announcement_bar_enabled'] ?? '0') === '1',
-            'attributes' => ['help' => __('Show announcement bar')],
-        ])
-        @include('admin::components.form-field', [
-            'name' => 'announcement_bar_text',
-            'label' => __('Announcement text'),
-            'type' => 'text',
-            'value' => $settings['announcement_bar_text'] ?? '',
-            'attributes' => ['placeholder' => __('e.g. 10% off your first order')],
-        ])
-        @include('admin::components.form-field', [
-            'name' => 'announcement_bar_link',
-            'label' => __('Link (optional)'),
-            'type' => 'text',
-            'value' => $settings['announcement_bar_link'] ?? '',
-            'attributes' => ['placeholder' => 'https://'],
-        ])
-    </div>
-
     {{-- Tab: Shipping --}}
     <div id="tab-shipping" class="settings-panel hidden space-y-6">
         <h2 class="text-lg font-semibold text-gray-900">{{ __('Shipping') }}</h2>
@@ -271,40 +130,6 @@
             <p class="mt-0.5 text-xs text-gray-500">{{ __('When type is Zones, paste JSON array: [{"id":"riyadh","label":"Riyadh","amount":15},{"id":"other","label":"Rest of KSA","amount":25}]') }}</p>
             <textarea name="shipping_zones" id="shipping_zones" rows="4" class="mt-1 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">{{ old('shipping_zones', $settings['shipping_zones'] ?? '') }}</textarea>
         </div>
-    </div>
-
-    {{-- Tab: Maintenance mode --}}
-    <div id="tab-maintenance" class="settings-panel hidden space-y-6">
-        <h2 class="text-lg font-semibold text-gray-900">{{ __('Maintenance mode') }}</h2>
-        <p class="text-sm text-gray-500">{{ __('When enabled, visitors see a "Coming back soon" page. Admin and allowlisted IPs can still access the site.') }}</p>
-        @include('admin::components.form-field', [
-            'name' => 'maintenance_mode_enabled',
-            'label' => '',
-            'type' => 'checkbox',
-            'value' => ($settings['maintenance_mode_enabled'] ?? '0') === '1',
-            'attributes' => ['help' => __('Enable maintenance mode')],
-        ])
-        @include('admin::components.form-field', [
-            'name' => 'maintenance_coming_back_at',
-            'label' => __('Coming back at (optional)'),
-            'type' => 'text',
-            'value' => $settings['maintenance_coming_back_at'] ?? '',
-            'attributes' => ['placeholder' => 'e.g. 2025-03-20 14:00'],
-        ])
-        <div>
-            <label for="maintenance_ip_allowlist" class="block text-sm font-medium text-gray-700">{{ __('IP allowlist') }}</label>
-            <p class="mt-0.5 text-xs text-gray-500">{{ __('Comma or newline-separated IPs that can access the site during maintenance. Leave empty to allow only admin.') }}</p>
-            <textarea name="maintenance_ip_allowlist" id="maintenance_ip_allowlist" rows="4" class="mt-1 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal" placeholder="192.168.1.1, 10.0.0.1">{{ old('maintenance_ip_allowlist', $settings['maintenance_ip_allowlist'] ?? '') }}</textarea>
-        </div>
-    </div>
-
-    {{-- Tab: Trust badges (footer / checkout line) --}}
-    <div id="tab-trust-badges" class="settings-panel hidden space-y-6">
-        <h2 class="text-lg font-semibold text-gray-900">{{ __('Trust badges') }}</h2>
-        <p class="text-sm text-gray-500">{{ __('Optional line shown in footer and checkout, e.g. "Secure payment", "Free shipping over X SAR", "Easy returns".') }}</p>
-        @include('admin::components.form-field', ['name' => 'trust_badge_1', 'label' => __('Badge 1'), 'type' => 'text', 'value' => $settings['trust_badge_1'] ?? '', 'attributes' => ['placeholder' => 'e.g. Secure payment']])
-        @include('admin::components.form-field', ['name' => 'trust_badge_2', 'label' => __('Badge 2'), 'type' => 'text', 'value' => $settings['trust_badge_2'] ?? '', 'attributes' => ['placeholder' => 'e.g. Free shipping over 200 SAR']])
-        @include('admin::components.form-field', ['name' => 'trust_badge_3', 'label' => __('Badge 3'), 'type' => 'text', 'value' => $settings['trust_badge_3'] ?? '', 'attributes' => ['placeholder' => 'e.g. Easy returns']])
     </div>
 
     {{-- Tab: Custom code (header/footer) for tracking, pixels, media team --}}

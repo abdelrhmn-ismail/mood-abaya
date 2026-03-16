@@ -8,6 +8,11 @@ return new class extends Migration
 {
     public function up(): void
     {
+        Schema::dropIfExists('banners');
+    }
+
+    public function down(): void
+    {
         Schema::create('banners', function (Blueprint $table) {
             $table->id();
             $table->string('title');
@@ -17,13 +22,7 @@ return new class extends Migration
             $table->unsignedInteger('sort_order')->default(0);
             $table->boolean('active')->default(true);
             $table->timestamps();
-
             $table->index(['active', 'start_at', 'end_at']);
         });
-    }
-
-    public function down(): void
-    {
-        Schema::dropIfExists('banners');
     }
 };

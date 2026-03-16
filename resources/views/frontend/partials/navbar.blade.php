@@ -87,6 +87,9 @@
                             <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2.5 text-sm text-brand-teal hover:bg-brand-gold/10 font-medium">
                                 {{ __('Dashboard panel') }}
                             </a>
+                            <a href="{{ route('admin.settings.frontend') }}" class="block px-4 py-2.5 text-sm text-brand-teal hover:bg-brand-gold/10 font-medium">
+                                {{ __('Frontend settings') }}
+                            </a>
                         @else
                             <a href="{{ route('account') }}" class="block px-4 py-2.5 text-sm text-brand-black/90 hover:bg-brand-gold/10">
                                 {{ site_label('nav_account') }}
@@ -183,6 +186,9 @@
                     @if(auth()->user()->is_admin)
                         <a href="{{ route('admin.dashboard') }}" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-brand-teal hover:bg-brand-gold/10">
                             {{ __('Dashboard panel') }}
+                        </a>
+                        <a href="{{ route('admin.settings.frontend') }}" class="block rounded-lg px-3 py-2.5 text-sm font-medium text-brand-teal hover:bg-brand-gold/10">
+                            {{ __('Frontend settings') }}
                         </a>
                     @else
                         <a href="{{ route('account') }}" class="block rounded-lg px-3 py-2.5 text-sm text-brand-black/90 hover:bg-brand-gold/10">

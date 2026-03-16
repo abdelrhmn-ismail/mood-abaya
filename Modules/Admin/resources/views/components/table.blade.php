@@ -79,7 +79,7 @@
                             $isActiveSort = $isSortable && request('sort') === $sortKey;
                             $currentOrder = request('order', 'desc');
                         @endphp
-                        <th scope="col" class="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wider text-slate-600 {{ $isSortable ? 'whitespace-nowrap' : '' }}">
+                        <th scope="col" class="px-5 py-4 text-start text-xs font-semibold uppercase tracking-wider text-slate-600 {{ $isSortable ? 'whitespace-nowrap' : '' }}">
                             @if($isSortable)
                                 <a href="{{ admin_sort_url($sortKey) }}" class="inline-flex items-center gap-1 transition hover:text-brand-teal">
                                     {{ $col['label'] ?? '' }}
@@ -95,7 +95,7 @@
                         </th>
                     @endforeach
                     @if($hasActions)
-                        <th scope="col" class="relative px-5 py-4 text-right text-xs font-semibold uppercase tracking-wider text-slate-600">
+                        <th scope="col" class="relative px-5 py-4 text-end text-xs font-semibold uppercase tracking-wider text-slate-600">
                             {{ __('Actions') }}
                         </th>
                     @endif
@@ -116,12 +116,12 @@
                             </td>
                         @endif
                         @foreach($columns as $col)
-                            <td class="whitespace-nowrap px-5 py-4 text-sm text-slate-800 {{ $col['class'] ?? '' }}">
+                            <td class="whitespace-nowrap px-5 py-4 text-start text-sm text-slate-800 {{ $col['class'] ?? '' }}">
                                 {{ $getCellValue($row, $col) }}
                             </td>
                         @endforeach
                         @if($hasActions)
-                            <td class="relative whitespace-nowrap px-5 py-4 text-right">
+                            <td class="relative whitespace-nowrap px-5 py-4 text-end">
                                 <div class="flex items-center justify-end gap-1">
                                     @if(!empty($actions['view_route']))
                                         <a href="{{ route($actions['view_route'], $row) }}" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900" title="{{ __('View') }}">
@@ -158,7 +158,7 @@
 </div>
 
 @if($pagination && method_exists($pagination, 'links'))
-    <div class="mt-4 flex flex-wrap items-center justify-between gap-4">
+    <div class="mt-4 flex flex-wrap items-center justify-between gap-4" dir="auto">
         <form method="GET" action="{{ request()->url() }}" class="flex items-center gap-2">
             @foreach(request()->query() as $key => $value)
                 @if($key !== 'per_page')

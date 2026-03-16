@@ -4,24 +4,15 @@ use App\Models\Setting;
 
 if (!function_exists('site_label')) {
     /**
-     * Get a site label (admin-editable). Falls back to translation or config.
+     * Get a site label. Uses Translations (admin/translations) for navbar/footer text.
      *
-     * @param  string  $key  Key without "label_" prefix (e.g. site_name, nav_home)
+     * @param  string  $key  e.g. site_name, nav_home, nav_categories
      * @return string
      */
     function site_label(string $key): string
     {
-        try {
-            $value = Setting::get('label_' . $key);
-            if ($value !== null && $value !== '') {
-                return (string) $value;
-            }
-        } catch (\Throwable) {
-            // Table may not exist during install
-        }
-
-        $defaults = [
-            'site_name' => null,
+        $translationKeys = [
+            'site_name' => 'Site name',
             'nav_home' => 'Home',
             'nav_categories' => 'Categories',
             'nav_products' => 'Products',
@@ -35,11 +26,18 @@ if (!function_exists('site_label')) {
         ];
 
         if ($key === 'site_name') {
-            return (string) config('app.name');
+            try {
+                $v = \App\Models\Setting::get('site_name', '');
+                if ($v !== null && $v !== '') {
+                    return (string) $v;
+                }
+            } catch (\Throwable) {
+            }
+            $v = __($translationKeys['site_name']);
+            return $v !== 'Site name' ? $v : (string) config('app.name');
         }
 
-        $translationKey = $defaults[$key] ?? str_replace('_', ' ', ucfirst($key));
-
+        $translationKey = $translationKeys[$key] ?? str_replace('_', ' ', ucfirst($key));
         return (string) __($translationKey);
     }
 }

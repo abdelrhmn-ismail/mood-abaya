@@ -32,6 +32,21 @@
     {{-- Tailwind CSS (required for utility classes: flex, grid, bg-*, etc.) --}}
     @vite(['resources/css/app.css'])
 
+    {{-- Color design system overrides from settings --}}
+    @php
+        $colorKeys = ['color_brand_black' => '--brand-black', 'color_brand_teal' => '--brand-teal', 'color_brand_teal_dark' => '--brand-teal-dark', 'color_brand_white' => '--brand-white', 'color_brand_gold' => '--brand-gold', 'color_brand_gold_dark' => '--brand-gold-dark'];
+        $colorVars = [];
+        foreach ($colorKeys as $settingKey => $cssVar) {
+            $v = \App\Models\Setting::get($settingKey, '');
+            if ($v !== '' && preg_match('/^#?[a-fA-F0-9]{6}$/', $v)) {
+                $colorVars[$cssVar] = str_starts_with($v, '#') ? $v : '#' . $v;
+            }
+        }
+    @endphp
+    @if(count($colorVars) > 0)
+    <style>:root { @foreach($colorVars as $var => $val) {{ $var }}: {{ $val }}; @endforeach }</style>
+    @endif
+
     {{-- Material Tailwind component overrides (optional enhancement) --}}
     <link rel="stylesheet" href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css" />
 
@@ -58,8 +73,6 @@
 
     @include('frontend.partials.navbar')
 
-    @include('frontend.partials.banners')
-
     <main class="flex-1">
         @yield('content')
     </main>
@@ -69,6 +82,7 @@
     @include('frontend.partials.floating-social')
 
     @include('frontend.partials.cookie-consent')
+    @include('frontend.partials.home-popup')
     @include('frontend.partials.quick-view-modal')
 
     {{-- Frontend JS (navbar, newsletter) --}}

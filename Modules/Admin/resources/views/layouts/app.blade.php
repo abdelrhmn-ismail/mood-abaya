@@ -34,6 +34,9 @@
                 <a href="{{ route('admin.settings.edit') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.settings.edit') || request()->routeIs('admin.settings.update') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">settings</span> {{ __('Settings') }}
                 </a>
+                <a href="{{ route('admin.settings.frontend') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.settings.frontend*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
+                    <span class="material-icons text-lg">palette</span> {{ __('Frontend settings') }}
+                </a>
                 <a href="{{ route('admin.translations.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.translations.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">translate</span> {{ __('Translations') }}
                 </a>
@@ -64,9 +67,6 @@
                 <a href="{{ route('admin.posts.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.posts.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">newspaper</span> {{ __('Blog / News') }}
                 </a>
-                <a href="{{ route('admin.banners.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.banners.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
-                    <span class="material-icons text-lg">campaign</span> {{ __('Banners') }}
-                </a>
                 <a href="{{ route('admin.testimonials.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.testimonials.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">format_quote</span> {{ __('Testimonials') }}
                 </a>
@@ -75,9 +75,6 @@
                 </a>
                 <a href="{{ route('admin.reviews.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.reviews.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">star</span> {{ __('Reviews') }}
-                </a>
-                <a href="{{ url('/') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-brand-gold/20" target="_blank">
-                    <span class="material-icons text-lg">storefront</span> {{ __('View store') }}
                 </a>
             </nav>
         </aside>
@@ -92,6 +89,9 @@
                     @endif
                 </div>
                 <div class="flex items-center gap-3">
+                    <a href="{{ url('/') }}" class="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-brand-black transition hover:bg-brand-gold/10 hover:text-brand-teal" target="_blank">
+                        <span class="material-icons text-lg">storefront</span> {{ __('View store') }}
+                    </a>
                     <div class="relative">
                         <label for="admin-locale" class="sr-only">{{ __('Language') }}</label>
                         <select id="admin-locale" class="appearance-none rounded-xl border border-slate-200 bg-slate-50 py-2 pl-3 pr-8 text-sm font-medium text-brand-black focus:border-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal/20" onchange="window.location.href='{{ url('/locale') }}/'+this.value">

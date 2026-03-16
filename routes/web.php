@@ -17,6 +17,11 @@ Route::post('/announcement-dismiss', function () {
     return back();
 })->name('announcement.dismiss');
 
+Route::post('/home-popup-dismiss', function () {
+    session()->put('home_popup_shown', true);
+    return response()->json(['ok' => true]);
+})->name('home.popup.dismiss');
+
 Route::get('/locale/{locale}', function (string $locale) {
     if (in_array($locale, ['en', 'ar'], true)) {
         session()->put('locale', $locale);

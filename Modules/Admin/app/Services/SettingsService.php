@@ -7,31 +7,11 @@ use Illuminate\Support\Facades\File;
 
 class SettingsService
 {
-    /** Site label keys (navbar, brand). Empty value = use translation. */
-    public const LABEL_KEYS = [
-        'site_name',
-        'nav_home',
-        'nav_categories',
-        'nav_products',
-        'nav_contact',
-        'nav_cart',
-        'nav_login',
-        'nav_register',
-        'nav_account',
-        'nav_logout',
-        'nav_admin',
-    ];
-
     public function getSettings(): array
     {
-        $labels = [];
-        foreach (self::LABEL_KEYS as $key) {
-            $labels[$key] = Setting::get('label_' . $key, '');
-        }
-
         return [
             'locale' => Setting::locale(),
-            'labels' => $labels,
+            'site_name' => Setting::get('site_name', ''),
             'site_logo' => Setting::get('site_logo', ''),
             'favicon' => Setting::get('favicon', ''),
             'footer_tagline' => Setting::get('footer_tagline', ''),
@@ -82,6 +62,22 @@ class SettingsService
             'trust_badge_1' => Setting::get('trust_badge_1', ''),
             'trust_badge_2' => Setting::get('trust_badge_2', ''),
             'trust_badge_3' => Setting::get('trust_badge_3', ''),
+            // Color design system (hex)
+            'color_brand_black' => Setting::get('color_brand_black', '#000000'),
+            'color_brand_teal' => Setting::get('color_brand_teal', '#144034'),
+            'color_brand_teal_dark' => Setting::get('color_brand_teal_dark', '#0f2d26'),
+            'color_brand_white' => Setting::get('color_brand_white', '#FFFFFF'),
+            'color_brand_gold' => Setting::get('color_brand_gold', '#D3AE72'),
+            'color_brand_gold_dark' => Setting::get('color_brand_gold_dark', '#b8945c'),
+            // Home page popup
+            'home_popup_enabled' => Setting::get('home_popup_enabled', '0'),
+            'home_popup_title' => Setting::get('home_popup_title', ''),
+            'home_popup_content' => Setting::get('home_popup_content', ''),
+            'home_popup_image' => Setting::get('home_popup_image', ''),
+            'home_popup_button_text' => Setting::get('home_popup_button_text', ''),
+            'home_popup_button_url' => Setting::get('home_popup_button_url', ''),
+            'home_popup_delay_seconds' => Setting::get('home_popup_delay_seconds', '2'),
+            'home_popup_show_once_per_session' => Setting::get('home_popup_show_once_per_session', '1'),
         ];
     }
 
@@ -89,6 +85,9 @@ class SettingsService
     {
         if (isset($data['locale']) && in_array($data['locale'], ['en', 'ar'], true)) {
             Setting::set('locale', $data['locale']);
+        }
+        if (array_key_exists('site_name', $data)) {
+            Setting::set('site_name', trim((string) ($data['site_name'] ?? '')));
         }
         if (array_key_exists('site_logo', $data)) {
             Setting::set('site_logo', trim((string) ($data['site_logo'] ?? '')));
@@ -164,11 +163,28 @@ class SettingsService
                 Setting::set($key, trim((string) ($data[$key] ?? '')));
             }
         }
-        if (isset($data['labels']) && is_array($data['labels'])) {
-            foreach (self::LABEL_KEYS as $key) {
-                $value = trim($data['labels'][$key] ?? '');
-                Setting::set('label_' . $key, $value);
+        foreach (['color_brand_black', 'color_brand_teal', 'color_brand_teal_dark', 'color_brand_white', 'color_brand_gold', 'color_brand_gold_dark'] as $key) {
+            if (array_key_exists($key, $data)) {
+                $v = trim((string) ($data[$key] ?? ''));
+                if (preg_match('/^#?[a-fA-F0-9]{6}$/', $v)) {
+                    Setting::set($key, str_starts_with($v, '#') ? $v : '#' . $v);
+                }
             }
+        }
+        if (array_key_exists('home_popup_enabled', $data)) {
+            Setting::set('home_popup_enabled', ($data['home_popup_enabled'] ?? false) ? '1' : '0');
+        }
+        foreach (['home_popup_title', 'home_popup_content', 'home_popup_image', 'home_popup_button_text', 'home_popup_button_url'] as $key) {
+            if (array_key_exists($key, $data)) {
+                Setting::set($key, trim((string) ($data[$key] ?? '')));
+            }
+        }
+        if (array_key_exists('home_popup_delay_seconds', $data)) {
+            $v = (int) ($data['home_popup_delay_seconds'] ?? 0);
+            Setting::set('home_popup_delay_seconds', (string) max(0, min(30, $v)));
+        }
+        if (array_key_exists('home_popup_show_once_per_session', $data)) {
+            Setting::set('home_popup_show_once_per_session', ($data['home_popup_show_once_per_session'] ?? false) ? '1' : '0');
         }
         if (isset($data['lang_overrides']) && is_array($data['lang_overrides'])) {
             $en = $data['lang_overrides']['en'] ?? [];

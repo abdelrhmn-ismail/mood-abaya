@@ -4,7 +4,7 @@
     $cancelLabel = $cancelLabel ?? __('Cancel');
 @endphp
 <div class="flex flex-wrap items-center gap-3 pt-2">
-    <button type="submit" class="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+    <button type="submit" class="rounded-lg bg-brand-teal px-4 py-2 text-sm font-medium text-white hover:bg-brand-teal-dark focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2">
         {{ $submitLabel }}
     </button>
     @if($cancelUrl)

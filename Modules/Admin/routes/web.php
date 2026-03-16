@@ -9,7 +9,6 @@ use Modules\Admin\Http\Controllers\OrderController;
 use Modules\Admin\Http\Controllers\PageContentController;
 use Modules\Admin\Http\Controllers\PaymentController;
 use Modules\Admin\Http\Controllers\ProductController;
-use Modules\Admin\Http\Controllers\BannerController;
 use Modules\Admin\Http\Controllers\PostController;
 use Modules\Admin\Http\Controllers\TestimonialController;
 use Modules\Admin\Http\Controllers\ReviewController;
@@ -20,6 +19,8 @@ Route::get('/', DashboardController::class)->name('dashboard');
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
 Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
 Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
+Route::get('/settings/frontend', [SettingsController::class, 'frontend'])->name('settings.frontend');
+Route::put('/settings/frontend', [SettingsController::class, 'updateFrontend'])->name('settings.frontend.update');
 Route::get('/translations', [SettingsController::class, 'translations'])->name('translations.index');
 Route::put('/translations', [SettingsController::class, 'updateTranslations'])->name('translations.update');
 
@@ -63,7 +64,6 @@ Route::post('/reviews/bulk', [ReviewController::class, 'bulkAction'])->name('rev
 Route::post('/reviews/{review}/toggle-visibility', [ReviewController::class, 'toggleVisibility'])->name('reviews.toggle-visibility');
 
 Route::resource('posts', PostController::class)->except('show');
-Route::resource('banners', BannerController::class);
 Route::resource('testimonials', TestimonialController::class);
 
 Route::get('/page-contents', [PageContentController::class, 'index'])->name('page-contents.index');
