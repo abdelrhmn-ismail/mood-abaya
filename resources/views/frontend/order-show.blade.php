@@ -11,7 +11,7 @@
         <div class="mt-10 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <p class="text-slate-600"><strong>{{ __('Date') }}:</strong> {{ $order->created_at->format('Y-m-d H:i') }}</p>
             <p class="text-slate-600"><strong>{{ __('Status') }}:</strong> {{ __($order->status) }}</p>
-            <p class="text-slate-600"><strong>{{ __('Payment') }}:</strong> {{ $order->payment_method }} – {{ $order->payment_status }}</p>
+            <p class="text-slate-600"><strong>{{ __('Payment') }}:</strong> {{ __($order->payment_method) }} – {{ __($order->payment_status) }}</p>
 
             <h2 class="mt-6 text-xl font-semibold text-slate-900">{{ __('Items') }}</h2>
             <ul class="divide-y divide-slate-200">

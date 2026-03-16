@@ -76,9 +76,6 @@
                 <a href="{{ route('admin.reviews.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.reviews.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">star</span> {{ __('Reviews') }}
                 </a>
-                <a href="{{ route('admin.presentations.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.presentations.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
-                    <span class="material-icons text-lg">slideshow</span> {{ __('Presentation') }}
-                </a>
                 <a href="{{ url('/') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm hover:bg-brand-gold/20" target="_blank">
                     <span class="material-icons text-lg">storefront</span> {{ __('View store') }}
                 </a>

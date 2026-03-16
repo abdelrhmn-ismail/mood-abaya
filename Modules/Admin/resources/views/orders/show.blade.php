@@ -43,10 +43,10 @@
             @elseif(in_array($order->status, ['shipped', 'processing'])) bg-blue-100 text-blue-800
             @else bg-amber-100 text-amber-800
             @endif">
-            {{ ucfirst($order->status) }}
+            {{ __($order->status) }}
         </span>
         <span class="text-sm text-gray-500">{{ $order->created_at->format('M j, Y H:i') }}</span>
-        <span class="ml-auto text-lg font-semibold text-gray-900">{{ number_format($order->total, 2) }} SAR</span>
+        <span class="ml-auto text-lg font-semibold text-gray-900">{{ number_format($order->total, 2) }} {{ __('SAR') }}</span>
     </div>
 
     <div class="grid gap-6 lg:grid-cols-2">
@@ -256,15 +256,15 @@
                         <tr>
                             <td class="px-4 py-3 text-sm font-medium text-gray-900">{{ $item->product?->name ?? '—' }}</td>
                             <td class="px-4 py-3 text-sm text-gray-600">{{ $item->quantity }}</td>
-                            <td class="px-4 py-3 text-sm text-gray-600">{{ number_format($item->price, 2) }} SAR</td>
-                            <td class="px-4 py-3 text-right text-sm font-medium text-gray-900">{{ number_format($item->quantity * $item->price, 2) }} SAR</td>
+                            <td class="px-4 py-3 text-sm text-gray-600">{{ number_format($item->price, 2) }} {{ __('SAR') }}</td>
+                            <td class="px-4 py-3 text-right text-sm font-medium text-gray-900">{{ number_format($item->quantity * $item->price, 2) }} {{ __('SAR') }}</td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
         <div class="mt-4 flex justify-end border-t border-gray-200 pt-4">
-            <p class="text-lg font-semibold text-gray-900">{{ __('Total') }}: {{ number_format($order->total, 2) }} SAR</p>
+            <p class="text-lg font-semibold text-gray-900">{{ __('Total') }}: {{ number_format($order->total, 2) }} {{ __('SAR') }}</p>
         </div>
     @endcomponent
 </div>

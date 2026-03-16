@@ -18,18 +18,21 @@
         $key2 = $col['key2'] ?? null;
         $format = $col['format'] ?? null;
         $glue = $col['glue'] ?? ' / ';
+        $translate = !empty($col['translate']);
 
         $val = $key !== null ? data_get($row, $key) : '';
         if ($key2 !== null) {
             $val2 = data_get($row, $key2);
-            $val = $val . $glue . $val2;
+            $val = $translate ? (__($val) . $glue . __($val2)) : ($val . $glue . $val2);
+        } elseif ($translate && $val !== null && $val !== '') {
+            $val = __($val);
         }
 
         if ($format === 'datetime' && $val && is_object($val) && method_exists($val, 'format')) {
             return $val->format('Y-m-d H:i');
         }
         if ($format === 'price' && $val !== null && $val !== '') {
-            return number_format((float) $val, 2) . ' SAR';
+            return number_format((float) $val, 2) . ' ' . __('SAR');
         }
         if ($format === 'boolean') {
             return $val ? __('Yes') : __('No');

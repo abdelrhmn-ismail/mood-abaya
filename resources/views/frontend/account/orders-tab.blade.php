@@ -82,7 +82,7 @@
                     </div>
                     <div>
                         <p class="text-xs font-medium uppercase tracking-wide text-slate-500">{{ __('Payment') }}</p>
-                        <p class="mt-0.5 font-semibold text-slate-900">{{ $selectedOrder->payment_method }} · {{ $selectedOrder->payment_status }}</p>
+                        <p class="mt-0.5 font-semibold text-slate-900">{{ __($selectedOrder->payment_method) }} · {{ __($selectedOrder->payment_status) }}</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-4 rounded-xl border border-slate-100 bg-slate-50/50 p-4 sm:col-span-2 lg:col-span-1">

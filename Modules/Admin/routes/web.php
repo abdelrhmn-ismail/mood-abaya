@@ -15,11 +15,9 @@ use Modules\Admin\Http\Controllers\TestimonialController;
 use Modules\Admin\Http\Controllers\ReviewController;
 use Modules\Admin\Http\Controllers\SettingsController;
 use Modules\Admin\Http\Controllers\UserController;
-use Modules\Admin\Http\Controllers\PresentationController;
 
 Route::get('/', DashboardController::class)->name('dashboard');
 Route::get('/users', [UserController::class, 'index'])->name('users.index');
-Route::get('/presentations', [PresentationController::class, 'index'])->name('presentations.index');
 Route::get('/settings', [SettingsController::class, 'edit'])->name('settings.edit');
 Route::put('/settings', [SettingsController::class, 'update'])->name('settings.update');
 Route::get('/translations', [SettingsController::class, 'translations'])->name('translations.index');

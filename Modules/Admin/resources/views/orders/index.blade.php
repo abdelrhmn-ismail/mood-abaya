@@ -8,18 +8,18 @@
     <input type="text" name="order_number" value="{{ request('order_number') }}" placeholder="{{ __('Order #') }}" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
     <select name="status" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
         <option value="">{{ __('All statuses') }}</option>
-        <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>pending</option>
-        <option value="processing" {{ request('status') === 'processing' ? 'selected' : '' }}>processing</option>
-        <option value="shipped" {{ request('status') === 'shipped' ? 'selected' : '' }}>shipped</option>
-        <option value="delivered" {{ request('status') === 'delivered' ? 'selected' : '' }}>delivered</option>
-        <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>cancelled</option>
+        <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>{{ __('pending') }}</option>
+        <option value="processing" {{ request('status') === 'processing' ? 'selected' : '' }}>{{ __('processing') }}</option>
+        <option value="shipped" {{ request('status') === 'shipped' ? 'selected' : '' }}>{{ __('shipped') }}</option>
+        <option value="delivered" {{ request('status') === 'delivered' ? 'selected' : '' }}>{{ __('delivered') }}</option>
+        <option value="cancelled" {{ request('status') === 'cancelled' ? 'selected' : '' }}>{{ __('cancelled') }}</option>
     </select>
     <select name="payment_status" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
         <option value="">{{ __('All payment statuses') }}</option>
-        <option value="pending" {{ request('payment_status') === 'pending' ? 'selected' : '' }}>pending</option>
-        <option value="pending_approval" {{ request('payment_status') === 'pending_approval' ? 'selected' : '' }}>pending_approval</option>
-        <option value="paid" {{ request('payment_status') === 'paid' ? 'selected' : '' }}>paid</option>
-        <option value="rejected" {{ request('payment_status') === 'rejected' ? 'selected' : '' }}>rejected</option>
+        <option value="pending" {{ request('payment_status') === 'pending' ? 'selected' : '' }}>{{ __('pending') }}</option>
+        <option value="pending_approval" {{ request('payment_status') === 'pending_approval' ? 'selected' : '' }}>{{ __('pending_approval') }}</option>
+        <option value="paid" {{ request('payment_status') === 'paid' ? 'selected' : '' }}>{{ __('paid') }}</option>
+        <option value="rejected" {{ request('payment_status') === 'rejected' ? 'selected' : '' }}>{{ __('rejected') }}</option>
     </select>
     <div class="flex items-center gap-2">
         <a href="{{ route('admin.orders.export', request()->query()) }}" class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 shadow-sm transition hover:bg-gray-50">
@@ -36,8 +36,8 @@
         ['label' => __('Order #'), 'key' => 'order_number', 'class' => 'font-mono', 'sort_key' => 'order_number'],
         ['label' => __('Customer'), 'key' => 'user.name', 'sort_key' => 'user_name'],
         ['label' => __('Total'), 'key' => 'total', 'format' => 'price', 'sort_key' => 'total'],
-        ['label' => __('Payment'), 'key' => 'payment_method', 'key2' => 'payment_status', 'glue' => ' / ', 'sort_key' => 'payment_status'],
-        ['label' => __('Status'), 'key' => 'status', 'sort_key' => 'status'],
+        ['label' => __('Payment'), 'key' => 'payment_method', 'key2' => 'payment_status', 'glue' => ' / ', 'sort_key' => 'payment_status', 'translate' => true],
+        ['label' => __('Status'), 'key' => 'status', 'sort_key' => 'status', 'translate' => true],
         ['label' => __('Date'), 'key' => 'created_at', 'format' => 'datetime', 'sort_key' => 'created_at'],
     ],
     'rows' => $orders,

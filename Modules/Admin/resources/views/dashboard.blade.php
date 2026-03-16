@@ -44,7 +44,7 @@
                 <h2 class="text-sm font-semibold uppercase tracking-wider text-gray-500">{{ __('Total revenue') }}</h2>
             </div>
             <div class="p-6">
-                <p class="text-3xl font-bold text-gray-900">{{ number_format($totalRevenue, 2) }} SAR</p>
+                <p class="text-3xl font-bold text-gray-900">{{ number_format($totalRevenue, 2) }} {{ __('SAR') }}</p>
             </div>
         </div>
         <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
@@ -52,7 +52,7 @@
                 <h2 class="text-sm font-semibold uppercase tracking-wider text-gray-500">{{ __('Revenue') }} ({{ __('This month') }})</h2>
             </div>
             <div class="p-6">
-                <p class="text-3xl font-bold text-indigo-600">{{ number_format($revenueThisMonth, 2) }} SAR</p>
+                <p class="text-3xl font-bold text-indigo-600">{{ number_format($revenueThisMonth, 2) }} {{ __('SAR') }}</p>
             </div>
         </div>
     </div>
@@ -118,7 +118,7 @@
                         ['label' => __('Order #'), 'key' => 'order_number', 'class' => 'font-mono'],
                         ['label' => __('Customer'), 'key' => 'user.name'],
                         ['label' => __('Total'), 'key' => 'total', 'format' => 'price'],
-                        ['label' => __('Status'), 'key' => 'status'],
+                        ['label' => __('Status'), 'key' => 'status', 'translate' => true],
                         ['label' => __('Date'), 'key' => 'created_at', 'format' => 'datetime'],
                     ],
                     'rows' => $recentOrders,

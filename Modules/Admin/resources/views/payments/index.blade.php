@@ -7,10 +7,10 @@
 @component('admin::components.filter-bar')
     <select name="status" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
         <option value="">{{ __('All statuses') }}</option>
-        <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>pending</option>
-        <option value="pending_approval" {{ request('status') === 'pending_approval' ? 'selected' : '' }}>pending_approval</option>
-        <option value="paid" {{ request('status') === 'paid' ? 'selected' : '' }}>paid</option>
-        <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>rejected</option>
+        <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>{{ __('pending') }}</option>
+        <option value="pending_approval" {{ request('status') === 'pending_approval' ? 'selected' : '' }}>{{ __('pending_approval') }}</option>
+        <option value="paid" {{ request('status') === 'paid' ? 'selected' : '' }}>{{ __('paid') }}</option>
+        <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>{{ __('rejected') }}</option>
     </select>
     <select name="method" class="rounded-lg border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal">
         <option value="">{{ __('All methods') }}</option>
