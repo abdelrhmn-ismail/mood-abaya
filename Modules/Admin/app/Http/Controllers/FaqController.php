@@ -6,12 +6,15 @@ use App\Models\Faq;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Admin\Services\FaqService;
 
 class FaqController
 {
+    public function __construct(private FaqService $faqService) {}
+
     public function index(): View
     {
-        $faqs = Faq::ordered()->get();
+        $faqs = $this->faqService->getAll();
 
         return view('admin::faqs.index', compact('faqs'));
     }
@@ -31,9 +34,9 @@ class FaqController
             'sort_order' => 'nullable|integer|min:0',
             'is_active' => 'nullable|boolean',
         ]);
-        $data['sort_order'] = (int) ($data['sort_order'] ?? 0);
         $data['is_active'] = $request->boolean('is_active');
-        Faq::create($data);
+
+        $this->faqService->create($data);
 
         return redirect()->route('admin.faqs.index')->with('success', __('FAQ added.'));
     }
@@ -53,16 +56,16 @@ class FaqController
             'sort_order' => 'nullable|integer|min:0',
             'is_active' => 'nullable|boolean',
         ]);
-        $data['sort_order'] = (int) ($data['sort_order'] ?? 0);
         $data['is_active'] = $request->boolean('is_active');
-        $faq->update($data);
+
+        $this->faqService->update($faq, $data);
 
         return redirect()->route('admin.faqs.index')->with('success', __('FAQ updated.'));
     }
 
     public function destroy(Faq $faq): RedirectResponse
     {
-        $faq->delete();
+        $this->faqService->delete($faq);
 
         return redirect()->route('admin.faqs.index')->with('success', __('FAQ deleted.'));
     }

@@ -22,14 +22,6 @@
         </nav>
     </div>
 
-    @php
-        $brandingDisplayUrl = function ($val) {
-            if (empty($val)) return null;
-            return str_starts_with($val, 'http') ? $val : \Illuminate\Support\Facades\Storage::url($val);
-        };
-        $heroDisplayUrl = $brandingDisplayUrl;
-    @endphp
-
     {{-- Tab: Branding --}}
     <div id="tab-branding" class="settings-panel space-y-6">
         <h2 class="text-lg font-semibold text-gray-900">{{ __('Branding') }}</h2>
@@ -38,7 +30,7 @@
             <div class="rounded-xl border border-gray-200 bg-gray-50/50 p-4">
                 <label class="block text-sm font-medium text-gray-700">{{ __('Site logo') }}</label>
                 <p class="mt-0.5 text-xs text-gray-500">{{ __('Shown in navbar and footer (logo only, no text).') }} {{ __('Recommended dimensions') }}: 180×50</p>
-                @php $logoVal = $settings['site_logo'] ?? ''; $logoUrl = $brandingDisplayUrl($logoVal); @endphp
+                @php $logoVal = $settings['site_logo'] ?? ''; $logoUrl = get_image_url($logoVal); @endphp
                 @if($logoUrl)
                     <div class="mt-2 flex items-center gap-2 overflow-hidden rounded-lg border border-gray-200 bg-white p-2">
                         <img src="{{ $logoUrl }}" alt="" class="max-h-12 max-w-[180px] object-contain" loading="lazy">
@@ -52,7 +44,7 @@
             <div class="rounded-xl border border-gray-200 bg-gray-50/50 p-4">
                 <label class="block text-sm font-medium text-gray-700">{{ __('Favicon') }}</label>
                 <p class="mt-0.5 text-xs text-gray-500">{{ __('Browser tab icon.') }} {{ __('Recommended') }}: 32×32 .ico or .png</p>
-                @php $favVal = $settings['favicon'] ?? ''; $favUrl = $brandingDisplayUrl($favVal); @endphp
+                @php $favVal = $settings['favicon'] ?? ''; $favUrl = get_image_url($favVal); @endphp
                 @if($favUrl)
                     <div class="mt-2 flex items-center gap-2">
                         <img src="{{ $favUrl }}" alt="" class="h-8 w-8 object-contain" loading="lazy">
@@ -72,25 +64,72 @@
     </div>
 
     {{-- Tab: Color palette --}}
+    @php
+        $colorLabels = [
+            'color_brand_black' => __('Black'),
+            'color_brand_teal' => __('Teal (primary)'),
+            'color_brand_teal_dark' => __('Teal dark'),
+            'color_brand_white' => __('White'),
+            'color_brand_gold' => __('Gold'),
+            'color_brand_gold_dark' => __('Gold dark'),
+        ];
+        $colorDefaults = [
+            'color_brand_black' => '#000000',
+            'color_brand_teal' => '#144034',
+            'color_brand_teal_dark' => '#0f2d26',
+            'color_brand_white' => '#FFFFFF',
+            'color_brand_gold' => '#D3AE72',
+            'color_brand_gold_dark' => '#b8945c',
+        ];
+    @endphp
     <div id="tab-colors" class="settings-panel hidden space-y-6">
-        <h2 class="text-lg font-semibold text-gray-900">{{ __('Color palette') }}</h2>
-        <p class="text-sm text-gray-500">{{ __('Manage the site color design system. These override the default palette used across the store.') }}</p>
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            @foreach([
-                'color_brand_black' => __('Black'),
-                'color_brand_teal' => __('Teal (primary)'),
-                'color_brand_teal_dark' => __('Teal dark'),
-                'color_brand_white' => __('White'),
-                'color_brand_gold' => __('Gold'),
-                'color_brand_gold_dark' => __('Gold dark'),
-            ] as $key => $label)
-                @php $val = old($key, $settings[$key] ?? ''); @endphp
-                <div class="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50/50 p-4">
-                    <input type="color" id="{{ $key }}_picker" value="{{ $val ?: '#000000' }}" class="h-12 w-14 cursor-pointer rounded-lg border border-gray-300 bg-white p-1">
-                    <div class="min-w-0 flex-1">
-                        <label for="{{ $key }}" class="block text-sm font-medium text-gray-700">{{ $label }}</label>
-                        <input type="text" name="{{ $key }}" id="{{ $key }}" value="{{ $val }}" placeholder="#000000" maxlength="7" class="mt-0.5 block w-full rounded-lg border border-gray-300 text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal" pattern="^#?[a-fA-F0-9]{6}$">
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-lg font-semibold text-gray-900">{{ __('Color palette') }}</h2>
+                <p class="mt-1 text-sm text-gray-500">{{ __('Manage the site color design system. These override the default palette used across the store.') }}</p>
+            </div>
+            <button type="button" id="reset-all-colors" class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2 text-xs font-medium text-gray-700 shadow-sm transition hover:bg-gray-50">
+                <span class="material-icons text-sm">restart_alt</span>
+                {{ __('Reset all to defaults') }}
+            </button>
+        </div>
+
+        {{-- Live preview bar --}}
+        <div class="rounded-xl border border-gray-200 bg-white p-4">
+            <p class="mb-3 text-xs font-medium uppercase tracking-wide text-gray-500">{{ __('Live preview') }}</p>
+            <div class="flex items-center gap-2 overflow-x-auto">
+                @foreach($colorLabels as $key => $label)
+                    @php $val = old($key, $settings[$key] ?? $colorDefaults[$key]); @endphp
+                    <div class="flex flex-col items-center gap-1">
+                        <div id="{{ $key }}_preview" class="h-10 w-16 rounded-lg border border-gray-200 shadow-inner" style="background-color: {{ $val }}"></div>
+                        <span class="text-[10px] text-gray-500">{{ $label }}</span>
                     </div>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            @foreach($colorLabels as $key => $label)
+                @php $val = old($key, $settings[$key] ?? $colorDefaults[$key]); @endphp
+                <div class="color-card rounded-xl border border-gray-200 bg-gray-50/50 p-4 transition hover:shadow-md" data-color-key="{{ $key }}" data-default="{{ $colorDefaults[$key] }}">
+                    <div class="flex items-center gap-3">
+                        <div class="relative">
+                            <input type="color" id="{{ $key }}_picker" value="{{ $val ?: '#000000' }}" class="h-12 w-14 cursor-pointer rounded-lg border border-gray-300 bg-white p-1">
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center justify-between">
+                                <label for="{{ $key }}" class="block text-sm font-medium text-gray-700">{{ $label }}</label>
+                                <button type="button" class="reset-color-btn text-xs text-gray-400 transition hover:text-brand-teal" title="{{ __('Reset to default') }}" data-key="{{ $key }}" data-default="{{ $colorDefaults[$key] }}">
+                                    <span class="material-icons text-sm">restart_alt</span>
+                                </button>
+                            </div>
+                            <input type="text" name="{{ $key }}" id="{{ $key }}" value="{{ $val }}" placeholder="#000000" maxlength="7" class="mt-0.5 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal" pattern="^#[a-fA-F0-9]{6}$">
+                            <p class="mt-0.5 text-[10px] text-gray-400">{{ __('Default') }}: {{ $colorDefaults[$key] }}</p>
+                        </div>
+                    </div>
+                    @error($key)
+                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
             @endforeach
         </div>
@@ -107,7 +146,7 @@
                 <h3 class="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">{{ __('Page headers') }}</h3>
                 <div class="grid gap-6 sm:grid-cols-1 lg:grid-cols-3">
                     @foreach(['hero_account' => __('Account header image'), 'hero_cart' => __('Cart header image'), 'hero_checkout' => __('Checkout header image'), 'hero_contact' => __('Contact header image'), 'hero_page' => __('Static pages header image'), 'hero_search' => __('Search header image'), 'hero_categories' => __('Categories header image'), 'hero_products' => __('Products header image')] as $key => $label)
-                        @php $val = $settings[$key] ?? ''; $imgUrl = $heroDisplayUrl($val); @endphp
+                        @php $val = $settings[$key] ?? ''; $imgUrl = get_image_url($val); @endphp
                         <div class="rounded-xl border border-gray-200 bg-gray-50/50 p-4">
                             <label class="block text-sm font-medium text-gray-700">{{ $label }}</label>
                             <p class="mt-0.5 text-xs text-gray-500">{{ __('Recommended dimensions') }}: 1920×600</p>
@@ -130,7 +169,7 @@
                 <h3 class="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">{{ __('Home hero slider') }}</h3>
                 <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-3">
                     @foreach(['hero_home_1' => __('Home hero image 1'), 'hero_home_2' => __('Home hero image 2'), 'hero_home_3' => __('Home hero image 3')] as $key => $label)
-                        @php $val = $settings[$key] ?? ''; $imgUrl = $heroDisplayUrl($val); @endphp
+                        @php $val = $settings[$key] ?? ''; $imgUrl = get_image_url($val); @endphp
                         <div class="rounded-xl border border-gray-200 bg-gray-50/50 p-4">
                             <label class="block text-sm font-medium text-gray-700">{{ $label }}</label>
                             <p class="mt-0.5 text-xs text-gray-500">{{ __('Recommended dimensions') }}: 1920×1080</p>
@@ -207,7 +246,7 @@
             <div class="mt-4">
                 <label class="block text-sm font-medium text-gray-700">{{ __('Popup image (optional)') }}</label>
                 <p class="mt-0.5 text-xs text-gray-500">{{ __('Recommended dimensions') }}: 600×400. {{ __('Accepted') }}: JPG, PNG, GIF, WebP. {{ __('Max') }} 2 MB</p>
-                @php $popupImgVal = $settings['home_popup_image'] ?? ''; $popupImgUrl = $heroDisplayUrl($popupImgVal); @endphp
+                @php $popupImgVal = $settings['home_popup_image'] ?? ''; $popupImgUrl = get_image_url($popupImgVal); @endphp
                 @if($popupImgUrl)
                     <p class="mt-2 text-xs font-medium text-slate-600">{{ __('Current image') }}</p>
                     <div class="mt-1 min-h-[6rem] overflow-hidden rounded-lg border border-gray-200 bg-white hero-preview" data-error-msg="{{ __('Image unavailable or failed to load') }}">

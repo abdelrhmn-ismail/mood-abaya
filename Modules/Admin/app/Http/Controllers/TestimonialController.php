@@ -5,14 +5,16 @@ namespace Modules\Admin\Http\Controllers;
 use App\Models\Testimonial;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Modules\Admin\Services\TestimonialService;
 
 class TestimonialController
 {
+    public function __construct(private TestimonialService $testimonialService) {}
+
     public function index(): View
     {
-        $testimonials = Testimonial::orderBy('sort_order')->orderBy('id')->get();
+        $testimonials = $this->testimonialService->getAll();
 
         return view('admin::testimonials.index', compact('testimonials'));
     }
@@ -33,14 +35,9 @@ class TestimonialController
             'sort_order' => 'nullable|integer|min:0',
             'active' => 'nullable|boolean',
         ]);
-        $data['sort_order'] = (int) ($data['sort_order'] ?? 0);
         $data['active'] = $request->boolean('active');
-        if ($request->hasFile('photo')) {
-            $data['photo'] = $request->file('photo')->store('testimonials', 'public');
-        } else {
-            $data['photo'] = null;
-        }
-        Testimonial::create($data);
+
+        $this->testimonialService->create($data);
 
         return redirect()->route('admin.testimonials.index')->with('success', __('Testimonial added.'));
     }
@@ -59,27 +56,16 @@ class TestimonialController
             'sort_order' => 'nullable|integer|min:0',
             'active' => 'nullable|boolean',
         ]);
-        $data['sort_order'] = (int) ($data['sort_order'] ?? 0);
         $data['active'] = $request->boolean('active');
-        if ($request->hasFile('photo')) {
-            if ($testimonial->photo) {
-                Storage::disk('public')->delete($testimonial->photo);
-            }
-            $data['photo'] = $request->file('photo')->store('testimonials', 'public');
-        } else {
-            unset($data['photo']);
-        }
-        $testimonial->update($data);
+
+        $this->testimonialService->update($testimonial, $data);
 
         return redirect()->route('admin.testimonials.index')->with('success', __('Testimonial updated.'));
     }
 
     public function destroy(Testimonial $testimonial): RedirectResponse
     {
-        if ($testimonial->photo) {
-            Storage::disk('public')->delete($testimonial->photo);
-        }
-        $testimonial->delete();
+        $this->testimonialService->delete($testimonial);
 
         return redirect()->route('admin.testimonials.index')->with('success', __('Testimonial deleted.'));
     }

@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\BillingAddress;
+use App\Services\BillingAddressService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class BillingAddressController extends Controller
 {
+    public function __construct(private BillingAddressService $billingAddressService) {}
+
     public function store(Request $request): RedirectResponse
     {
         $codes = array_column(config('phone_codes', []), 'code');
@@ -31,17 +33,12 @@ class BillingAddressController extends Controller
         }
 
         $validated = $validator->validated();
-        $validated['user_id'] = $request->user()->id;
         $validated['phone'] = $request->phoneWithCode('phone');
         unset($validated['phone_country_code'], $validated['phone_number']);
         $validated['country'] = $validated['country'] ?? 'Saudi Arabia';
         $validated['is_default'] = $request->boolean('is_default');
 
-        if ($validated['is_default']) {
-            BillingAddress::where('user_id', $request->user()->id)->update(['is_default' => false]);
-        }
-
-        BillingAddress::create($validated);
+        $this->billingAddressService->create($request->user()->id, $validated);
 
         return redirect()->route('account')->withFragment('addresses')
             ->with('success', __('Address added.'));
@@ -71,13 +68,8 @@ class BillingAddressController extends Controller
         $validated['phone'] = $request->phoneWithCode('phone');
         unset($validated['phone_country_code'], $validated['phone_number']);
         $validated['is_default'] = $request->boolean('is_default');
-        if ($validated['is_default']) {
-            BillingAddress::where('user_id', $request->user()->id)
-                ->where('id', '!=', $billingAddress->id)
-                ->update(['is_default' => false]);
-        }
 
-        $billingAddress->update($validated);
+        $this->billingAddressService->update($billingAddress, $validated);
 
         return redirect()->route('account')->withFragment('addresses')
             ->with('success', __('Address updated.'));
@@ -88,7 +80,9 @@ class BillingAddressController extends Controller
         if ($billingAddress->user_id !== $request->user()->id) {
             abort(403);
         }
-        $billingAddress->delete();
+
+        $this->billingAddressService->delete($billingAddress);
+
         return redirect()->route('account')->withFragment('addresses')
             ->with('success', __('Address removed.'));
     }

@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Setting;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('site_label')) {
     /**
@@ -43,30 +45,16 @@ if (!function_exists('site_label')) {
 }
 
 if (!function_exists('site_logo_url')) {
-    /**
-     * Get the site logo URL (admin-editable). Returns null if not set.
-     */
     function site_logo_url(): ?string
     {
-        $val = Setting::get('site_logo', '');
-        if ($val === null || $val === '') {
-            return null;
-        }
-        return str_starts_with($val, 'http') ? $val : \Illuminate\Support\Facades\Storage::url($val);
+        return get_image_url(Setting::get('site_logo', ''));
     }
 }
 
 if (!function_exists('site_favicon_url')) {
-    /**
-     * Get the site favicon URL (admin-editable). Returns null if not set.
-     */
     function site_favicon_url(): ?string
     {
-        $val = Setting::get('favicon', '');
-        if ($val === null || $val === '') {
-            return null;
-        }
-        return str_starts_with($val, 'http') ? $val : \Illuminate\Support\Facades\Storage::url($val);
+        return get_image_url(Setting::get('favicon', ''));
     }
 }
 
@@ -191,6 +179,57 @@ if (!function_exists('admin_sort_url')) {
         $query['sort'] = $sortKey;
         $query['order'] = $order;
         return request()->url() . '?' . http_build_query($query);
+    }
+}
+
+if (!function_exists('upload_image')) {
+    /**
+     * Upload an image file to the given storage directory.
+     *
+     * @param  UploadedFile  $file     The uploaded file instance
+     * @param  string        $directory  Storage subdirectory (e.g. 'products', 'branding', 'posts')
+     * @param  string        $disk       Storage disk name
+     * @return string|null  The stored path, or null on failure
+     */
+    function upload_image(UploadedFile $file, string $directory, string $disk = 'public'): ?string
+    {
+        if (!$file->isValid()) {
+            return null;
+        }
+
+        return $file->store($directory, $disk) ?: null;
+    }
+}
+
+if (!function_exists('delete_image')) {
+    /**
+     * Delete an image from storage if the path is a local storage path (not an external URL).
+     *
+     * @param  string|null  $path  The stored path (e.g. 'products/abc.jpg')
+     * @param  string       $disk  Storage disk name
+     */
+    function delete_image(?string $path, string $disk = 'public'): void
+    {
+        if ($path && !str_starts_with($path, 'http')) {
+            Storage::disk($disk)->delete($path);
+        }
+    }
+}
+
+if (!function_exists('get_image_url')) {
+    /**
+     * Resolve a stored image path or external URL to a full public URL.
+     *
+     * @param  string|null  $value  Stored path or external URL
+     * @return string|null  The public URL, or null if empty
+     */
+    function get_image_url(?string $value): ?string
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return str_starts_with($value, 'http') ? $value : Storage::url($value);
     }
 }
 

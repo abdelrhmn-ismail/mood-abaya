@@ -23,7 +23,7 @@ class SettingsController
 
     public function update(Request $request, SettingsService $settingsService): RedirectResponse
     {
-        $rules = [
+        $request->validate([
             'locale' => 'required|in:en,ar',
             'site_name' => 'nullable|string|max:255',
             'meta_title' => 'nullable|string|max:255',
@@ -46,35 +46,15 @@ class SettingsController
             'shipping_flat_rate' => 'nullable|numeric|min:0',
             'shipping_free_over' => 'nullable|numeric|min:0',
             'shipping_zones' => 'nullable|string|max:2000',
-        ];
-        $request->validate($rules);
+        ]);
 
-        $data = $request->only(
-            'locale',
-            'site_name',
-            'meta_title',
-            'meta_description',
-            'meta_keywords',
-            'og_image',
-            'tinymce_api_key',
-            'whatsapp_url',
-            'instagram_url',
-            'facebook_url',
-            'twitter_url',
-            'contact_email',
-            'contact_email_secondary',
-            'contact_location',
-            'contact_phone',
-            'contact_phone_secondary',
-            'custom_code_header',
-            'custom_code_footer',
-            'shipping_type',
-            'shipping_flat_rate',
-            'shipping_free_over',
-            'shipping_zones',
-        );
-
-        $settingsService->updateSettings($data);
+        $settingsService->updateSettings($request->only(
+            'locale', 'site_name', 'meta_title', 'meta_description', 'meta_keywords',
+            'og_image', 'tinymce_api_key', 'whatsapp_url', 'instagram_url', 'facebook_url',
+            'twitter_url', 'contact_email', 'contact_email_secondary', 'contact_location',
+            'contact_phone', 'contact_phone_secondary', 'custom_code_header', 'custom_code_footer',
+            'shipping_type', 'shipping_flat_rate', 'shipping_free_over', 'shipping_zones',
+        ));
 
         return redirect()->route('admin.settings.edit')->with('success', __('Settings saved.'));
     }
@@ -93,6 +73,7 @@ class SettingsController
             'translations.*.en' => 'nullable|string|max:1000',
             'translations.*.ar' => 'nullable|string|max:1000',
         ]);
+
         $translations = $request->input('translations', []);
         $en = [];
         $ar = [];
@@ -102,6 +83,7 @@ class SettingsController
                 $ar[$key] = trim($vals['ar'] ?? '');
             }
         }
+
         $settingsService->updateSettings(['lang_overrides' => ['en' => $en, 'ar' => $ar]]);
 
         return redirect()->route('admin.translations.index')->with('success', __('Translations saved.'));
@@ -110,6 +92,7 @@ class SettingsController
     public function frontend(SettingsService $settingsService): View
     {
         $settings = $settingsService->getSettings();
+
         return view('admin::settings.frontend', compact('settings'));
     }
 
@@ -121,32 +104,35 @@ class SettingsController
             'footer_tagline' => 'nullable|string|max:500',
             'logo_file' => 'nullable|file|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
             'favicon_file' => 'nullable|file|mimes:ico,png,jpg|max:512',
+            'announcement_bar_enabled' => 'nullable|boolean',
+            'announcement_bar_text' => 'nullable|string|max:500',
+            'announcement_bar_link' => 'nullable|string|max:500',
+            'maintenance_mode_enabled' => 'nullable|boolean',
+            'maintenance_coming_back_at' => 'nullable|string|max:100',
+            'maintenance_ip_allowlist' => 'nullable|string|max:2000',
+            'trust_badge_1' => 'nullable|string|max:255',
+            'trust_badge_2' => 'nullable|string|max:255',
+            'trust_badge_3' => 'nullable|string|max:255',
+            'home_popup_enabled' => 'nullable|boolean',
+            'home_popup_title' => 'nullable|string|max:255',
+            'home_popup_content' => 'nullable|string|max:5000',
+            'home_popup_image' => 'nullable|string|max:500',
+            'home_popup_image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'home_popup_button_text' => 'nullable|string|max:100',
+            'home_popup_button_url' => 'nullable|string|max:500',
+            'home_popup_delay_seconds' => 'nullable|integer|min:0|max:30',
+            'home_popup_show_once_per_session' => 'nullable|boolean',
         ];
+
         foreach (self::HERO_KEYS as $key) {
             $rules[$key] = 'nullable|string|max:500';
             $rules['hero_file_' . $key] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
         }
-        $rules['announcement_bar_enabled'] = 'nullable|boolean';
-        $rules['announcement_bar_text'] = 'nullable|string|max:500';
-        $rules['announcement_bar_link'] = 'nullable|string|max:500';
-        $rules['maintenance_mode_enabled'] = 'nullable|boolean';
-        $rules['maintenance_coming_back_at'] = 'nullable|string|max:100';
-        $rules['maintenance_ip_allowlist'] = 'nullable|string|max:2000';
-        $rules['trust_badge_1'] = 'nullable|string|max:255';
-        $rules['trust_badge_2'] = 'nullable|string|max:255';
-        $rules['trust_badge_3'] = 'nullable|string|max:255';
-        foreach (['color_brand_black', 'color_brand_teal', 'color_brand_teal_dark', 'color_brand_white', 'color_brand_gold', 'color_brand_gold_dark'] as $k) {
+
+        foreach ($settingsService->getColorKeys() as $k) {
             $rules[$k] = 'nullable|string|max:20';
         }
-        $rules['home_popup_enabled'] = 'nullable|boolean';
-        $rules['home_popup_title'] = 'nullable|string|max:255';
-        $rules['home_popup_content'] = 'nullable|string|max:5000';
-        $rules['home_popup_image'] = 'nullable|string|max:500';
-        $rules['home_popup_image_file'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
-        $rules['home_popup_button_text'] = 'nullable|string|max:100';
-        $rules['home_popup_button_url'] = 'nullable|string|max:500';
-        $rules['home_popup_delay_seconds'] = 'nullable|integer|min:0|max:30';
-        $rules['home_popup_show_once_per_session'] = 'nullable|boolean';
+
         $request->validate($rules);
 
         $frontendKeys = array_merge(
@@ -156,45 +142,22 @@ class SettingsController
                 'announcement_bar_enabled', 'announcement_bar_text', 'announcement_bar_link',
                 'maintenance_mode_enabled', 'maintenance_coming_back_at', 'maintenance_ip_allowlist',
                 'trust_badge_1', 'trust_badge_2', 'trust_badge_3',
-                'color_brand_black', 'color_brand_teal', 'color_brand_teal_dark', 'color_brand_white', 'color_brand_gold', 'color_brand_gold_dark',
                 'home_popup_enabled', 'home_popup_title', 'home_popup_content', 'home_popup_image',
-                'home_popup_button_text', 'home_popup_button_url', 'home_popup_delay_seconds', 'home_popup_show_once_per_session',
-            ]
+                'home_popup_button_text', 'home_popup_button_url', 'home_popup_delay_seconds',
+                'home_popup_show_once_per_session',
+            ],
+            $settingsService->getColorKeys()
         );
+
         $data = $request->only($frontendKeys);
         $data['announcement_bar_enabled'] = $request->boolean('announcement_bar_enabled');
         $data['maintenance_mode_enabled'] = $request->boolean('maintenance_mode_enabled');
         $data['home_popup_enabled'] = $request->boolean('home_popup_enabled');
         $data['home_popup_show_once_per_session'] = $request->boolean('home_popup_show_once_per_session');
 
-        foreach (self::HERO_KEYS as $key) {
-            if ($request->hasFile('hero_file_' . $key)) {
-                $path = $request->file('hero_file_' . $key)->store('hero', 'public');
-                if ($path) {
-                    $data[$key] = $path;
-                }
-            }
-        }
-        if ($request->hasFile('logo_file')) {
-            $path = $request->file('logo_file')->store('branding', 'public');
-            if ($path) {
-                $data['site_logo'] = $path;
-            }
-        }
-        if ($request->hasFile('favicon_file')) {
-            $path = $request->file('favicon_file')->store('branding', 'public');
-            if ($path) {
-                $data['favicon'] = $path;
-            }
-        }
-        if ($request->hasFile('home_popup_image_file')) {
-            $path = $request->file('home_popup_image_file')->store('popup', 'public');
-            if ($path) {
-                $data['home_popup_image'] = $path;
-            }
-        }
-
+        $settingsService->processFileUploads($request, $data);
         $settingsService->updateSettings($data);
+
         return redirect()->route('admin.settings.frontend')->with('success', __('Settings saved.'));
     }
 }

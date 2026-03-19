@@ -70,7 +70,7 @@ class ProductService
         $data['slug'] = $data['slug'] ?: Str::slug($nameForSlug);
         $data['slug'] = $this->ensureUniqueSlug($data['slug']);
         if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
-            $data['image'] = $data['image']->store('products', 'public');
+            $data['image'] = upload_image($data['image'], 'products');
         } else {
             unset($data['image']);
         }
@@ -118,7 +118,7 @@ class ProductService
             $data['slug'] = $this->ensureUniqueSlug($data['slug'], $product->id);
         }
         if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
-            $data['image'] = $data['image']->store('products', 'public');
+            $data['image'] = upload_image($data['image'], 'products');
         } else {
             unset($data['image']);
         }
@@ -195,8 +195,10 @@ class ProductService
             if (!$file instanceof UploadedFile || !$file->isValid()) {
                 continue;
             }
-            $path = $file->store('products', 'public');
-            $product->images()->create(['image' => $path, 'sort_order' => ++$sortOrder]);
+            $path = upload_image($file, 'products');
+            if ($path) {
+                $product->images()->create(['image' => $path, 'sort_order' => ++$sortOrder]);
+            }
         }
     }
 
