@@ -3,8 +3,10 @@
 namespace Modules\Admin\Http\Controllers;
 
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Admin\Http\Requests\UpdateFrontendSettingsRequest;
+use Modules\Admin\Http\Requests\UpdateSettingsRequest;
+use Modules\Admin\Http\Requests\UpdateTranslationsRequest;
 use Modules\Admin\Services\SettingsService;
 
 class SettingsController
@@ -21,33 +23,8 @@ class SettingsController
         return view('admin::settings.edit', compact('settings'));
     }
 
-    public function update(Request $request, SettingsService $settingsService): RedirectResponse
+    public function update(UpdateSettingsRequest $request, SettingsService $settingsService): RedirectResponse
     {
-        $request->validate([
-            'locale' => 'required|in:en,ar',
-            'site_name' => 'nullable|string|max:255',
-            'meta_title' => 'nullable|string|max:255',
-            'meta_description' => 'nullable|string|max:500',
-            'meta_keywords' => 'nullable|string|max:500',
-            'og_image' => 'nullable|string|max:500',
-            'tinymce_api_key' => 'nullable|string|max:255',
-            'whatsapp_url' => 'nullable|string|max:500',
-            'instagram_url' => 'nullable|string|max:500',
-            'facebook_url' => 'nullable|string|max:500',
-            'twitter_url' => 'nullable|string|max:500',
-            'contact_email' => 'nullable|string|max:255',
-            'contact_email_secondary' => 'nullable|string|max:255',
-            'contact_location' => 'nullable|string|max:500',
-            'contact_phone' => 'nullable|string|max:100',
-            'contact_phone_secondary' => 'nullable|string|max:100',
-            'custom_code_header' => 'nullable|string|max:15000',
-            'custom_code_footer' => 'nullable|string|max:15000',
-            'shipping_type' => 'nullable|string|in:flat,free_over,zones',
-            'shipping_flat_rate' => 'nullable|numeric|min:0',
-            'shipping_free_over' => 'nullable|numeric|min:0',
-            'shipping_zones' => 'nullable|string|max:2000',
-        ]);
-
         $settingsService->updateSettings($request->only(
             'locale', 'site_name', 'meta_title', 'meta_description', 'meta_keywords',
             'og_image', 'tinymce_api_key', 'whatsapp_url', 'instagram_url', 'facebook_url',
@@ -66,14 +43,8 @@ class SettingsController
         return view('admin::settings.translations', compact('translations'));
     }
 
-    public function updateTranslations(Request $request, SettingsService $settingsService): RedirectResponse
+    public function updateTranslations(UpdateTranslationsRequest $request, SettingsService $settingsService): RedirectResponse
     {
-        $request->validate([
-            'translations' => 'required|array',
-            'translations.*.en' => 'nullable|string|max:1000',
-            'translations.*.ar' => 'nullable|string|max:1000',
-        ]);
-
         $translations = $request->input('translations', []);
         $en = [];
         $ar = [];
@@ -96,45 +67,8 @@ class SettingsController
         return view('admin::settings.frontend', compact('settings'));
     }
 
-    public function updateFrontend(Request $request, SettingsService $settingsService): RedirectResponse
+    public function updateFrontend(UpdateFrontendSettingsRequest $request, SettingsService $settingsService): RedirectResponse
     {
-        $rules = [
-            'site_logo' => 'nullable|string|max:500',
-            'favicon' => 'nullable|string|max:500',
-            'footer_tagline' => 'nullable|string|max:500',
-            'logo_file' => 'nullable|file|mimes:jpeg,png,jpg,gif,webp,svg|max:2048',
-            'favicon_file' => 'nullable|file|mimes:ico,png,jpg|max:512',
-            'announcement_bar_enabled' => 'nullable|boolean',
-            'announcement_bar_text' => 'nullable|string|max:500',
-            'announcement_bar_link' => 'nullable|string|max:500',
-            'maintenance_mode_enabled' => 'nullable|boolean',
-            'maintenance_coming_back_at' => 'nullable|string|max:100',
-            'maintenance_ip_allowlist' => 'nullable|string|max:2000',
-            'trust_badge_1' => 'nullable|string|max:255',
-            'trust_badge_2' => 'nullable|string|max:255',
-            'trust_badge_3' => 'nullable|string|max:255',
-            'home_popup_enabled' => 'nullable|boolean',
-            'home_popup_title' => 'nullable|string|max:255',
-            'home_popup_content' => 'nullable|string|max:5000',
-            'home_popup_image' => 'nullable|string|max:500',
-            'home_popup_image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'home_popup_button_text' => 'nullable|string|max:100',
-            'home_popup_button_url' => 'nullable|string|max:500',
-            'home_popup_delay_seconds' => 'nullable|integer|min:0|max:30',
-            'home_popup_show_once_per_session' => 'nullable|boolean',
-        ];
-
-        foreach (self::HERO_KEYS as $key) {
-            $rules[$key] = 'nullable|string|max:500';
-            $rules['hero_file_' . $key] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048';
-        }
-
-        foreach ($settingsService->getColorKeys() as $k) {
-            $rules[$k] = 'nullable|string|max:20';
-        }
-
-        $request->validate($rules);
-
         $frontendKeys = array_merge(
             ['site_logo', 'favicon', 'footer_tagline'],
             self::HERO_KEYS,

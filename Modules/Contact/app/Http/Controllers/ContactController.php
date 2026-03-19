@@ -5,8 +5,8 @@ namespace Modules\Contact\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Faq;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Contact\Http\Requests\StoreContactRequest;
 use Modules\Contact\Services\ContactService;
 
 class ContactController extends Controller
@@ -22,16 +22,9 @@ class ContactController extends Controller
         return view('frontend.contact', compact('faqs'));
     }
 
-    public function submit(Request $request): RedirectResponse
+    public function submit(StoreContactRequest $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email'],
-            'subject' => ['nullable', 'string', 'max:255'],
-            'message' => ['required', 'string', 'max:10000'],
-        ]);
-
-        $this->contactService->submitMessage($validated);
+        $this->contactService->submitMessage($request->validated());
 
         return redirect()
             ->route('contact')

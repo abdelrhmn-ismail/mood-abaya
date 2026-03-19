@@ -4,8 +4,8 @@ namespace Modules\Admin\Http\Controllers;
 
 use App\Models\Testimonial;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Admin\Http\Requests\StoreTestimonialRequest;
 use Modules\Admin\Services\TestimonialService;
 
 class TestimonialController
@@ -26,15 +26,9 @@ class TestimonialController
         return view('admin::testimonials.create', compact('testimonial'));
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreTestimonialRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'quote' => 'required|string|max:2000',
-            'name' => 'required|string|max:255',
-            'photo' => 'nullable|image|max:2048',
-            'sort_order' => 'nullable|integer|min:0',
-            'active' => 'nullable|boolean',
-        ]);
+        $data = $request->validated();
         $data['active'] = $request->boolean('active');
 
         $this->testimonialService->create($data);
@@ -47,15 +41,9 @@ class TestimonialController
         return view('admin::testimonials.edit', compact('testimonial'));
     }
 
-    public function update(Request $request, Testimonial $testimonial): RedirectResponse
+    public function update(StoreTestimonialRequest $request, Testimonial $testimonial): RedirectResponse
     {
-        $data = $request->validate([
-            'quote' => 'required|string|max:2000',
-            'name' => 'required|string|max:255',
-            'photo' => 'nullable|image|max:2048',
-            'sort_order' => 'nullable|integer|min:0',
-            'active' => 'nullable|boolean',
-        ]);
+        $data = $request->validated();
         $data['active'] = $request->boolean('active');
 
         $this->testimonialService->update($testimonial, $data);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreWishlistRequest;
 use App\Services\WishlistService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -13,19 +14,17 @@ class WishlistController extends Controller
         private WishlistService $wishlistService
     ) {}
 
-    /** Redirect to account page with wishlist tab (auth) or login with return url (guest). */
     public function index(): RedirectResponse
     {
         if (auth()->check()) {
             return redirect()->route('account')->withFragment('wishlist');
         }
+
         return redirect()->route('login', ['redirect' => route('account') . '#wishlist']);
     }
 
-    /** Add product to wishlist (guest: stored in cache until login). */
-    public function store(Request $request): RedirectResponse|JsonResponse
+    public function store(StoreWishlistRequest $request): RedirectResponse|JsonResponse
     {
-        $request->validate(['product_id' => 'required|exists:products,id']);
         $productId = (int) $request->product_id;
         $this->wishlistService->add($productId);
         if ($request->expectsJson() || $request->ajax()) {
@@ -36,10 +35,10 @@ class WishlistController extends Controller
                 'in_wishlist' => true,
             ]);
         }
+
         return redirect()->back()->with('success', __('Added to wishlist.'));
     }
 
-    /** Remove product from wishlist. */
     public function destroy(Request $request, int $productId): RedirectResponse|JsonResponse
     {
         $this->wishlistService->remove($productId);
@@ -51,13 +50,12 @@ class WishlistController extends Controller
                 'in_wishlist' => false,
             ]);
         }
+
         return redirect()->back()->with('success', __('Removed from wishlist.'));
     }
 
-    /** Toggle: add if not in wishlist, remove if in wishlist. */
-    public function toggle(Request $request): RedirectResponse|JsonResponse
+    public function toggle(StoreWishlistRequest $request): RedirectResponse|JsonResponse
     {
-        $request->validate(['product_id' => 'required|exists:products,id']);
         $productId = (int) $request->product_id;
         $added = $this->wishlistService->toggle($productId);
         $message = $added ? __('Added to wishlist.') : __('Removed from wishlist.');
@@ -70,6 +68,7 @@ class WishlistController extends Controller
                 'in_wishlist' => $added,
             ]);
         }
+
         return redirect()->back()->with('success', $message);
     }
 }

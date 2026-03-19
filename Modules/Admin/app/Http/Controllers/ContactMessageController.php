@@ -6,6 +6,7 @@ use App\Models\ContactMessage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Admin\Http\Requests\BulkContactMessageActionRequest;
 use Modules\Admin\Services\ContactMessageService;
 
 class ContactMessageController
@@ -31,13 +32,8 @@ class ContactMessageController
         return view('admin::contacts.show', compact('contactMessage'));
     }
 
-    public function bulkAction(Request $request): RedirectResponse
+    public function bulkAction(BulkContactMessageActionRequest $request): RedirectResponse
     {
-        $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:contact_messages,id',
-            'action' => 'required|in:mark_read,delete',
-        ]);
         $ids = $request->input('ids');
         $action = $request->input('action');
         $count = 0;
@@ -46,6 +42,7 @@ class ContactMessageController
         } elseif ($action === 'delete') {
             $count = $this->contactMessageService->bulkDelete($ids);
         }
+
         return redirect()->route('admin.contacts.index', $request->only('read', 'search', 'per_page', 'sort', 'order'))
             ->with('success', __(':count record(s) updated.', ['count' => $count]));
     }

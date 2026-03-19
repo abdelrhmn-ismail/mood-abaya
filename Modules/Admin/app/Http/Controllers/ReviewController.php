@@ -7,6 +7,7 @@ use App\Models\ProductReview;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Admin\Http\Requests\BulkReviewActionRequest;
 use Modules\Admin\Services\ReviewService;
 
 class ReviewController
@@ -32,14 +33,8 @@ class ReviewController
             ->with('success', $review->is_visible ? __('Review is now visible.') : __('Review is now hidden.'));
     }
 
-    public function bulkAction(Request $request): RedirectResponse
+    public function bulkAction(BulkReviewActionRequest $request): RedirectResponse
     {
-        $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:product_reviews,id',
-            'action' => 'required|in:show,hide,delete',
-        ]);
-
         $count = $this->reviewService->bulkAction($request->input('ids'), $request->input('action'));
 
         return redirect()->route('admin.reviews.index', $request->only('rating', 'visible', 'product_id', 'search', 'per_page', 'sort', 'order'))

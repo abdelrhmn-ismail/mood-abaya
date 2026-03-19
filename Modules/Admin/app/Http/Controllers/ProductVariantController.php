@@ -5,18 +5,13 @@ namespace Modules\Admin\Http\Controllers;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Modules\Admin\Http\Requests\StoreProductVariantRequest;
 
 class ProductVariantController
 {
-    public function store(Request $request, Product $product): RedirectResponse
+    public function store(StoreProductVariantRequest $request, Product $product): RedirectResponse
     {
-        $data = $request->validate([
-            'sku' => 'nullable|string|max:100',
-            'price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
-            'attributes' => 'nullable|string|max:1000', // JSON string e.g. {"Size":"M","Color":"Black"}
-        ]);
+        $data = $request->validated();
 
         $attributes = null;
         if (! empty(trim($data['attributes'] ?? ''))) {

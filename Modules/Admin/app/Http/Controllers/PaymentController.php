@@ -6,6 +6,7 @@ use App\Models\Payment;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Admin\Http\Requests\BulkPaymentActionRequest;
 use Modules\Admin\Services\PaymentService as AdminPaymentService;
 
 class PaymentController
@@ -61,13 +62,8 @@ class PaymentController
         return redirect()->route('admin.orders.show', $payment->order)->with('success', __('Payment marked as paid.'));
     }
 
-    public function bulkAction(Request $request): RedirectResponse
+    public function bulkAction(BulkPaymentActionRequest $request): RedirectResponse
     {
-        $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:payments,id',
-            'action' => 'required|in:approve,reject,mark_paid',
-        ]);
         $ids = $request->input('ids');
         $action = $request->input('action');
         $count = 0;
@@ -78,6 +74,7 @@ class PaymentController
         } elseif ($action === 'mark_paid') {
             $count = $this->paymentService->bulkMarkPaid($ids);
         }
+
         return redirect()->route('admin.payments.index', $request->only('status', 'method', 'per_page', 'sort', 'order'))
             ->with('success', __(':count payment(s) updated.', ['count' => $count]));
     }

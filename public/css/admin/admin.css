@@ -33,3 +33,16 @@
     padding-top: 2rem;
     border-top: 1px solid #e2e8f0;
 }
+
+/* --- RTL: Admin sidebar positioning ------------------------ */
+[dir="rtl"] #admin-sidebar {
+    left: auto;
+    right: 0;
+    transform: translateX(100%);
+}
+
+@media (min-width: 768px) {
+    [dir="rtl"] #admin-sidebar {
+        transform: translateX(0);
+    }
+}

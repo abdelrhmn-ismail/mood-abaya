@@ -6,6 +6,9 @@ use App\Models\Order;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Admin\Http\Requests\BulkOrderActionRequest;
+use Modules\Admin\Http\Requests\ShipOrderRequest;
+use Modules\Admin\Http\Requests\UpdateOrderStatusRequest;
 use Modules\Admin\Services\OrderExportService;
 use Modules\Admin\Services\OrderService;
 use Modules\Admin\Services\ShippingService;
@@ -37,36 +40,23 @@ class OrderController
         return view('admin::orders.show', compact('order', 'payment'));
     }
 
-    public function updateStatus(Request $request, Order $order): RedirectResponse
+    public function updateStatus(UpdateOrderStatusRequest $request, Order $order): RedirectResponse
     {
-        $request->validate(['status' => 'required|in:pending,processing,shipped,delivered,cancelled']);
-
         $this->orderService->updateOrderStatus($order, $request->status);
 
         return redirect()->route('admin.orders.show', $order)->with('success', __('Order status updated.'));
     }
 
-    public function ship(Request $request, Order $order): RedirectResponse
+    public function ship(ShipOrderRequest $request, Order $order): RedirectResponse
     {
-        $request->validate([
-            'carrier' => 'required|string|max:255',
-            'tracking_number' => 'required|string|max:255',
-        ]);
-
         $this->shippingService->markShipped($order, $request->carrier, $request->tracking_number);
         $this->orderService->updateOrderStatus($order, 'shipped');
 
         return redirect()->route('admin.orders.show', $order)->with('success', __('Shipping updated.'));
     }
 
-    public function bulkAction(Request $request): RedirectResponse
+    public function bulkAction(BulkOrderActionRequest $request): RedirectResponse
     {
-        $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:orders,id',
-            'action' => 'required|in:pending,processing,shipped,delivered,cancelled',
-        ]);
-
         $count = $this->orderService->bulkUpdateStatus($request->input('ids'), $request->input('action'));
 
         return redirect()->route('admin.orders.index', $request->only('status', 'payment_status', 'order_number', 'per_page', 'sort', 'order'))

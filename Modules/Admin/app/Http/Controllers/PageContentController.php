@@ -6,6 +6,7 @@ use App\Models\PageContent;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Admin\Http\Requests\UpdatePageContentRequest;
 use Modules\Admin\Services\PageContentService;
 
 class PageContentController
@@ -24,14 +25,9 @@ class PageContentController
         return view('admin::page-contents.edit', ['page' => $pageContent]);
     }
 
-    public function update(Request $request, PageContent $pageContent): RedirectResponse
+    public function update(UpdatePageContentRequest $request, PageContent $pageContent): RedirectResponse
     {
-        $data = $request->validate([
-            'page_content_en' => 'nullable|string',
-            'page_content_ar' => 'nullable|string',
-        ]);
-
-        $this->pageContentService->update($pageContent, $data);
+        $this->pageContentService->update($pageContent, $request->validated());
 
         return redirect()->route('admin.page-contents.index')->with('success', __('Page content updated.'));
     }

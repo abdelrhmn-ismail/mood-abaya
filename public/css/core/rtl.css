@@ -9,10 +9,24 @@
     margin-right: 0;
 }
 
-[dir="rtl"] select {
-    background-position: left 0.5rem center;
+/* --- Select dropdown arrow + padding for RTL ---
+   The @tailwindcss/forms plugin sets:
+     background-position: right 0.5rem center
+     padding-right: 2.5rem
+   In RTL, the arrow should be on the left and text padding flips.
+   ------------------------------------------------------------ */
+[dir="rtl"] select:not(.appearance-none) {
+    background-position: left 0.5rem center !important;
+    padding-right: 0.75rem !important;
+    padding-left: 2.5rem !important;
 }
 
+/* Custom appearance-none selects with manually placed arrow icons */
+[dir="rtl"] select.appearance-none {
+    background-image: none !important;
+}
+
+/* --- Text alignment flips --- */
 [dir="rtl"] .text-left {
     text-align: right;
 }

@@ -4,8 +4,8 @@ namespace Modules\Admin\Http\Controllers;
 
 use App\Models\Faq;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Admin\Http\Requests\StoreFaqRequest;
 use Modules\Admin\Services\FaqService;
 
 class FaqController
@@ -24,16 +24,9 @@ class FaqController
         return view('admin::faqs.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreFaqRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'question_en' => 'required|string|max:500',
-            'question_ar' => 'nullable|string|max:500',
-            'answer_en' => 'required|string|max:10000',
-            'answer_ar' => 'nullable|string|max:10000',
-            'sort_order' => 'nullable|integer|min:0',
-            'is_active' => 'nullable|boolean',
-        ]);
+        $data = $request->validated();
         $data['is_active'] = $request->boolean('is_active');
 
         $this->faqService->create($data);
@@ -46,16 +39,9 @@ class FaqController
         return view('admin::faqs.edit', compact('faq'));
     }
 
-    public function update(Request $request, Faq $faq): RedirectResponse
+    public function update(StoreFaqRequest $request, Faq $faq): RedirectResponse
     {
-        $data = $request->validate([
-            'question_en' => 'required|string|max:500',
-            'question_ar' => 'nullable|string|max:500',
-            'answer_en' => 'required|string|max:10000',
-            'answer_ar' => 'nullable|string|max:10000',
-            'sort_order' => 'nullable|integer|min:0',
-            'is_active' => 'nullable|boolean',
-        ]);
+        $data = $request->validated();
         $data['is_active'] = $request->boolean('is_active');
 
         $this->faqService->update($faq, $data);

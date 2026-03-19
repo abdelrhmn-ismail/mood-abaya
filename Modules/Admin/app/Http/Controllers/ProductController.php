@@ -6,6 +6,9 @@ use App\Models\Product;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Admin\Http\Requests\BulkProductActionRequest;
+use Modules\Admin\Http\Requests\StoreProductRequest;
+use Modules\Admin\Http\Requests\UpdateProductRequest;
 use Modules\Admin\Services\CategoryService;
 use Modules\Admin\Services\ProductService as AdminProductService;
 
@@ -27,13 +30,8 @@ class ProductController
         return view('admin::products.index', compact('products', 'categories'));
     }
 
-    public function bulkAction(Request $request): RedirectResponse
+    public function bulkAction(BulkProductActionRequest $request): RedirectResponse
     {
-        $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:products,id',
-            'action' => 'required|in:activate,deactivate,delete',
-        ]);
         $ids = $request->input('ids');
         $action = $request->input('action');
         $count = 0;
@@ -44,6 +42,7 @@ class ProductController
         } elseif ($action === 'delete') {
             $count = $this->productService->bulkDelete($ids);
         }
+
         return redirect()->route('admin.products.index', $request->only('category_id', 'search', 'active', 'featured', 'per_page', 'sort', 'order'))
             ->with('success', __(':count record(s) updated.', ['count' => $count]));
     }
@@ -55,37 +54,9 @@ class ProductController
         return view('admin::products.create', compact('categories'));
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreProductRequest $request): RedirectResponse
     {
-        $data = $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|array',
-            'name.en' => 'nullable|string|max:255',
-            'name.ar' => 'nullable|string|max:255',
-            'slug' => 'nullable|string|max:255',
-            'description' => 'nullable|array',
-            'description.en' => 'nullable|string',
-            'description.ar' => 'nullable|string',
-            'sku' => 'nullable|string|max:100',
-            'barcode' => 'nullable|string|max:100',
-            'short_description' => 'nullable|string|max:500',
-            'tags' => 'nullable|string|max:500',
-            'meta_title' => 'nullable|string|max:255',
-            'meta_description' => 'nullable|string|max:500',
-            'meta_keywords' => 'nullable|string|max:500',
-            'og_image' => 'nullable|string|max:500',
-            'price' => 'required|numeric|min:0',
-            'compare_at_price' => 'nullable|numeric|min:0',
-            'image' => 'nullable|image|max:2048',
-            'images' => 'nullable|array',
-            'images.*' => 'image|max:2048',
-            'stock' => 'nullable|integer|min:0',
-            'min_order_qty' => 'nullable|integer|min:1',
-            'max_order_qty' => 'nullable|integer|min:1',
-            'weight_kg' => 'nullable|numeric|min:0',
-            'active' => 'nullable|boolean',
-            'featured' => 'nullable|boolean',
-        ]);
+        $data = $request->validated();
         $data['name'] = array_filter($data['name'] ?? [], fn ($v) => $v !== null && $v !== '');
         $data['description'] = array_filter($data['description'] ?? [], fn ($v) => $v !== null && $v !== '');
         if (empty($data['name'])) {
@@ -108,39 +79,9 @@ class ProductController
         return view('admin::products.edit', compact('product', 'categories'));
     }
 
-    public function update(Request $request, Product $product): RedirectResponse
+    public function update(UpdateProductRequest $request, Product $product): RedirectResponse
     {
-        $data = $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'name' => 'required|array',
-            'name.en' => 'nullable|string|max:255',
-            'name.ar' => 'nullable|string|max:255',
-            'slug' => 'nullable|string|max:255',
-            'description' => 'nullable|array',
-            'description.en' => 'nullable|string',
-            'description.ar' => 'nullable|string',
-            'sku' => 'nullable|string|max:100',
-            'barcode' => 'nullable|string|max:100',
-            'short_description' => 'nullable|string|max:500',
-            'tags' => 'nullable|string|max:500',
-            'meta_title' => 'nullable|string|max:255',
-            'meta_description' => 'nullable|string|max:500',
-            'meta_keywords' => 'nullable|string|max:500',
-            'og_image' => 'nullable|string|max:500',
-            'price' => 'required|numeric|min:0',
-            'compare_at_price' => 'nullable|numeric|min:0',
-            'image' => 'nullable|image|max:2048',
-            'images' => 'nullable|array',
-            'images.*' => 'image|max:2048',
-            'delete_image_ids' => 'nullable|array',
-            'delete_image_ids.*' => 'integer|exists:product_images,id',
-            'stock' => 'nullable|integer|min:0',
-            'min_order_qty' => 'nullable|integer|min:1',
-            'max_order_qty' => 'nullable|integer|min:1',
-            'weight_kg' => 'nullable|numeric|min:0',
-            'active' => 'nullable|boolean',
-            'featured' => 'nullable|boolean',
-        ]);
+        $data = $request->validated();
         $data['name'] = array_filter($data['name'] ?? [], fn ($v) => $v !== null && $v !== '');
         $data['description'] = array_filter($data['description'] ?? [], fn ($v) => $v !== null && $v !== '');
         if (empty($data['name'])) {

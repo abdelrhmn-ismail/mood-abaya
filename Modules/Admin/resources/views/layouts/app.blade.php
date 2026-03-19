@@ -103,11 +103,11 @@
                     </a>
                     <div class="relative">
                         <label for="admin-locale" class="sr-only">{{ __('Language') }}</label>
-                        <select id="admin-locale" class="appearance-none rounded-xl border border-slate-200 bg-slate-50 py-2 pl-3 pr-8 text-sm font-medium text-brand-black focus:border-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal/20" onchange="window.location.href='{{ url('/locale') }}/'+this.value">
+                        <select id="admin-locale" class="appearance-none rounded-xl border border-slate-200 bg-slate-50 py-2 text-sm font-medium text-brand-black focus:border-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal/20 {{ app()->getLocale() === 'ar' ? 'pl-8 pr-3' : 'pl-3 pr-8' }}" onchange="window.location.href='{{ url('/locale') }}/'+this.value">
                             <option value="en" {{ app()->getLocale() === 'en' ? 'selected' : '' }}>{{ __('English') }}</option>
                             <option value="ar" {{ app()->getLocale() === 'ar' ? 'selected' : '' }}>{{ __('Arabic') }}</option>
                         </select>
-                        <span class="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-slate-400">
+                        <span class="pointer-events-none absolute top-1/2 -translate-y-1/2 text-slate-400 {{ app()->getLocale() === 'ar' ? 'left-2' : 'right-2' }}">
                             <span class="material-icons text-lg">arrow_drop_down</span>
                         </span>
                     </div>

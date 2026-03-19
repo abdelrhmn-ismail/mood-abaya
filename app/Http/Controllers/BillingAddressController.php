@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBillingAddressRequest;
 use App\Models\BillingAddress;
 use App\Services\BillingAddressService;
 use Illuminate\Http\RedirectResponse;
@@ -11,28 +12,9 @@ class BillingAddressController extends Controller
 {
     public function __construct(private BillingAddressService $billingAddressService) {}
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreBillingAddressRequest $request): RedirectResponse
     {
-        $codes = array_column(config('phone_codes', []), 'code');
-        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
-            'label' => ['nullable', 'string', 'max:100'],
-            'full_name' => ['required', 'string', 'max:255'],
-            'phone_country_code' => ['required', 'string', 'in:' . implode(',', $codes)],
-            'phone_number' => ['required', 'string', 'max:20'],
-            'address_line_1' => ['required', 'string', 'max:255'],
-            'address_line_2' => ['nullable', 'string', 'max:255'],
-            'city' => ['required', 'string', 'max:100'],
-            'state' => ['nullable', 'string', 'max:100'],
-            'postal_code' => ['nullable', 'string', 'max:20'],
-            'country' => ['nullable', 'string', 'max:100'],
-            'is_default' => ['nullable', 'boolean'],
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->route('account')->withFragment('addresses')->withInput()->withErrors($validator);
-        }
-
-        $validated = $validator->validated();
+        $validated = $request->validated();
         $validated['phone'] = $request->phoneWithCode('phone');
         unset($validated['phone_country_code'], $validated['phone_number']);
         $validated['country'] = $validated['country'] ?? 'Saudi Arabia';
@@ -44,27 +26,13 @@ class BillingAddressController extends Controller
             ->with('success', __('Address added.'));
     }
 
-    public function update(Request $request, BillingAddress $billingAddress): RedirectResponse
+    public function update(StoreBillingAddressRequest $request, BillingAddress $billingAddress): RedirectResponse
     {
         if ($billingAddress->user_id !== $request->user()->id) {
             abort(403);
         }
 
-        $codes = array_column(config('phone_codes', []), 'code');
-        $validated = $request->validate([
-            'label' => ['nullable', 'string', 'max:100'],
-            'full_name' => ['required', 'string', 'max:255'],
-            'phone_country_code' => ['required', 'string', 'in:' . implode(',', $codes)],
-            'phone_number' => ['required', 'string', 'max:20'],
-            'address_line_1' => ['required', 'string', 'max:255'],
-            'address_line_2' => ['nullable', 'string', 'max:255'],
-            'city' => ['required', 'string', 'max:100'],
-            'state' => ['nullable', 'string', 'max:100'],
-            'postal_code' => ['nullable', 'string', 'max:20'],
-            'country' => ['nullable', 'string', 'max:100'],
-            'is_default' => ['nullable', 'boolean'],
-        ]);
-
+        $validated = $request->validated();
         $validated['phone'] = $request->phoneWithCode('phone');
         unset($validated['phone_country_code'], $validated['phone_number']);
         $validated['is_default'] = $request->boolean('is_default');

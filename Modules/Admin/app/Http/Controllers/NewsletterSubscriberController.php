@@ -5,6 +5,7 @@ namespace Modules\Admin\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Admin\Http\Requests\BulkNewsletterActionRequest;
 use Modules\Admin\Services\NewsletterService;
 
 class NewsletterSubscriberController
@@ -21,14 +22,8 @@ class NewsletterSubscriberController
         return view('admin::newsletter.index', compact('subscribers'));
     }
 
-    public function bulkAction(Request $request): RedirectResponse
+    public function bulkAction(BulkNewsletterActionRequest $request): RedirectResponse
     {
-        $request->validate([
-            'ids' => 'required|array',
-            'ids.*' => 'integer|exists:newsletter_subscribers,id',
-            'action' => 'required|in:delete',
-        ]);
-
         $count = $this->newsletterService->bulkDelete($request->input('ids'));
 
         return redirect()

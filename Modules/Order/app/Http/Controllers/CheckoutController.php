@@ -7,8 +7,8 @@ use App\Models\BillingAddress;
 use App\Services\ShippingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
+use Modules\Order\Http\Requests\StoreCheckoutRequest;
 use Modules\Order\Services\CheckoutService;
 
 class CheckoutController extends Controller
@@ -25,43 +25,18 @@ class CheckoutController extends Controller
         if ($data['items']->isEmpty()) {
             return redirect()->route('cart')->with('error', __('Your cart is empty.'));
         }
+
         return view('frontend.checkout', $data);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(StoreCheckoutRequest $request): RedirectResponse
     {
         $data = $this->checkoutService->getCheckoutData();
         if ($data['items']->isEmpty()) {
             return redirect()->route('cart')->with('error', __('Your cart is empty.'));
         }
 
-        $codes = array_column(config('phone_codes', []), 'code');
-
-        $rules = [
-            'notes' => ['nullable', 'string', 'max:1000'],
-            'payment_method' => ['required', 'in:cash,bank'],
-            'proof' => ['required_if:payment_method,bank', 'nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
-            'billing_use' => ['required', 'in:saved,new'],
-            'billing_address_id' => [
-                'required_if:billing_use,saved',
-                'nullable',
-                'integer',
-                Rule::exists('billing_addresses', 'id')->where('user_id', $request->user()->id),
-            ],
-            'billing_full_name' => ['required_if:billing_use,new', 'nullable', 'string', 'max:255'],
-            'billing_phone_country_code' => ['required_if:billing_use,new', 'nullable', 'string', 'in:' . implode(',', $codes)],
-            'billing_phone_number' => ['required_if:billing_use,new', 'nullable', 'string', 'max:20'],
-            'billing_address_line_1' => ['required_if:billing_use,new', 'nullable', 'string', 'max:255'],
-            'billing_address_line_2' => ['nullable', 'string', 'max:255'],
-            'billing_city' => ['required_if:billing_use,new', 'nullable', 'string', 'max:100'],
-            'billing_state' => ['nullable', 'string', 'max:100'],
-            'billing_postal_code' => ['nullable', 'string', 'max:20'],
-            'billing_country' => ['nullable', 'string', 'max:100'],
-            'save_billing_address' => ['nullable', 'boolean'],
-            'shipping_zone_id' => ['nullable', 'string', 'max:50'],
-        ];
-
-        $validated = $request->validate($rules);
+        $validated = $request->validated();
 
         $subtotal = $this->checkoutService->getCheckoutData()['subtotal'];
         $zoneId = $validated['shipping_zone_id'] ?? null;
@@ -100,7 +75,6 @@ class CheckoutController extends Controller
                 'country' => $validated['billing_country'] ?? 'Saudi Arabia',
                 'notes' => $notes,
             ];
-            // Always save new billing address at checkout so it appears in Account → Addresses
             $setAsDefault = $request->boolean('save_billing_address');
             $hasExisting = BillingAddress::where('user_id', $request->user()->id)->exists();
             if ($setAsDefault && $hasExisting) {
@@ -130,6 +104,7 @@ class CheckoutController extends Controller
                 $shippingAmount,
                 $shippingLabel
             );
+
             return redirect()
                 ->route('order.confirmed', $order->order_number)
                 ->with('success', __('Order placed successfully.'));
