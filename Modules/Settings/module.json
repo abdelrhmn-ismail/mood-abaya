@@ -1,0 +1,11 @@
+{
+    "name": "Settings",
+    "alias": "settings",
+    "description": "Site settings, frontend settings, and translations",
+    "keywords": ["settings", "translations"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Settings\\Providers\\SettingsServiceProvider"
+    ],
+    "files": []
+}

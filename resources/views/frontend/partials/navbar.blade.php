@@ -55,10 +55,10 @@
                 <span class="material-icons text-xl">favorite</span>
                 <span id="nav-wishlist-count" class="rounded-full bg-brand-teal px-2 py-0.5 text-xs text-white" style="{{ (isset($wishlistCount) && $wishlistCount > 0) ? '' : 'display:none' }}">{{ $wishlistCount ?? 0 }}</span>
             </a>
-            <a href="{{ route('account') }}#cart" id="nav-cart-link" class="flex items-center gap-2 rounded-xl bg-brand-gold/15 px-4 py-2.5 text-sm font-medium text-brand-teal transition hover:bg-brand-gold/25" data-ripple-light="true" aria-label="{{ site_label('nav_cart') }}">
+            <button type="button" id="nav-cart-link" onclick="window.dispatchEvent(new CustomEvent('cart-drawer-open'))" class="flex items-center gap-2 rounded-xl bg-brand-gold/15 px-4 py-2.5 text-sm font-medium text-brand-teal transition hover:bg-brand-gold/25 cursor-pointer" data-ripple-light="true" aria-label="{{ site_label('nav_cart') }}">
                 <span class="material-icons text-xl">shopping_cart</span>
                 <span id="nav-cart-count" class="rounded-full bg-brand-teal px-2 py-0.5 text-xs text-white" style="{{ (isset($cartCount) && $cartCount > 0) ? '' : 'display:none' }}">{{ $cartCount ?? 0 }}</span>
-            </a>
+            </button>
             @auth
                 {{-- Account dropdown with username --}}
                 <div class="relative" x-data="{ userMenuOpen: false }" @click.outside="userMenuOpen = false">
@@ -163,11 +163,11 @@
             {{ __('Wishlist') }}
             <span id="nav-wishlist-count-mobile" class="rounded-full bg-brand-teal px-2 py-0.5 text-xs text-white" style="{{ (isset($wishlistCount) && $wishlistCount > 0) ? '' : 'display:none' }}">{{ $wishlistCount ?? 0 }}</span>
         </a>
-        <a href="{{ route('account') }}#cart" id="nav-cart-link-mobile" class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-brand-teal hover:bg-brand-gold/10">
+        <button type="button" id="nav-cart-link-mobile" onclick="window.dispatchEvent(new CustomEvent('cart-drawer-open'))" class="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-brand-teal hover:bg-brand-gold/10 cursor-pointer">
             <span class="material-icons text-lg">shopping_cart</span>
             {{ site_label('nav_cart') }}
             <span id="nav-cart-count-mobile" class="rounded-full bg-brand-teal px-2 py-0.5 text-xs text-white" style="{{ (isset($cartCount) && $cartCount > 0) ? '' : 'display:none' }}">{{ $cartCount ?? 0 }}</span>
-        </a>
+        </button>
         @auth
             {{-- Account dropdown (mobile) with username --}}
             <div class="relative" x-data="{ userMenuOpenMobile: false }" @click.outside="userMenuOpenMobile = false">

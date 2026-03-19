@@ -37,6 +37,6 @@ class ProductController extends Controller
         $recentlyViewedIds = array_values(array_diff($request->session()->get('recently_viewed_ids', []), [$product->id]));
         $recentlyViewed = $this->productService->getByIds($recentlyViewedIds, 6);
 
-        return view('frontend.product', compact('product', 'relatedProducts', 'recentlyViewed'));
+        return view('shop::frontend.product', compact('product', 'relatedProducts', 'recentlyViewed'));
     }
 }

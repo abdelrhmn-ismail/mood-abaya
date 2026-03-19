@@ -83,6 +83,11 @@
                         window.updateNavbarCartCount(r.data.cart_count);
                         setButtonLoading(btn, false);
                         markCartButtonAdded(btn);
+                        if (r.data.cart && window.CartDrawerAPI) {
+                            window.CartDrawerAPI.loadFromPayload(r.data.cart);
+                        } else {
+                            window.dispatchEvent(new CustomEvent('cart-drawer-open'));
+                        }
                     } else {
                         setButtonLoading(btn, false);
                         if (r.data.message) alert(r.data.message);

@@ -25,7 +25,7 @@ class SearchController extends Controller
         ];
         $products = $q !== '' ? $this->productService->search($q, $filters) : new LengthAwarePaginator([], 0, 12);
 
-        return view('frontend.search', [
+        return view('shop::frontend.search', [
             'q' => $q,
             'products' => $products,
             'filters' => $filters,

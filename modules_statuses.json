@@ -5,5 +5,11 @@
     "Cart": true,
     "Order": true,
     "Payment": true,
-    "Admin": true
+    "Settings": true,
+    "User": true,
+    "Testimonial": true,
+    "Newsletter": true,
+    "Blog": true,
+    "Page": true,
+    "Faq": true
 }

@@ -19,6 +19,6 @@ class OrderController extends Controller
         if (! $order) {
             abort(404);
         }
-        return view('frontend.order-confirmed', compact('order'));
+        return view('order::frontend.order-confirmed', compact('order'));
     }
 }

@@ -17,7 +17,7 @@ class CategoryController extends Controller
     {
         $categories = $this->categoryService->getActiveCategories();
 
-        return view('frontend.categories', compact('categories'));
+        return view('shop::frontend.categories', compact('categories'));
     }
 
     public function show(Request $request, string $slug): View|\Illuminate\Http\RedirectResponse
@@ -36,6 +36,6 @@ class CategoryController extends Controller
         ];
         $products = $this->categoryService->getProductsByCategory($category, $filters);
 
-        return view('frontend.category', compact('category', 'products', 'filters'));
+        return view('shop::frontend.category', compact('category', 'products', 'filters'));
     }
 }

@@ -80,6 +80,8 @@
     @include('frontend.partials.home-popup')
     @include('frontend.partials.quick-view-modal')
 
+    @include('components.frontend.cart-drawer')
+
     {{-- Alpine.js (CDN) --}}
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
     {{-- Frontend JS modules --}}
@@ -87,6 +89,7 @@
     <script defer src="{{ asset('js/frontend/hero-slider.js') }}"></script>
     <script defer src="{{ asset('js/frontend/newsletter.js') }}"></script>
     <script defer src="{{ asset('js/frontend/cookie-consent.js') }}"></script>
+    <script src="{{ asset('js/frontend/cart-drawer.js') }}"></script>
     <script defer src="{{ asset('js/frontend/cart-wishlist.js') }}"></script>
     @stack('scripts')
     @php $footerCode = \App\Models\Setting::get('custom_code_footer', ''); @endphp

@@ -2,8 +2,8 @@
     "$schema": "https://www.schemastore.org/package.json",
     "private": true,
     "scripts": {
-        "css:build": "npx tailwindcss -i resources/css/app.css -o public/css/tailwind.css --minify",
-        "css:watch": "npx tailwindcss -i resources/css/app.css -o public/css/tailwind.css --watch"
+        "css:build": "npx tailwindcss -i resources/css/app.css -o public/css/core/tailwind.css --minify",
+        "css:watch": "npx tailwindcss -i resources/css/app.css -o public/css/core/tailwind.css --watch"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",

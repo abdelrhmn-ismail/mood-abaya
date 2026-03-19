@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Services\WishlistService;
+use Modules\Shop\Services\WishlistService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;

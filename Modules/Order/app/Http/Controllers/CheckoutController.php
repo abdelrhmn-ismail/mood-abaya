@@ -4,7 +4,7 @@ namespace Modules\Order\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\BillingAddress;
-use App\Services\ShippingService;
+use Modules\Order\Services\ShippingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -26,7 +26,7 @@ class CheckoutController extends Controller
             return redirect()->route('cart')->with('error', __('Your cart is empty.'));
         }
 
-        return view('frontend.checkout', $data);
+        return view('order::frontend.checkout', $data);
     }
 
     public function store(StoreCheckoutRequest $request): RedirectResponse

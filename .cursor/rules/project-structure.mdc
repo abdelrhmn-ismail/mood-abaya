@@ -1,0 +1,387 @@
+---
+description: Mood-Abaya Laravel project architecture, coding conventions, and patterns. Follow these when adding or modifying code.
+alwaysApply: true
+---
+
+# Mood-Abaya Project Architecture & Conventions
+
+## Tech Stack
+
+- **Framework:** Laravel 11+ with nwidart/laravel-modules
+- **Frontend:** Blade templates, Tailwind CSS, Vanilla JS
+- **Language:** PHP 8.2+, bilingual (English + Arabic), RTL support
+- **Database:** MySQL, Eloquent ORM with translatable JSON columns
+- **Build:** Vite (`vite.config.js`, `vite-module-loader.js`)
+
+---
+
+## Module Architecture
+
+Each domain has its own module. Modules contain **both** frontend and admin code. Admin code lives in `Admin/` subdirectories. Each module owns its views under `resources/views/admin/` and `resources/views/frontend/`.
+
+```
+Modules/{Module}/
+├── app/Http/Controllers/
+│   ├── Admin/              ← Admin controllers (back-office)
+│   │   └── XxxController.php
+│   └── XxxController.php   ← Frontend controllers (customer-facing)
+├── app/Http/Requests/
+│   ├── Admin/              ← Admin form requests
+│   │   └── XxxRequest.php
+│   └── XxxRequest.php      ← Frontend form requests
+├── app/Services/
+│   ├── Admin/              ← Admin services
+│   │   └── XxxService.php
+│   └── XxxService.php      ← Frontend services
+├── app/Providers/
+│   ├── {Module}ServiceProvider.php  ← Registers views, blade components
+│   └── RouteServiceProvider.php     ← Loads web.php AND admin.php
+├── routes/
+│   ├── web.php             ← Frontend routes
+│   ├── admin.php           ← Admin routes (prefix: admin, middleware: auth+is_admin)
+│   └── api.php             ← API routes (if any)
+├── resources/views/
+│   ├── admin/              ← Admin blade views for this module
+│   └── frontend/           ← Frontend blade views for this module
+└── module.json
+```
+
+### 13 Modules
+
+| Module | Admin (back-office) | Frontend (customer-facing) |
+|--------|--------------------|-----------------------------|
+| **Core** | Dashboard | Home page, About, Maintenance |
+| **Settings** | Site settings, Frontend settings, Translations | *(none)* |
+| **User** | User management | *(none)* |
+| **Shop** | Products, Categories, Reviews | Product listing, category pages, search |
+| **Order** | Order management, export, shipping | Checkout, order confirmation |
+| **Payment** | Payment management, approval | Payment processing |
+| **Contact** | Contact messages | Contact form |
+| **Cart** | *(none)* | Cart management |
+| **Testimonial** | Testimonial management | *(none)* |
+| **Newsletter** | Newsletter subscribers | Newsletter subscribe (POST) |
+| **Blog** | Blog post management | Blog listing, single post |
+| **Page** | Static page content editing | About page, dynamic pages |
+| **Faq** | FAQ management | *(displayed on contact page)* |
+
+### Admin Route Registration
+
+Each module's `RouteServiceProvider` loads admin routes:
+
+```php
+protected function mapAdminRoutes(): void
+{
+    Route::middleware(['web', 'auth', 'verified', 'is_admin'])
+        ->prefix('admin')
+        ->name('admin.')
+        ->group(module_path($this->name, '/routes/admin.php'));
+}
+```
+
+All admin route names start with `admin.` (e.g., `admin.products.index`, `admin.orders.show`).
+
+---
+
+## Views Organization
+
+### Module Views (owned by each module)
+
+Each module stores its own views. Views are referenced with the module namespace prefix (`module::`):
+
+```php
+// Admin views — inside Modules/{Module}/resources/views/admin/
+return view('core::admin.dashboard');           // Modules/Core/resources/views/admin/dashboard.blade.php
+return view('settings::admin.edit');            // Modules/Settings/resources/views/admin/edit.blade.php
+return view('shop::admin.products.index');      // Modules/Shop/resources/views/admin/products/index.blade.php
+return view('shop::admin.categories.index');    // Modules/Shop/resources/views/admin/categories/index.blade.php
+return view('order::admin.orders.index');       // Modules/Order/resources/views/admin/orders/index.blade.php
+return view('faq::admin.index');               // Modules/Faq/resources/views/admin/index.blade.php
+return view('blog::admin.index');              // Modules/Blog/resources/views/admin/index.blade.php
+
+// Frontend views — inside Modules/{Module}/resources/views/frontend/
+return view('core::frontend.home');            // Modules/Core/resources/views/frontend/home.blade.php
+return view('shop::frontend.product');         // Modules/Shop/resources/views/frontend/product.blade.php
+return view('order::frontend.checkout');       // Modules/Order/resources/views/frontend/checkout.blade.php
+return view('blog::frontend.index');           // Modules/Blog/resources/views/frontend/index.blade.php
+return view('page::frontend.page');            // Modules/Page/resources/views/frontend/page.blade.php
+```
+
+### Shared Views (centralized in resources/views/)
+
+Shared layouts, partials, and components stay in `resources/views/` and are referenced WITHOUT a namespace prefix:
+
+```blade
+{{-- Shared admin layout (resources/views/admin/layouts/app.blade.php) --}}
+@extends('admin.layouts.app')
+
+{{-- Shared admin components (resources/views/components/admin/) --}}
+@include('components.admin.table', [...])
+
+{{-- Shared frontend layout (resources/views/frontend/layouts/app.blade.php) --}}
+@extends('frontend.layouts.app')
+
+{{-- Shared frontend partials (resources/views/frontend/partials/) --}}
+@include('frontend.partials.navbar')
+```
+
+### Within-Module Includes
+
+When a module view includes another view from the SAME module, use the module namespace:
+
+```blade
+{{-- In Modules/Faq/resources/views/admin/create.blade.php --}}
+@include('faq::admin.form')
+
+{{-- In Modules/Blog/resources/views/admin/edit.blade.php --}}
+@include('blog::admin.form')
+```
+
+---
+
+## CSS Organization
+
+| File | Purpose |
+|------|---------|
+| `public/css/core/tailwind.css` | Compiled Tailwind — the main stylesheet |
+| `public/css/core/brand.css` | CSS variables for brand colors (generated from DB settings) |
+| `public/css/core/rtl.css` | RTL overrides for Arabic layout (select arrows, padding flips) |
+| `public/css/frontend/animations.css` | Scroll-triggered animations, fade-ins, slide-ups |
+| `public/css/frontend/components.css` | Frontend-specific component styles |
+| `public/css/frontend/maintenance.css` | Maintenance mode page styling |
+| `public/css/admin/admin.css` | Admin panel custom styles |
+| `resources/css/app.css` | Vite entry point for CSS bundling |
+
+**When adding new CSS:**
+- Admin styles → `public/css/admin/admin.css`
+- RTL fixes → `public/css/core/rtl.css`
+- Brand/color variables → `public/css/core/brand.css`
+- Frontend page-specific → `public/css/frontend/` (new file or existing)
+- Animations → `public/css/frontend/animations.css`
+
+---
+
+## JS Organization
+
+| File | Purpose |
+|------|---------|
+| `public/js/admin/sidebar.js` | Admin sidebar toggle/collapse |
+| `public/js/admin/settings-tabs.js` | Settings page tab navigation |
+| `public/js/admin/locale-tabs.js` | EN/AR content tab switching in forms |
+| `public/js/admin/tinymce-init.js` | TinyMCE rich text editor initialization |
+| `public/js/admin/delete-confirm.js` | Delete confirmation modal handler |
+| `public/js/admin/color-picker-sync.js` | Color palette picker sync & live preview |
+| `public/js/frontend/navbar.js` | Mobile nav toggle, scroll-hide behavior |
+| `public/js/frontend/hero-slider.js` | Homepage hero image slider |
+| `public/js/frontend/cart-wishlist.js` | AJAX add-to-cart & wishlist toggle |
+| `public/js/frontend/newsletter.js` | AJAX newsletter subscription |
+| `public/js/frontend/cookie-consent.js` | Cookie consent banner logic |
+| `resources/js/frontend/index.js` | Barrel file importing all frontend JS modules |
+| `resources/js/frontend.js` | Frontend Vite entry point |
+| `resources/js/app.js` | Main Vite entry point |
+| `resources/js/bootstrap.js` | Axios + default headers setup |
+
+**When adding new JS:**
+- Admin feature → `public/js/admin/{feature-name}.js`
+- Frontend feature → `public/js/frontend/{feature-name}.js`
+- If using Vite bundling → `resources/js/frontend/{feature-name}.js` and import in `index.js`
+
+---
+
+## Routes Organization
+
+`routes/web.php` is minimal — it only loads `auth.php`. All other routes live in their modules:
+
+| Module Route File | Purpose |
+|------|---------|
+| `routes/auth.php` | Auth routes (login, register, password reset) — Laravel Breeze |
+| `Modules/Core/routes/web.php` | `/`, `/sitemap.xml`, `/dashboard`, `/announcement-dismiss`, `/home-popup-dismiss` |
+| `Modules/Core/routes/admin.php` | Admin: dashboard |
+| `Modules/Settings/routes/web.php` | `/locale/{locale}` |
+| `Modules/Settings/routes/admin.php` | Admin: settings, frontend settings, translations |
+| `Modules/User/routes/web.php` | `/account`, `/account/orders/*`, `/profile` |
+| `Modules/User/routes/admin.php` | Admin: user management |
+| `Modules/Shop/routes/web.php` | `/categories`, `/products/*`, `/search`, `/wishlist`, `/account/order-review` |
+| `Modules/Shop/routes/admin.php` | Admin: categories, products, variants, reviews |
+| `Modules/Order/routes/web.php` | `/checkout`, `/order-confirmed/*`, `/account/billing-addresses` |
+| `Modules/Order/routes/admin.php` | Admin: orders, export, shipping |
+| `Modules/Payment/routes/admin.php` | Admin: payments, approval, rejection |
+| `Modules/Contact/routes/web.php` | `/contact` |
+| `Modules/Contact/routes/admin.php` | Admin: contact messages |
+| `Modules/Cart/routes/web.php` | `/cart` |
+| `Modules/Testimonial/routes/admin.php` | Admin: testimonials |
+| `Modules/Newsletter/routes/web.php` | `/newsletter` (POST) |
+| `Modules/Newsletter/routes/admin.php` | Admin: newsletter subscribers |
+| `Modules/Blog/routes/web.php` | `/blog`, `/blog/{slug}` |
+| `Modules/Blog/routes/admin.php` | Admin: blog posts |
+| `Modules/Page/routes/web.php` | `/about`, `/page/{slug}` |
+| `Modules/Page/routes/admin.php` | Admin: page content |
+| `Modules/Faq/routes/admin.php` | Admin: FAQs |
+
+All `admin.php` route files are loaded with `prefix('admin')`, `name('admin.')`, and `['web', 'auth', 'verified', 'is_admin']` middleware.
+
+---
+
+## Middleware
+
+| Middleware | Purpose |
+|------------|---------|
+| `IsAdmin` | Guards admin routes — checks `user->is_admin` |
+| `SetLocaleFromSetting` | Sets app locale from DB setting (en/ar) |
+| `CheckMaintenanceMode` | Shows maintenance page, respects IP allowlist |
+
+---
+
+## Architecture Rules
+
+### 1. Thin Controllers
+
+Controllers only handle HTTP concerns: receive request, delegate to service, return response.
+
+```php
+// GOOD
+public function store(StoreProductRequest $request): RedirectResponse
+{
+    $data = $request->validated();
+    $this->productService->create($data);
+    return redirect()->route('admin.products.index')->with('success', __('Product created.'));
+}
+
+// BAD — logic in controller
+public function store(Request $request): RedirectResponse
+{
+    $request->validate([...]);  // ← should be in FormRequest
+    $product = Product::create([...]); // ← should be in Service
+}
+```
+
+### 2. FormRequest for All Validation
+
+Every controller method with validation MUST use a dedicated FormRequest class.
+
+**Naming conventions:**
+- `Store{Resource}Request` — for create actions
+- `Update{Resource}Request` — for update actions (if rules differ from store)
+- `Bulk{Resource}ActionRequest` — for bulk operations
+
+### 3. Services for Business Logic
+
+All business logic lives in Service classes. Services handle database queries, mutations, file uploads (via helpers), data transformation, and business rules.
+
+### 4. Helper Functions
+
+Global helpers in `app/Helpers/helpers.php`:
+
+```php
+upload_image(UploadedFile $file, string $directory, string $disk = 'public'): ?string
+delete_image(?string $path, string $disk = 'public'): void
+get_image_url(?string $value): ?string
+site_label(string $key): string
+site_logo_url(): ?string
+site_favicon_url(): ?string
+admin_per_page(): int
+```
+
+### 5. Translations
+
+Use `__('Key')` for all user-facing strings. Files: `lang/en.json`, `lang/ar.json`.
+
+### 6. RTL Support
+
+All frontend must work in LTR and RTL. Use conditional classes:
+```blade
+{{ app()->getLocale() === 'ar' ? 'pl-8 pr-3' : 'pl-3 pr-8' }}
+```
+
+---
+
+## File Placement Quick Reference
+
+| What | Where |
+|------|-------|
+| Models | `app/Models/` |
+| Auth Controllers (Breeze) | `app/Http/Controllers/Auth/` |
+| Auth FormRequests | `app/Http/Requests/Auth/` |
+| Shared FormRequests | `app/Http/Requests/` |
+| Middleware | `app/Http/Middleware/` |
+| Helpers | `app/Helpers/helpers.php` |
+| **Admin Controllers** | `Modules/{Mod}/app/Http/Controllers/Admin/` |
+| **Admin Services** | `Modules/{Mod}/app/Services/Admin/` |
+| **Admin FormRequests** | `Modules/{Mod}/app/Http/Requests/Admin/` |
+| **Admin Routes** | `Modules/{Mod}/routes/admin.php` |
+| **Frontend Controllers** | `Modules/{Mod}/app/Http/Controllers/` |
+| **Frontend Services** | `Modules/{Mod}/app/Services/` |
+| **Frontend Routes** | `Modules/{Mod}/routes/web.php` |
+| Module Providers | `Modules/{Mod}/app/Providers/` |
+| **Admin views** | `Modules/{Mod}/resources/views/admin/` (use `mod::admin.xxx`) |
+| **Frontend views** | `Modules/{Mod}/resources/views/frontend/` (use `mod::frontend.xxx`) |
+| **Admin layout (shared)** | `resources/views/admin/layouts/app.blade.php` |
+| **Admin components (shared)** | `resources/views/components/admin/` |
+| **Frontend layout (shared)** | `resources/views/frontend/layouts/app.blade.php` |
+| **Frontend partials (shared)** | `resources/views/frontend/partials/` |
+| Frontend components (shared) | `resources/views/components/frontend/` |
+| Shared Blade components | `resources/views/components/` |
+| Auth views | `resources/views/auth/` |
+| Admin CSS | `public/css/admin/admin.css` |
+| RTL CSS | `public/css/core/rtl.css` |
+| Brand CSS vars | `public/css/core/brand.css` |
+| Frontend CSS | `public/css/frontend/` |
+| Admin JS | `public/js/admin/` |
+| Frontend JS | `public/js/frontend/` |
+| Seeders | `database/seeders/` |
+| Migrations | `database/migrations/` |
+| Helpers | `app/Helpers/helpers.php` |
+| Translations | `lang/en.json`, `lang/ar.json` |
+
+---
+
+## When Adding a New Feature
+
+1. Identify the **module** (or create a new one if it's a new domain)
+2. Create the **Model** in `app/Models/`
+3. Create the **Migration** in `database/migrations/`
+4. Create the **Service** in `Modules/{Mod}/app/Services/` (frontend) or `Admin/` (admin)
+5. Create **FormRequest** class(es) in `Modules/{Mod}/app/Http/Requests/` or `Admin/`
+6. Create the **Controller** (thin) in `Modules/{Mod}/app/Http/Controllers/` or `Admin/`
+7. Add **routes** in `routes/web.php` (frontend) or `routes/admin.php` (admin)
+8. Create **Blade views** in `Modules/{Mod}/resources/views/admin/` or `frontend/`
+9. Reference views as `mod::admin.xxx` or `mod::frontend.xxx`
+10. Add **CSS** to `public/css/admin/` or `public/css/frontend/`
+11. Add **JS** to `public/js/admin/` or `public/js/frontend/`
+12. Add **translations** to `lang/en.json` and `lang/ar.json`
+
+### Creating a New Module
+
+```bash
+php artisan module:make {ModuleName}
+```
+
+Then ensure the module's `ServiceProvider` has `registerViews()` and its `RouteServiceProvider` has `mapAdminRoutes()`:
+
+```php
+// ServiceProvider — register views
+public function registerViews(): void
+{
+    $sourcePath = module_path($this->name, 'resources/views');
+    $this->loadViewsFrom([$sourcePath], $this->nameLower);
+}
+
+// RouteServiceProvider — load admin routes
+protected function mapAdminRoutes(): void
+{
+    Route::middleware(['web', 'auth', 'verified', 'is_admin'])
+        ->prefix('admin')
+        ->name('admin.')
+        ->group(module_path($this->name, '/routes/admin.php'));
+}
+```
+
+### Namespace Convention
+
+```
+Modules\{Module}\Http\Controllers\Admin\{Name}Controller   ← Admin controller
+Modules\{Module}\Http\Controllers\{Name}Controller          ← Frontend controller
+Modules\{Module}\Services\Admin\{Name}Service               ← Admin service
+Modules\{Module}\Services\{Name}Service                     ← Frontend service
+Modules\{Module}\Http\Requests\Admin\{Name}Request          ← Admin form request
+Modules\{Module}\Http\Requests\{Name}Request                ← Frontend form request
+```

@@ -5,7 +5,7 @@ namespace Modules\Order\Services;
 use App\Models\BillingAddress;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Services\ShippingService;
+use Modules\Order\Services\ShippingService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Modules\Cart\Services\CartService;

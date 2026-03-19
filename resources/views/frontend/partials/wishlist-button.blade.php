@@ -1,5 +1,5 @@
 @php
-    $inWishlist = app(\App\Services\WishlistService::class)->has($product->id);
+    $inWishlist = app(\Modules\Shop\Services\WishlistService::class)->has($product->id);
 @endphp
 <div class="inline rounded-full bg-white/90 shadow-sm" data-wishlist-wrap data-ajax-wishlist data-product-id="{{ $product->id }}" data-in-wishlist="{{ $inWishlist ? '1' : '0' }}" onclick="event.stopPropagation();">
     <form action="{{ route('wishlist.destroy', $product->id) }}" method="POST" class="inline" data-wishlist-action="remove" title="{{ __('Remove from wishlist') }}" style="{{ $inWishlist ? '' : 'display:none' }}">

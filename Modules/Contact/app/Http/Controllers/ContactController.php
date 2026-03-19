@@ -19,7 +19,7 @@ class ContactController extends Controller
     {
         $faqs = Faq::active()->ordered()->get();
 
-        return view('frontend.contact', compact('faqs'));
+        return view('contact::frontend.contact', compact('faqs'));
     }
 
     public function submit(StoreContactRequest $request): RedirectResponse
