@@ -241,35 +241,4 @@
 </script>
 @endif
 
-{{-- Single-row delete: no nested form, so bulk form stays valid --}}
-<script>
-(function() {
-    if (window.__adminDeleteBound) return;
-    window.__adminDeleteBound = true;
-    document.body.addEventListener('click', function(e) {
-        var btn = e.target.closest('.admin-delete-one');
-        if (!btn) return;
-        e.preventDefault();
-        var url = btn.getAttribute('data-delete-url');
-        var msg = btn.getAttribute('data-delete-confirm') || '{{ __("Are you sure?") }}';
-        if (!url) return;
-        if (!confirm(msg)) return;
-        var form = document.createElement('form');
-        form.method = 'POST';
-        form.action = url;
-        var csrf = document.createElement('input');
-        csrf.type = 'hidden';
-        csrf.name = '_token';
-        var meta = document.querySelector('meta[name="csrf-token"]');
-        csrf.value = meta ? meta.getAttribute('content') : '';
-        form.appendChild(csrf);
-        var method = document.createElement('input');
-        method.type = 'hidden';
-        method.name = '_method';
-        method.value = 'DELETE';
-        form.appendChild(method);
-        document.body.appendChild(form);
-        form.submit();
-    });
-})();
-</script>
+{{-- Single-row delete JS is loaded globally via js/admin/delete-confirm.js --}}

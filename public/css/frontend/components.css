@@ -1,0 +1,47 @@
+/* ============================================================
+   Reusable Component Styles
+   ============================================================ */
+
+/* --- Product Card ------------------------------------------ */
+.product-card {
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.product-card:hover {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08),
+                0 4px 10px -6px rgba(0, 0, 0, 0.04);
+}
+
+/* --- Discount Badge ---------------------------------------- */
+.discount-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    width: fit-content;
+    align-self: flex-start;
+}
+
+/* --- Hero Slider ------------------------------------------- */
+[data-hero-slider] [data-hero-slide] {
+    transition: opacity 0.7s ease-in-out;
+}
+
+/* --- Quick-view modal backdrop ----------------------------- */
+.quick-view-backdrop {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+/* --- Floating social buttons ------------------------------- */
+.floating-social {
+    transition: transform 0.2s ease;
+}
+
+.floating-social:hover {
+    transform: scale(1.1);
+}
+
+/* --- Toast / flash messages -------------------------------- */
+.toast-enter {
+    animation: slide-up 0.35s ease-out;
+}

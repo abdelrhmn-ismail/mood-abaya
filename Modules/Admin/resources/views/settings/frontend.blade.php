@@ -292,38 +292,7 @@
 @endcomponent
 
 @push('admin-scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var tabs = document.querySelectorAll('.settings-tab');
-    var panels = document.querySelectorAll('.settings-panel');
-    tabs.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            var tab = this.getAttribute('data-tab');
-            tabs.forEach(function(b) {
-                b.classList.remove('border-brand-teal', 'text-brand-teal');
-                b.classList.add('border-transparent', 'text-gray-500');
-            });
-            this.classList.add('border-brand-teal', 'text-brand-teal');
-            this.classList.remove('border-transparent', 'text-gray-500');
-            panels.forEach(function(p) {
-                p.classList.add('hidden');
-                if (p.id === 'tab-' + tab) p.classList.remove('hidden');
-            });
-        });
-    });
-    // Sync color pickers with text inputs
-    document.querySelectorAll('input[type="color"][id$="_picker"]').forEach(function(picker) {
-        var key = picker.id.replace('_picker', '');
-        var textInput = document.getElementById(key);
-        if (textInput) {
-            picker.addEventListener('input', function() { textInput.value = this.value; });
-            textInput.addEventListener('input', function() {
-                var v = this.value.replace(/^#/, '');
-                if (/^[a-fA-F0-9]{6}$/.test(v)) picker.value = '#' + v;
-            });
-        }
-    });
-});
-</script>
+<script defer src="{{ asset('js/admin/settings-tabs.js') }}"></script>
+<script defer src="{{ asset('js/admin/color-picker-sync.js') }}"></script>
 @endpush
 @endsection

@@ -5,7 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name') }}@isset($header) – {{ $header }}@endisset</title>
-    @vite(['resources/css/app.css'])
+    {{-- Core CSS --}}
+    <link rel="stylesheet" href="{{ asset('css/core/tailwind.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/core/brand.css') }}">
+    @if(app()->getLocale() === 'ar')
+    <link rel="stylesheet" href="{{ asset('css/core/rtl.css') }}">
+    @endif
+    {{-- Frontend CSS --}}
+    <link rel="stylesheet" href="{{ asset('css/frontend/animations.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/frontend/components.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
@@ -28,7 +36,12 @@
 
     @include('frontend.partials.footer')
 
-    @vite(['resources/js/app.js', 'resources/js/frontend.js'])
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+    <script defer src="{{ asset('js/frontend/navbar.js') }}"></script>
+    <script defer src="{{ asset('js/frontend/hero-slider.js') }}"></script>
+    <script defer src="{{ asset('js/frontend/newsletter.js') }}"></script>
+    <script defer src="{{ asset('js/frontend/cookie-consent.js') }}"></script>
+    <script defer src="{{ asset('js/frontend/cart-wishlist.js') }}"></script>
     @stack('scripts')
 </body>
 </html>

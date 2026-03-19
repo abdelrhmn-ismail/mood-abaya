@@ -1,0 +1,22 @@
+/* ============================================================
+   RTL (Arabic) Layout Overrides
+   ============================================================ */
+
+[dir="rtl"] .space-x-1 > :not(:last-child),
+[dir="rtl"] .space-x-2 > :not(:last-child),
+[dir="rtl"] .space-x-3 > :not(:last-child),
+[dir="rtl"] .space-x-4 > :not(:last-child) {
+    margin-right: 0;
+}
+
+[dir="rtl"] select {
+    background-position: left 0.5rem center;
+}
+
+[dir="rtl"] .text-left {
+    text-align: right;
+}
+
+[dir="rtl"] .text-right {
+    text-align: left;
+}

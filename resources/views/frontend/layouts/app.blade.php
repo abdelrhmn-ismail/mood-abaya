@@ -29,8 +29,15 @@
         <meta property="og:image" content="{{ $pageOgImage ?: $siteOgImage }}">
     @endif
 
-    {{-- Tailwind CSS (required for utility classes: flex, grid, bg-*, etc.) --}}
-    @vite(['resources/css/app.css'])
+    {{-- Core CSS --}}
+    <link rel="stylesheet" href="{{ asset('css/core/tailwind.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/core/brand.css') }}">
+    @if(app()->getLocale() === 'ar')
+    <link rel="stylesheet" href="{{ asset('css/core/rtl.css') }}">
+    @endif
+    {{-- Frontend CSS --}}
+    <link rel="stylesheet" href="{{ asset('css/frontend/animations.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/frontend/components.css') }}">
 
     {{-- Color design system overrides from settings --}}
     @php
@@ -85,8 +92,14 @@
     @include('frontend.partials.home-popup')
     @include('frontend.partials.quick-view-modal')
 
-    {{-- Frontend JS (navbar, newsletter) --}}
-    @vite(['resources/js/frontend.js'])
+    {{-- Alpine.js (CDN) --}}
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+    {{-- Frontend JS modules --}}
+    <script defer src="{{ asset('js/frontend/navbar.js') }}"></script>
+    <script defer src="{{ asset('js/frontend/hero-slider.js') }}"></script>
+    <script defer src="{{ asset('js/frontend/newsletter.js') }}"></script>
+    <script defer src="{{ asset('js/frontend/cookie-consent.js') }}"></script>
+    <script defer src="{{ asset('js/frontend/cart-wishlist.js') }}"></script>
     @stack('scripts')
     @php $footerCode = \App\Models\Setting::get('custom_code_footer', ''); @endphp
     @if(trim($footerCode) !== '')

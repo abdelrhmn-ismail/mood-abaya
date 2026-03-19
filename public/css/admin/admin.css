@@ -1,0 +1,35 @@
+/* ============================================================
+   Admin Panel Specific Styles
+   ============================================================ */
+
+/* --- Sidebar ----------------------------------------------- */
+#admin-sidebar nav a.bg-brand-teal-dark {
+    font-weight: 600;
+}
+
+/* --- Data Tables ------------------------------------------- */
+.admin-table th a {
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.admin-table th a:hover {
+    color: var(--brand-teal);
+}
+
+/* --- Dashboard stat cards ---------------------------------- */
+.stat-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Form sections ----------------------------------------- */
+.form-section + .form-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e2e8f0;
+}

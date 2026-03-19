@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ __('Maintenance') }} – {{ config('app.name') }}</title>
-    @vite(['resources/css/app.css'])
-    <style>
-        body { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/core/tailwind.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/core/brand.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/frontend/maintenance.css') }}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 </head>
 <body class="bg-slate-100 text-slate-800 antialiased">
     <div class="mx-auto max-w-lg px-6 py-16 text-center">

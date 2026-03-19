@@ -175,26 +175,6 @@
 @endcomponent
 
 @push('admin-scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    var tabs = document.querySelectorAll('.settings-tab');
-    var panels = document.querySelectorAll('.settings-panel');
-    tabs.forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            var tab = this.getAttribute('data-tab');
-            tabs.forEach(function(b) {
-                b.classList.remove('border-brand-teal', 'text-brand-teal');
-                b.classList.add('border-transparent', 'text-gray-500');
-            });
-            this.classList.add('border-brand-teal', 'text-brand-teal');
-            this.classList.remove('border-transparent', 'text-gray-500');
-            panels.forEach(function(p) {
-                p.classList.add('hidden');
-                if (p.id === 'tab-' + tab) p.classList.remove('hidden');
-            });
-        });
-    });
-});
-</script>
+<script defer src="{{ asset('js/admin/settings-tabs.js') }}"></script>
 @endpush
 @endsection

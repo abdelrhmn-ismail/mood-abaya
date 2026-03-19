@@ -11,7 +11,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
-    @vite(['resources/css/app.css'])
+    {{-- Core CSS --}}
+    <link rel="stylesheet" href="{{ asset('css/core/tailwind.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/core/brand.css') }}">
+    @if(app()->getLocale() === 'ar')
+    <link rel="stylesheet" href="{{ asset('css/core/rtl.css') }}">
+    @endif
+    {{-- Admin CSS --}}
+    <link rel="stylesheet" href="{{ asset('css/admin/admin.css') }}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     @stack('styles')
 </head>
@@ -119,30 +126,9 @@
             </main>
         </div>
     </div>
-    <script>
-        (function() {
-            var sidebar = document.getElementById('admin-sidebar');
-            var overlay = document.getElementById('sidebar-overlay');
-            var toggle = document.getElementById('sidebar-toggle');
-            var closeBtn = document.getElementById('sidebar-close');
-            function openSidebar() {
-                sidebar.classList.remove('-translate-x-full');
-                overlay.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-            }
-            function closeSidebar() {
-                sidebar.classList.add('-translate-x-full');
-                overlay.classList.add('hidden');
-                document.body.style.overflow = '';
-            }
-            if (toggle) toggle.addEventListener('click', openSidebar);
-            if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
-            if (overlay) overlay.addEventListener('click', closeSidebar);
-            document.querySelectorAll('#admin-sidebar nav a').forEach(function(a) {
-                a.addEventListener('click', function() { if (window.innerWidth < 768) closeSidebar(); });
-            });
-        })();
-    </script>
+    {{-- Admin JS --}}
+    <script defer src="{{ asset('js/admin/sidebar.js') }}"></script>
+    <script defer src="{{ asset('js/admin/delete-confirm.js') }}"></script>
     @stack('scripts')
     @stack('admin-scripts')
 </body>
