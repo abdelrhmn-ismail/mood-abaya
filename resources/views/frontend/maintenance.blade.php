@@ -6,6 +6,7 @@
     <title>{{ __('Maintenance') }} – {{ config('app.name') }}</title>
     <link rel="stylesheet" href="{{ asset('css/core/tailwind.css') }}">
     <link rel="stylesheet" href="{{ asset('css/core/brand.css') }}">
+    @include('components.color-overrides')
     <link rel="stylesheet" href="{{ asset('css/frontend/maintenance.css') }}">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 </head>

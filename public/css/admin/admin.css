@@ -14,7 +14,7 @@
 }
 
 .admin-table th a:hover {
-    color: var(--brand-teal);
+    color: rgb(var(--brand-teal-rgb));
 }
 
 /* --- Dashboard stat cards ---------------------------------- */

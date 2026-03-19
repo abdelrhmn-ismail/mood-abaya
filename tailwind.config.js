@@ -19,12 +19,12 @@ module.exports = {
             },
             colors: {
                 brand: {
-                    black: '#000000',
-                    teal: '#144034',
-                    'teal-dark': '#0f2d26',
-                    white: '#FFFFFF',
-                    gold: '#D3AE72',
-                    'gold-dark': '#b8945c',
+                    black: 'rgb(var(--brand-black-rgb) / <alpha-value>)',
+                    teal: 'rgb(var(--brand-teal-rgb) / <alpha-value>)',
+                    'teal-dark': 'rgb(var(--brand-teal-dark-rgb) / <alpha-value>)',
+                    white: 'rgb(var(--brand-white-rgb) / <alpha-value>)',
+                    gold: 'rgb(var(--brand-gold-rgb) / <alpha-value>)',
+                    'gold-dark': 'rgb(var(--brand-gold-dark-rgb) / <alpha-value>)',
                 },
             },
         },

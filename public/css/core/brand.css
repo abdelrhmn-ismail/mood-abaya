@@ -1,8 +1,21 @@
 /* ============================================================
    Brand Design Tokens & Custom Properties
+   ============================================================
+   Tailwind utilities reference the -rgb triplet variants so that
+   opacity modifiers (bg-brand-teal/20) work correctly.
+   The hex variants are kept for direct usage in non-Tailwind CSS.
    ============================================================ */
 
 :root {
+    /* RGB triplets (space-separated for modern rgb() syntax) */
+    --brand-black-rgb: 0 0 0;
+    --brand-teal-rgb: 20 64 52;
+    --brand-teal-dark-rgb: 15 45 38;
+    --brand-white-rgb: 255 255 255;
+    --brand-gold-rgb: 211 174 114;
+    --brand-gold-dark-rgb: 184 148 92;
+
+    /* Hex shortcuts for non-Tailwind usage */
     --brand-black: #000000;
     --brand-teal: #144034;
     --brand-teal-dark: #0f2d26;

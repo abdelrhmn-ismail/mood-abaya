@@ -19,6 +19,8 @@
     @endif
     {{-- Admin CSS --}}
     <link rel="stylesheet" href="{{ asset('css/admin/admin.css') }}">
+    {{-- Color design system overrides from admin settings --}}
+    @include('components.color-overrides')
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     @stack('styles')
 </head>

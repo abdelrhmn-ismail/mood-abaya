@@ -14,6 +14,7 @@
     {{-- Frontend CSS --}}
     <link rel="stylesheet" href="{{ asset('css/frontend/animations.css') }}">
     <link rel="stylesheet" href="{{ asset('css/frontend/components.css') }}">
+    @include('components.color-overrides')
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
