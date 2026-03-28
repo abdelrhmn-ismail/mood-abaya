@@ -5,21 +5,14 @@ namespace Database\Seeders;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
-use Database\Seeders\Concerns\SeedsProductMedia;
 use Illuminate\Database\Seeder;
 
 /**
- * Seeds only the Mood Abaya catalog products defined below (EN/AR + SAR prices).
- * Images and videos are imported from `storage/app/seed-assets/product-media/{slug}/` into `public/media/products/{slug}/` when present
- * (same slug as the product); otherwise minimal PNG placeholders are generated.
+ * Mood Abaya catalog (EN/AR + SAR). Product media paths are fixed strings under public/media —
+ * deploy those files to production; the seeder only writes DB rows (no scanning or copying).
  */
 class ProductSeeder extends Seeder
 {
-    use CreatesTestImages;
-    use SeedsProductMedia;
-
-    private const GALLERY_IMAGES_PER_PRODUCT = 3;
-
     public function run(): void
     {
         $winter = Category::where('slug', 'luxury-winter-abayas')->first();
@@ -29,19 +22,19 @@ class ProductSeeder extends Seeder
             return;
         }
 
+        $media = $this->explicitProductMedia();
         $products = $this->catalogProducts($winter->id, $evening->id, $ramadan->id);
 
         foreach ($products as $data) {
             $slug = $data['slug'];
-            $media = $this->importProductMediaFromSeedFolder($slug);
-
-            if ($media['main']) {
-                $data['image'] = $media['main'];
-                $data['video'] = $media['video'];
-            } else {
-                $data['image'] = $this->createProductMainPlaceholder($slug);
-                $data['video'] = null;
+            $paths = $media[$slug] ?? null;
+            if ($paths === null) {
+                throw new \LogicException("Missing explicit media paths for product slug: {$slug}");
             }
+
+            $gallery = $paths['gallery'];
+            unset($paths['gallery']);
+            $data = array_merge($data, $paths);
             $data['active'] = true;
 
             $product = Product::updateOrCreate(
@@ -52,12 +45,109 @@ class ProductSeeder extends Seeder
                 $data
             );
 
-            if ($media['main']) {
-                $this->syncProductGalleryImages($product, $media['gallery']);
-            } else {
-                $this->seedPlaceholderGallery($product, $slug);
-            }
+            $this->syncProductGalleryImages($product, $gallery);
         }
+    }
+
+    /**
+     * Full URLs on site: /media/... — files must exist at public/media/...
+     *
+     * @return array<string, array{image: string, video: ?string, gallery: array<int, string>}>
+     */
+    private function explicitProductMedia(): array
+    {
+        return [
+            'suede-fur-winter-abaya' => [
+                'image' => 'media/products/suede-fur-winter-abaya/main.jpg',
+                'video' => null,
+                'gallery' => [
+                    'media/products/suede-fur-winter-abaya/gallery-1.jpg',
+                    'media/products/suede-fur-winter-abaya/gallery-2.jpg',
+                    'media/products/suede-fur-winter-abaya/gallery-3.jpg',
+                ],
+            ],
+            'velvet-abaya-side-shawl-sleeve-detailing' => [
+                'image' => 'media/products/velvet-abaya-side-shawl-sleeve-detailing/main.jpg',
+                'video' => null,
+                'gallery' => [
+                    'media/products/velvet-abaya-side-shawl-sleeve-detailing/gallery-1.jpg',
+                    'media/products/velvet-abaya-side-shawl-sleeve-detailing/gallery-2.jpg',
+                    'media/products/velvet-abaya-side-shawl-sleeve-detailing/gallery-3.jpg',
+                ],
+            ],
+            'heavy-crepe-winter-abaya-shine-inner-dress' => [
+                'image' => 'media/products/heavy-crepe-winter-abaya-shine-inner-dress/main.jpg',
+                'video' => null,
+                'gallery' => [
+                    'media/products/heavy-crepe-winter-abaya-shine-inner-dress/gallery-1.jpg',
+                    'media/products/heavy-crepe-winter-abaya-shine-inner-dress/gallery-2.jpg',
+                    'media/products/heavy-crepe-winter-abaya-shine-inner-dress/gallery-3.jpg',
+                ],
+            ],
+            'wide-cut-crepe-abaya-back-pleats-lace' => [
+                'image' => 'media/products/wide-cut-crepe-abaya-back-pleats-lace/main.jpg',
+                'video' => null,
+                'gallery' => [
+                    'media/products/wide-cut-crepe-abaya-back-pleats-lace/gallery-1.jpg',
+                    'media/products/wide-cut-crepe-abaya-back-pleats-lace/gallery-2.jpg',
+                    'media/products/wide-cut-crepe-abaya-back-pleats-lace/gallery-3.jpg',
+                ],
+            ],
+            'velvet-abaya-luxurious-bodice-embellishments' => [
+                'image' => 'media/products/velvet-abaya-luxurious-bodice-embellishments/main.jpg',
+                'video' => null,
+                'gallery' => [
+                    'media/products/velvet-abaya-luxurious-bodice-embellishments/gallery-1.jpg',
+                    'media/products/velvet-abaya-luxurious-bodice-embellishments/gallery-2.jpg',
+                    'media/products/velvet-abaya-luxurious-bodice-embellishments/gallery-3.jpg',
+                ],
+            ],
+            'velvet-abaya-side-pearl-embellishments' => [
+                'image' => 'media/products/velvet-abaya-side-pearl-embellishments/main.jpg',
+                'video' => null,
+                'gallery' => [
+                    'media/products/velvet-abaya-side-pearl-embellishments/gallery-1.jpg',
+                    'media/products/velvet-abaya-side-pearl-embellishments/gallery-2.jpg',
+                    'media/products/velvet-abaya-side-pearl-embellishments/gallery-3.jpg',
+                ],
+            ],
+            'elegant-ramadan-abaya' => [
+                'image' => 'media/products/elegant-ramadan-abaya/main.jpg',
+                'video' => null,
+                'gallery' => [
+                    'media/products/elegant-ramadan-abaya/gallery-1.jpg',
+                    'media/products/elegant-ramadan-abaya/gallery-2.jpg',
+                    'media/products/elegant-ramadan-abaya/gallery-3.jpg',
+                ],
+            ],
+            'elegant-ramadan-occasion-dress' => [
+                'image' => 'media/products/elegant-ramadan-occasion-dress/main.jpg',
+                'video' => null,
+                'gallery' => [
+                    'media/products/elegant-ramadan-occasion-dress/gallery-1.jpg',
+                    'media/products/elegant-ramadan-occasion-dress/gallery-2.jpg',
+                    'media/products/elegant-ramadan-occasion-dress/gallery-3.jpg',
+                ],
+            ],
+            'elegant-makhawar' => [
+                'image' => 'media/products/elegant-makhawar/main.jpg',
+                'video' => null,
+                'gallery' => [
+                    'media/products/elegant-makhawar/gallery-1.jpg',
+                    'media/products/elegant-makhawar/gallery-2.jpg',
+                    'media/products/elegant-makhawar/gallery-3.jpg',
+                ],
+            ],
+            'ramadan-makhawar' => [
+                'image' => 'media/products/ramadan-makhawar/main.jpg',
+                'video' => null,
+                'gallery' => [
+                    'media/products/ramadan-makhawar/gallery-1.jpg',
+                    'media/products/ramadan-makhawar/gallery-2.jpg',
+                    'media/products/ramadan-makhawar/gallery-3.jpg',
+                ],
+            ],
+        ];
     }
 
     /**
@@ -333,19 +423,6 @@ class ProductSeeder extends Seeder
             ProductImage::create([
                 'product_id' => $product->id,
                 'sort_order' => $i + 1,
-                'image' => $path,
-            ]);
-        }
-    }
-
-    private function seedPlaceholderGallery(Product $product, string $slug): void
-    {
-        $product->images()->delete();
-        for ($i = 1; $i <= self::GALLERY_IMAGES_PER_PRODUCT; $i++) {
-            $path = $this->createProductGalleryPlaceholder($slug, $i);
-            ProductImage::create([
-                'product_id' => $product->id,
-                'sort_order' => $i,
                 'image' => $path,
             ]);
         }

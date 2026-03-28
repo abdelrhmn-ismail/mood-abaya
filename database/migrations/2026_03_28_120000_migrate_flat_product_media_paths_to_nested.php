@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\File;
 
 /**
  * Legacy placeholders used media/products/{slug}.png and media/products/{slug}-gallery-n.png.
- * Align with SeedsProductMedia: media/products/{slug}/main.png and .../gallery-n.png.
+ * Align with nested public paths: media/products/{slug}/main.png and .../gallery-n.png.
  */
 return new class extends Migration
 {

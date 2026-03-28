@@ -27,7 +27,7 @@ trait CreatesTestImages
     }
 
     /**
-     * Product main placeholder — same path shape as SeedsProductMedia (media/products/{slug}/main.png).
+     * Product main placeholder — nested under media/products/{slug}/main.png.
      */
     protected function createProductMainPlaceholder(string $slug): string
     {
