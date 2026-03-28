@@ -70,14 +70,14 @@
             'label' => __('Meta keywords'),
             'type' => 'text',
             'value' => $settings['meta_keywords'] ?? '',
-            'attributes' => ['placeholder' => 'keyword1, keyword2'],
+            'attributes' => ['placeholder' => __('Meta keywords placeholder')],
         ])
         @include('components.admin.form-field', [
             'name' => 'og_image',
             'label' => __('OG image URL'),
             'type' => 'text',
             'value' => $settings['og_image'] ?? '',
-            'attributes' => ['placeholder' => 'https://example.com/image.jpg'],
+            'attributes' => ['placeholder' => __('OG image URL example')],
         ])
     </div>
 
@@ -89,19 +89,19 @@
             <div>
                 <h3 class="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">{{ __('Social links') }}</h3>
                 <div class="space-y-3">
-                    @include('components.admin.form-field', ['name' => 'whatsapp_url', 'label' => __('WhatsApp URL'), 'type' => 'text', 'value' => $settings['whatsapp_url'] ?? '', 'attributes' => ['placeholder' => 'https://wa.me/966501234567']])
-                    @include('components.admin.form-field', ['name' => 'instagram_url', 'label' => __('Instagram URL'), 'type' => 'text', 'value' => $settings['instagram_url'] ?? '', 'attributes' => ['placeholder' => 'https://instagram.com/yourstore']])
-                    @include('components.admin.form-field', ['name' => 'facebook_url', 'label' => __('Facebook URL'), 'type' => 'text', 'value' => $settings['facebook_url'] ?? '', 'attributes' => ['placeholder' => 'https://facebook.com/yourpage']])
-                    @include('components.admin.form-field', ['name' => 'twitter_url', 'label' => __('Twitter / X URL'), 'type' => 'text', 'value' => $settings['twitter_url'] ?? '', 'attributes' => ['placeholder' => 'https://twitter.com/yourstore']])
+                    @include('components.admin.form-field', ['name' => 'whatsapp_url', 'label' => __('WhatsApp URL'), 'type' => 'text', 'value' => $settings['whatsapp_url'] ?? '', 'attributes' => ['placeholder' => __('WhatsApp URL example')]])
+                    @include('components.admin.form-field', ['name' => 'instagram_url', 'label' => __('Instagram URL'), 'type' => 'text', 'value' => $settings['instagram_url'] ?? '', 'attributes' => ['placeholder' => __('Instagram URL example')]])
+                    @include('components.admin.form-field', ['name' => 'facebook_url', 'label' => __('Facebook URL'), 'type' => 'text', 'value' => $settings['facebook_url'] ?? '', 'attributes' => ['placeholder' => __('Facebook URL example')]])
+                    @include('components.admin.form-field', ['name' => 'twitter_url', 'label' => __('Twitter / X URL'), 'type' => 'text', 'value' => $settings['twitter_url'] ?? '', 'attributes' => ['placeholder' => __('Twitter URL example')]])
                 </div>
             </div>
             <div>
                 <h3 class="mb-3 text-sm font-medium uppercase tracking-wide text-gray-500">{{ __('Contact info') }}</h3>
                 <div class="space-y-3">
-                    @include('components.admin.form-field', ['name' => 'contact_email', 'label' => __('Email'), 'type' => 'text', 'value' => $settings['contact_email'] ?? '', 'attributes' => ['placeholder' => 'info@example.com']])
-                    @include('components.admin.form-field', ['name' => 'contact_email_secondary', 'label' => __('Email (secondary)'), 'type' => 'text', 'value' => $settings['contact_email_secondary'] ?? '', 'attributes' => ['placeholder' => 'support@example.com']])
-                    @include('components.admin.form-field', ['name' => 'contact_phone', 'label' => __('Phone'), 'type' => 'text', 'value' => $settings['contact_phone'] ?? '', 'attributes' => ['placeholder' => '+966 50 123 4567']])
-                    @include('components.admin.form-field', ['name' => 'contact_phone_secondary', 'label' => __('Phone (secondary)'), 'type' => 'text', 'value' => $settings['contact_phone_secondary'] ?? '', 'attributes' => ['placeholder' => '+966 11 234 5678']])
+                    @include('components.admin.form-field', ['name' => 'contact_email', 'label' => __('Email'), 'type' => 'text', 'value' => $settings['contact_email'] ?? '', 'attributes' => ['placeholder' => __('Email example placeholder')]])
+                    @include('components.admin.form-field', ['name' => 'contact_email_secondary', 'label' => __('Email (secondary)'), 'type' => 'text', 'value' => $settings['contact_email_secondary'] ?? '', 'attributes' => ['placeholder' => __('Email secondary example placeholder')]])
+                    @include('components.admin.form-field', ['name' => 'contact_phone', 'label' => __('Phone'), 'type' => 'text', 'value' => $settings['contact_phone'] ?? '', 'attributes' => ['placeholder' => __('Phone example placeholder')]])
+                    @include('components.admin.form-field', ['name' => 'contact_phone_secondary', 'label' => __('Phone (secondary)'), 'type' => 'text', 'value' => $settings['contact_phone_secondary'] ?? '', 'attributes' => ['placeholder' => __('Phone secondary example placeholder')]])
                     @include('components.admin.form-field', ['name' => 'contact_location', 'label' => __('Address / Location'), 'type' => 'textarea', 'value' => $settings['contact_location'] ?? '', 'attributes' => ['rows' => 3, 'placeholder' => __('Full address or area')]])
                 </div>
             </div>
@@ -141,15 +141,13 @@
                 <label for="custom_code_header" class="block text-sm font-medium text-gray-900">{{ __('Header code') }}</label>
                 <p class="mt-0.5 text-xs text-gray-600">{{ __('Pasted inside &lt;head&gt;. Use for: Google Tag Manager head snippet, meta tags, Facebook Pixel, TikTok Pixel, etc.') }}</p>
                 <textarea name="custom_code_header" id="custom_code_header" rows="8" class="mt-2 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal"
-                    placeholder="<!-- e.g. Google Tag Manager -->
-<script>(function(w,d,s,l,i){...})(window,document,'script','dataLayer','GTM-XXXX');</script>">{{ old('custom_code_header', $settings['custom_code_header'] ?? '') }}</textarea>
+                    placeholder="{{ __('Custom code header textarea placeholder') }}">{{ old('custom_code_header', $settings['custom_code_header'] ?? '') }}</textarea>
             </div>
             <div class="rounded-xl border border-gray-200 bg-amber-50/50 p-4">
                 <label for="custom_code_footer" class="block text-sm font-medium text-gray-900">{{ __('Footer code') }}</label>
                 <p class="mt-0.5 text-xs text-gray-600">{{ __('Pasted just before &lt;/body&gt;. Use for: GTM noscript, analytics, chat widgets, or any script that should load at page bottom.') }}</p>
                 <textarea name="custom_code_footer" id="custom_code_footer" rows="8" class="mt-2 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal"
-                    placeholder="<!-- e.g. Chat widget or GTM noscript -->
-<noscript><iframe src='...'></iframe></noscript>">{{ old('custom_code_footer', $settings['custom_code_footer'] ?? '') }}</textarea>
+                    placeholder="{{ __('Custom code footer textarea placeholder') }}">{{ old('custom_code_footer', $settings['custom_code_footer'] ?? '') }}</textarea>
             </div>
         </div>
     </div>
@@ -163,7 +161,7 @@
             'label' => __('TinyMCE API key'),
             'type' => 'text',
             'value' => $settings['tinymce_api_key'] ?? '',
-            'attributes' => ['placeholder' => 'your-api-key', 'autocomplete' => 'off'],
+            'attributes' => ['placeholder' => __('TinyMCE key placeholder'), 'autocomplete' => 'off'],
         ])
     </div>
 

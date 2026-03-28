@@ -4,7 +4,7 @@
             <div>
                 <a href="<?php echo e(url('/')); ?>" class="inline-flex items-center" aria-label="<?php echo e(site_label('site_name')); ?>">
                     <?php if(site_logo_url()): ?>
-                        <img src="<?php echo e(site_logo_url()); ?>" alt="" class="h-10 w-auto max-w-[180px] object-contain brightness-0 invert">
+                        <img src="<?php echo e(site_logo_url()); ?>" alt="<?php echo e(site_label('site_name')); ?>" class="h-10 w-auto max-w-[180px] object-contain drop-shadow-sm">
                     <?php else: ?>
                         <span class="material-icons text-3xl text-brand-white">storefront</span>
                     <?php endif; ?>

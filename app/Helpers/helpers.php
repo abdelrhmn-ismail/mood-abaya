@@ -220,15 +220,11 @@ if (! function_exists('admin_sort_url')) {
     }
 }
 
-if (! function_exists('upload_image')) {
+if (! function_exists('upload_public_media')) {
     /**
-     * Upload an image to `public/media/{directory}/` and return the web-relative path (e.g. media/products/uuid.jpg).
-     *
-     * @param  UploadedFile  $file  The uploaded file instance
-     * @param  string  $directory  Subdirectory under public/media (e.g. 'products', 'branding', 'posts')
-     * @param  string  $disk  Unused; kept for backward compatibility
+     * Upload a file to `public/media/{directory}/` and return the web-relative path (e.g. media/products/uuid.mp4).
      */
-    function upload_image(UploadedFile $file, string $directory, string $disk = 'public'): ?string
+    function upload_public_media(UploadedFile $file, string $directory, string $disk = 'public'): ?string
     {
         if (! $file->isValid()) {
             return null;
@@ -243,6 +239,20 @@ if (! function_exists('upload_image')) {
         $file->move($fullDir, $name);
 
         return $relativeDir.'/'.$name;
+    }
+}
+
+if (! function_exists('upload_image')) {
+    /**
+     * Upload an image to `public/media/{directory}/` and return the web-relative path (e.g. media/products/uuid.jpg).
+     *
+     * @param  UploadedFile  $file  The uploaded file instance
+     * @param  string  $directory  Subdirectory under public/media (e.g. 'products', 'branding', 'posts')
+     * @param  string  $disk  Unused; kept for backward compatibility
+     */
+    function upload_image(UploadedFile $file, string $directory, string $disk = 'public'): ?string
+    {
+        return upload_public_media($file, $directory, $disk);
     }
 }
 

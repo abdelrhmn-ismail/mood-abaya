@@ -123,7 +123,7 @@
                                     <span class="material-icons text-sm">restart_alt</span>
                                 </button>
                             </div>
-                            <input type="text" name="{{ $key }}" id="{{ $key }}" value="{{ $val }}" placeholder="#000000" maxlength="7" class="mt-0.5 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal" pattern="^#[a-fA-F0-9]{6}$">
+                            <input type="text" name="{{ $key }}" id="{{ $key }}" value="{{ $val }}" placeholder="{{ __('Hex color placeholder') }}" maxlength="7" class="mt-0.5 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal" pattern="^#[a-fA-F0-9]{6}$">
                             <p class="mt-0.5 text-[10px] text-gray-400">{{ __('Default') }}: {{ $colorDefaults[$key] }}</p>
                         </div>
                     </div>
@@ -214,7 +214,7 @@
             'label' => __('Link (optional)'),
             'type' => 'text',
             'value' => $settings['announcement_bar_link'] ?? '',
-            'attributes' => ['placeholder' => 'https://'],
+            'attributes' => ['placeholder' => __('URL placeholder https')],
         ])
     </div>
 
@@ -270,7 +270,7 @@
                 'label' => __('Button URL (optional)'),
                 'type' => 'text',
                 'value' => $settings['home_popup_button_url'] ?? '',
-                'attributes' => ['placeholder' => 'https://'],
+                'attributes' => ['placeholder' => __('URL placeholder https')],
             ])
             @include('components.admin.form-field', [
                 'name' => 'home_popup_delay_seconds',
@@ -305,12 +305,12 @@
             'label' => __('Coming back at (optional)'),
             'type' => 'text',
             'value' => $settings['maintenance_coming_back_at'] ?? '',
-            'attributes' => ['placeholder' => 'e.g. 2025-03-20 14:00'],
+            'attributes' => ['placeholder' => __('Maintenance datetime placeholder')],
         ])
         <div>
             <label for="maintenance_ip_allowlist" class="block text-sm font-medium text-gray-700">{{ __('IP allowlist') }}</label>
             <p class="mt-0.5 text-xs text-gray-500">{{ __('Comma or newline-separated IPs that can access the site during maintenance. Leave empty to allow only admin.') }}</p>
-            <textarea name="maintenance_ip_allowlist" id="maintenance_ip_allowlist" rows="4" class="mt-1 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal" placeholder="192.168.1.1, 10.0.0.1">{{ old('maintenance_ip_allowlist', $settings['maintenance_ip_allowlist'] ?? '') }}</textarea>
+            <textarea name="maintenance_ip_allowlist" id="maintenance_ip_allowlist" rows="4" class="mt-1 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal" placeholder="{{ __('IP allowlist placeholder') }}">{{ old('maintenance_ip_allowlist', $settings['maintenance_ip_allowlist'] ?? '') }}</textarea>
         </div>
     </div>
 
@@ -318,9 +318,9 @@
     <div id="tab-trust-badges" class="settings-panel hidden space-y-6">
         <h2 class="text-lg font-semibold text-gray-900">{{ __('Trust badges') }}</h2>
         <p class="text-sm text-gray-500">{{ __('Optional line shown in footer and checkout, e.g. "Secure payment", "Free shipping over X SAR", "Easy returns".') }}</p>
-        @include('components.admin.form-field', ['name' => 'trust_badge_1', 'label' => __('Badge 1'), 'type' => 'text', 'value' => $settings['trust_badge_1'] ?? '', 'attributes' => ['placeholder' => 'e.g. Secure payment']])
+        @include('components.admin.form-field', ['name' => 'trust_badge_1', 'label' => __('Badge 1'), 'type' => 'text', 'value' => $settings['trust_badge_1'] ?? '', 'attributes' => ['placeholder' => __('Trust badge secure example')]])
         @include('components.admin.form-field', ['name' => 'trust_badge_2', 'label' => __('Badge 2'), 'type' => 'text', 'value' => $settings['trust_badge_2'] ?? '', 'attributes' => ['placeholder' => __('e.g. Free shipping over 200 SAR')]])
-        @include('components.admin.form-field', ['name' => 'trust_badge_3', 'label' => __('Badge 3'), 'type' => 'text', 'value' => $settings['trust_badge_3'] ?? '', 'attributes' => ['placeholder' => 'e.g. Easy returns']])
+        @include('components.admin.form-field', ['name' => 'trust_badge_3', 'label' => __('Badge 3'), 'type' => 'text', 'value' => $settings['trust_badge_3'] ?? '', 'attributes' => ['placeholder' => __('Trust badge returns example')]])
     </div>
 
     @include('components.admin.form-actions', [

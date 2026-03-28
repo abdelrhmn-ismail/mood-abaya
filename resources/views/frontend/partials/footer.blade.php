@@ -4,7 +4,7 @@
             <div>
                 <a href="{{ url('/') }}" class="inline-flex items-center" aria-label="{{ site_label('site_name') }}">
                     @if(site_logo_url())
-                        <img src="{{ site_logo_url() }}" alt="" class="h-10 w-auto max-w-[180px] object-contain brightness-0 invert">
+                        <img src="{{ site_logo_url() }}" alt="{{ site_label('site_name') }}" class="h-10 w-auto max-w-[180px] object-contain drop-shadow-sm">
                     @else
                         <span class="material-icons text-3xl text-brand-white">storefront</span>
                     @endif

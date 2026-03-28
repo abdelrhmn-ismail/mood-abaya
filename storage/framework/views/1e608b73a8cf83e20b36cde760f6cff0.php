@@ -122,7 +122,7 @@
                                     <span class="material-icons text-sm">restart_alt</span>
                                 </button>
                             </div>
-                            <input type="text" name="<?php echo e($key); ?>" id="<?php echo e($key); ?>" value="<?php echo e($val); ?>" placeholder="#000000" maxlength="7" class="mt-0.5 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal" pattern="^#[a-fA-F0-9]{6}$">
+                            <input type="text" name="<?php echo e($key); ?>" id="<?php echo e($key); ?>" value="<?php echo e($val); ?>" placeholder="<?php echo e(__('Hex color placeholder')); ?>" maxlength="7" class="mt-0.5 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal" pattern="^#[a-fA-F0-9]{6}$">
                             <p class="mt-0.5 text-[10px] text-gray-400"><?php echo e(__('Default')); ?>: <?php echo e($colorDefaults[$key]); ?></p>
                         </div>
                     </div>
@@ -220,7 +220,7 @@ unset($__errorArgs, $__bag); ?>
             'label' => __('Link (optional)'),
             'type' => 'text',
             'value' => $settings['announcement_bar_link'] ?? '',
-            'attributes' => ['placeholder' => 'https://'],
+            'attributes' => ['placeholder' => __('URL placeholder https')],
         ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     </div>
 
@@ -276,7 +276,7 @@ unset($__errorArgs, $__bag); ?>
                 'label' => __('Button URL (optional)'),
                 'type' => 'text',
                 'value' => $settings['home_popup_button_url'] ?? '',
-                'attributes' => ['placeholder' => 'https://'],
+                'attributes' => ['placeholder' => __('URL placeholder https')],
             ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
             <?php echo $__env->make('components.admin.form-field', [
                 'name' => 'home_popup_delay_seconds',
@@ -311,12 +311,12 @@ unset($__errorArgs, $__bag); ?>
             'label' => __('Coming back at (optional)'),
             'type' => 'text',
             'value' => $settings['maintenance_coming_back_at'] ?? '',
-            'attributes' => ['placeholder' => 'e.g. 2025-03-20 14:00'],
+            'attributes' => ['placeholder' => __('Maintenance datetime placeholder')],
         ], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
         <div>
             <label for="maintenance_ip_allowlist" class="block text-sm font-medium text-gray-700"><?php echo e(__('IP allowlist')); ?></label>
             <p class="mt-0.5 text-xs text-gray-500"><?php echo e(__('Comma or newline-separated IPs that can access the site during maintenance. Leave empty to allow only admin.')); ?></p>
-            <textarea name="maintenance_ip_allowlist" id="maintenance_ip_allowlist" rows="4" class="mt-1 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal" placeholder="192.168.1.1, 10.0.0.1"><?php echo e(old('maintenance_ip_allowlist', $settings['maintenance_ip_allowlist'] ?? '')); ?></textarea>
+            <textarea name="maintenance_ip_allowlist" id="maintenance_ip_allowlist" rows="4" class="mt-1 block w-full rounded-lg border border-gray-300 font-mono text-sm shadow-sm focus:border-brand-teal focus:ring-brand-teal" placeholder="<?php echo e(__('IP allowlist placeholder')); ?>"><?php echo e(old('maintenance_ip_allowlist', $settings['maintenance_ip_allowlist'] ?? '')); ?></textarea>
         </div>
     </div>
 
@@ -324,9 +324,9 @@ unset($__errorArgs, $__bag); ?>
     <div id="tab-trust-badges" class="settings-panel hidden space-y-6">
         <h2 class="text-lg font-semibold text-gray-900"><?php echo e(__('Trust badges')); ?></h2>
         <p class="text-sm text-gray-500"><?php echo e(__('Optional line shown in footer and checkout, e.g. "Secure payment", "Free shipping over X SAR", "Easy returns".')); ?></p>
-        <?php echo $__env->make('components.admin.form-field', ['name' => 'trust_badge_1', 'label' => __('Badge 1'), 'type' => 'text', 'value' => $settings['trust_badge_1'] ?? '', 'attributes' => ['placeholder' => 'e.g. Secure payment']], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+        <?php echo $__env->make('components.admin.form-field', ['name' => 'trust_badge_1', 'label' => __('Badge 1'), 'type' => 'text', 'value' => $settings['trust_badge_1'] ?? '', 'attributes' => ['placeholder' => __('Trust badge secure example')]], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
         <?php echo $__env->make('components.admin.form-field', ['name' => 'trust_badge_2', 'label' => __('Badge 2'), 'type' => 'text', 'value' => $settings['trust_badge_2'] ?? '', 'attributes' => ['placeholder' => __('e.g. Free shipping over 200 SAR')]], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-        <?php echo $__env->make('components.admin.form-field', ['name' => 'trust_badge_3', 'label' => __('Badge 3'), 'type' => 'text', 'value' => $settings['trust_badge_3'] ?? '', 'attributes' => ['placeholder' => 'e.g. Easy returns']], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+        <?php echo $__env->make('components.admin.form-field', ['name' => 'trust_badge_3', 'label' => __('Badge 3'), 'type' => 'text', 'value' => $settings['trust_badge_3'] ?? '', 'attributes' => ['placeholder' => __('Trust badge returns example')]], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
     </div>
 
     <?php echo $__env->make('components.admin.form-actions', [

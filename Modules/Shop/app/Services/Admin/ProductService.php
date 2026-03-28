@@ -74,6 +74,13 @@ class ProductService
         } else {
             unset($data['image']);
         }
+        $video = null;
+        if (! empty($data['video_file']) && $data['video_file'] instanceof UploadedFile) {
+            $video = upload_public_media($data['video_file'], 'products');
+        } elseif (! empty($data['video'])) {
+            $video = trim((string) $data['video']) ?: null;
+        }
+        unset($data['video_file']);
         $data['active'] = isset($data['active']);
         $data['featured'] = isset($data['featured']);
         $data['stock'] = (int) ($data['stock'] ?? 0);
@@ -98,6 +105,7 @@ class ProductService
             'price' => $data['price'],
             'compare_at_price' => $data['compare_at_price'],
             'image' => $data['image'] ?? null,
+            'video' => $video,
             'stock' => $data['stock'],
             'min_order_qty' => $data['min_order_qty'],
             'max_order_qty' => $data['max_order_qty'],
@@ -122,6 +130,21 @@ class ProductService
         } else {
             unset($data['image']);
         }
+        if (! empty($data['video_file']) && $data['video_file'] instanceof UploadedFile) {
+            delete_image($product->video);
+            $product->video = upload_public_media($data['video_file'], 'products');
+        } elseif (! empty($data['remove_video'])) {
+            delete_image($product->video);
+            $product->video = null;
+        } elseif (array_key_exists('video', $data)) {
+            $new = trim((string) ($data['video'] ?? '')) ?: null;
+            $old = $product->video;
+            if ($old && $new !== $old && ! str_starts_with((string) $old, 'http')) {
+                delete_image($old);
+            }
+            $product->video = $new;
+        }
+        unset($data['video_file']);
         $product->name = $data['name'] ?? $product->getTranslations('name');
         $product->description = $data['description'] ?? $product->getTranslations('description');
         $product->active = isset($data['active']);

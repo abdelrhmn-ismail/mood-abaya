@@ -8,8 +8,7 @@
         var sidebar = document.getElementById('admin-sidebar');
         var overlay = document.getElementById('sidebar-overlay');
         var toggle = document.getElementById('sidebar-toggle');
-        var iconOpen = toggle ? toggle.querySelector('[data-sidebar-icon-open]') : null;
-        var iconClose = toggle ? toggle.querySelector('[data-sidebar-icon-close]') : null;
+        var toggleIcon = toggle ? toggle.querySelector('[data-sidebar-toggle-icon]') : null;
 
         if (!sidebar || !toggle) return;
 
@@ -25,11 +24,8 @@
         }
 
         function syncToggleIcons(open) {
-            if (iconOpen) {
-                iconOpen.classList.toggle('hidden', open);
-            }
-            if (iconClose) {
-                iconClose.classList.toggle('hidden', !open);
+            if (toggleIcon) {
+                toggleIcon.textContent = open ? 'close' : 'menu';
             }
             toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
             toggle.setAttribute('aria-label', open ? labelClose : labelOpen);

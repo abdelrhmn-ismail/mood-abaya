@@ -66,6 +66,7 @@ class ProductController
         $data['featured'] = $request->boolean('featured');
         $data['stock'] = (int) ($data['stock'] ?? 0);
         $data['gallery_images'] = $request->file('images') ?? [];
+        $data['video_file'] = $request->file('video_file');
         $this->productService->create($data);
 
         return redirect()->route('admin.products.index')->with('success', __('Product created.'));
@@ -94,6 +95,8 @@ class ProductController
         }
         $data['gallery_images'] = $request->file('images') ?? [];
         $data['delete_image_ids'] = $request->input('delete_image_ids', []);
+        $data['video_file'] = $request->file('video_file');
+        $data['remove_video'] = $request->boolean('remove_video');
         $this->productService->update($product, $data);
 
         return redirect()->route('admin.products.index')->with('success', __('Product updated.'));

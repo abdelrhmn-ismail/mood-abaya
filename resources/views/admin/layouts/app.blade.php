@@ -93,9 +93,8 @@
         <div class="flex min-w-0 flex-1 flex-col">
             <header class="flex min-h-14 flex-shrink-0 flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-brand-white px-3 py-2 sm:min-h-16 sm:gap-3 sm:px-4 md:flex-nowrap md:px-6 md:py-0">
                 <div class="flex min-w-0 flex-1 items-center gap-2 sm:gap-3 md:min-w-0 md:flex-none">
-                    <button type="button" id="sidebar-toggle" class="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg p-0 text-brand-teal hover:bg-brand-gold/10 md:hidden" aria-expanded="false" aria-controls="admin-sidebar" aria-label="{{ __('Open menu') }}" data-label-open="{{ __('Open menu') }}" data-label-close="{{ __('Close menu') }}">
-                        <span class="material-icons absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl leading-none" data-sidebar-icon-open>menu</span>
-                        <span class="material-icons absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 text-2xl leading-none" data-sidebar-icon-close>close</span>
+                    <button type="button" id="sidebar-toggle" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg p-0 text-brand-teal hover:bg-brand-gold/10 md:hidden" aria-expanded="false" aria-controls="admin-sidebar" aria-label="{{ __('Open menu') }}" data-label-open="{{ __('Open menu') }}" data-label-close="{{ __('Close menu') }}">
+                        <span class="material-icons text-2xl leading-none select-none" data-sidebar-toggle-icon aria-hidden="true">menu</span>
                     </button>
                     @if(!$__env->hasSection('heading') || trim((string) $__env->yieldContent('heading')) !== '')
                         <h1 class="min-w-0 truncate text-base font-semibold text-brand-black sm:text-lg">@yield('heading', __('Admin'))</h1>

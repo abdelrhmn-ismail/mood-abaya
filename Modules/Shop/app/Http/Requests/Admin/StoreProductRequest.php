@@ -33,6 +33,8 @@ class StoreProductRequest extends FormRequest
             'price' => 'required|numeric|min:0',
             'compare_at_price' => 'nullable|numeric|min:0',
             'image' => 'nullable|image|max:2048',
+            'video' => 'nullable|string|max:500',
+            'video_file' => 'nullable|file|mimes:mp4,webm,mov|max:51200',
             'images' => 'nullable|array',
             'images.*' => 'image|max:2048',
             'stock' => 'nullable|integer|min:0',

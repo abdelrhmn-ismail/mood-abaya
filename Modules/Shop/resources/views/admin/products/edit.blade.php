@@ -6,7 +6,7 @@
 @section('content')
 @php $locales = config('app.available_locales', ['en', 'ar']); @endphp
 @component('components.admin.card', ['title' => null])
-<form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+<form id="admin-product-edit-form" action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
     @csrf
     @method('PUT')
     @include('components.admin.form-field', [
@@ -50,8 +50,8 @@
     @include('components.admin.form-field', ['name' => 'tags', 'label' => __('Tags'), 'type' => 'text', 'value' => old('tags', $product->tags), 'attributes' => ['placeholder' => __('Comma-separated')]])
     @include('components.admin.form-field', ['name' => 'meta_title', 'label' => __('Meta title'), 'type' => 'text', 'value' => old('meta_title', $product->meta_title)])
     @include('components.admin.form-field', ['name' => 'meta_description', 'label' => __('Meta description'), 'type' => 'textarea', 'value' => old('meta_description', $product->meta_description), 'attributes' => ['rows' => 2]])
-    @include('components.admin.form-field', ['name' => 'meta_keywords', 'label' => __('Meta keywords'), 'type' => 'text', 'value' => old('meta_keywords', $product->meta_keywords), 'attributes' => ['placeholder' => 'keyword1, keyword2']])
-    @include('components.admin.form-field', ['name' => 'og_image', 'label' => __('OG image URL'), 'type' => 'text', 'value' => old('og_image', $product->og_image), 'attributes' => ['placeholder' => 'https://']])
+    @include('components.admin.form-field', ['name' => 'meta_keywords', 'label' => __('Meta keywords'), 'type' => 'text', 'value' => old('meta_keywords', $product->meta_keywords), 'attributes' => ['placeholder' => __('Meta keywords placeholder')]])
+    @include('components.admin.form-field', ['name' => 'og_image', 'label' => __('OG image URL'), 'type' => 'text', 'value' => old('og_image', $product->og_image), 'attributes' => ['placeholder' => __('URL placeholder https')]])
     @include('components.admin.form-field', ['name' => 'price', 'label' => __('Price (SAR)'), 'type' => 'number', 'value' => old('price', $product->price), 'required' => true, 'attributes' => ['step' => '0.01', 'min' => 0]])
     @include('components.admin.form-field', ['name' => 'compare_at_price', 'label' => __('Compare at price (SAR)'), 'type' => 'number', 'value' => old('compare_at_price', $product->compare_at_price), 'attributes' => ['step' => '0.01', 'min' => 0, 'placeholder' => __('Original price for discount display')]])
     @include('components.admin.form-field', ['name' => 'image', 'label' => __('Main image'), 'type' => 'file', 'value' => '', 'attributes' => ['accept' => 'image/*', 'current' => $product->image, 'current_url' => $product->image ? get_image_url($product->image) : '']])
@@ -73,13 +73,49 @@
         <input type="file" name="images[]" accept="image/*" multiple class="block w-full text-sm text-gray-500 file:mr-4 file:rounded file:border-0 file:bg-gray-100 file:px-4 file:py-2 file:text-sm file:font-medium file:text-gray-700 hover:file:bg-gray-200">
         <p class="mt-1 text-xs text-gray-500">{{ __('Add more images. Check Delete to remove existing.') }}</p>
     </div>
+    <div>
+        <label class="mb-2 block text-sm font-medium text-gray-700">{{ __('Product video') }}</label>
+        <p class="mb-2 text-xs text-gray-500">{{ __('Upload MP4, WebM, or MOV (max 50 MB), or paste a public URL. Upload replaces the current file or URL.') }}</p>
+        @if($product->video)
+            <div class="mb-3 rounded-lg border border-gray-200 bg-slate-50 p-3">
+                <p class="mb-2 text-xs font-medium text-gray-600">{{ __('Current video') }}</p>
+                @php
+                    $vUrl = public_media_url($product->video);
+                    $vExt = strtolower(pathinfo($product->video, PATHINFO_EXTENSION));
+                    $vMime = match ($vExt) {
+                        'webm' => 'video/webm',
+                        'mov' => 'video/quicktime',
+                        default => 'video/mp4',
+                    };
+                @endphp
+                @if($vUrl && ! str_starts_with($product->video, 'http'))
+                    <video class="max-h-48 w-full max-w-md rounded border bg-black object-contain" controls playsinline preload="metadata">
+                        <source src="{{ $vUrl }}" type="{{ $vMime }}">
+                    </video>
+                @elseif($vUrl)
+                    <video class="max-h-48 w-full max-w-md rounded border bg-black object-contain" controls playsinline preload="metadata">
+                        <source src="{{ $vUrl }}">
+                    </video>
+                @endif
+                <p class="mt-2 break-all text-xs text-gray-500">{{ $product->video }}</p>
+                <label class="mt-2 flex cursor-pointer items-center gap-2 text-sm text-gray-700">
+                    <input type="checkbox" name="remove_video" value="1" class="rounded border-gray-300" @checked(old('remove_video'))>
+                    {{ __('Remove current video') }}
+                </label>
+            </div>
+        @endif
+        <input type="file" name="video_file" accept="video/mp4,video/webm,video/quicktime,.mp4,.webm,.mov" class="block w-full text-sm text-gray-500 file:mr-4 file:rounded file:border-0 file:bg-gray-100 file:px-4 file:py-2 file:text-sm file:font-medium file:text-gray-700 hover:file:bg-gray-200">
+        @include('components.admin.form-field', ['name' => 'video', 'label' => __('Video URL (optional)'), 'type' => 'text', 'value' => old('video', $product->video), 'attributes' => ['placeholder' => __('URL placeholder https')]])
+    </div>
     @include('components.admin.form-field', ['name' => 'stock', 'label' => __('Stock'), 'type' => 'number', 'value' => old('stock', $product->stock), 'attributes' => ['min' => 0]])
     @include('components.admin.form-field', ['name' => 'min_order_qty', 'label' => __('Min. order qty'), 'type' => 'number', 'value' => old('min_order_qty', $product->min_order_qty ?? 1), 'attributes' => ['min' => 1]])
     @include('components.admin.form-field', ['name' => 'max_order_qty', 'label' => __('Max. order qty'), 'type' => 'number', 'value' => old('max_order_qty', $product->max_order_qty), 'attributes' => ['min' => 1, 'placeholder' => __('Leave empty for no limit')]])
     @include('components.admin.form-field', ['name' => 'weight_kg', 'label' => __('Weight (kg)'), 'type' => 'number', 'value' => old('weight_kg', $product->weight_kg), 'attributes' => ['step' => '0.01', 'min' => 0]])
     @include('components.admin.form-field', ['name' => 'active', 'label' => '', 'type' => 'checkbox', 'value' => $product->active, 'attributes' => ['help' => __('Active')]])
     @include('components.admin.form-field', ['name' => 'featured', 'label' => '', 'type' => 'checkbox', 'value' => $product->featured, 'attributes' => ['help' => __('Featured')]])
+</form>
 
+    {{-- Nested <form> inside the product form breaks the Update button in browsers — keep variant actions in sibling forms --}}
     {{-- Variants (size/color with own SKU, price, stock) --}}
     <div class="rounded-xl border border-gray-200 bg-gray-50/50 p-6">
         <h3 class="mb-4 text-sm font-semibold text-gray-900">{{ __('Product variants') }}</h3>
@@ -98,7 +134,7 @@
                 <tbody>
                     @foreach($product->variants as $v)
                         <tr class="border-t border-gray-100">
-                            <td class="px-3 py-2 font-mono">{{ $v->sku ?? '—' }}</td>
+                            <td class="px-3 py-2 font-mono">{{ $v->sku ?? __('—') }}</td>
                             <td class="px-3 py-2">{{ $v->getDisplayName() }}</td>
                             <td class="px-3 py-2">{{ number_format($v->price, 2) }} {{ __('SAR') }}</td>
                             <td class="px-3 py-2">{{ $v->stock }}</td>
@@ -130,7 +166,7 @@
             </div>
             <div class="min-w-[200px] flex-1">
                 <label class="block text-xs font-medium text-gray-600">{{ __('Attributes (JSON)') }}</label>
-                <input type="text" name="attributes" class="mt-1 block w-full rounded-lg border border-gray-300 font-mono text-sm" placeholder='{"Size":"M"} or {"Color":"Black"}'>
+                <input type="text" name="attributes" class="mt-1 block w-full rounded-lg border border-gray-300 font-mono text-sm" placeholder="{{ __('Variant attributes JSON placeholder') }}">
             </div>
             <button type="submit" class="rounded-lg bg-brand-teal px-4 py-2 text-sm font-medium text-white hover:bg-brand-teal-dark">{{ __('Add variant') }}</button>
         </form>
@@ -139,8 +175,8 @@
     @include('components.admin.form-actions', [
         'submitLabel' => __('Update product'),
         'cancelUrl' => route('admin.products.index'),
+        'submitForm' => 'admin-product-edit-form',
     ])
-</form>
 @endcomponent
 @push('admin-scripts')
 @include('components.admin.editor-scripts')

@@ -14,7 +14,7 @@
             'type' => 'text',
             'value' => old('code'),
             'required' => true,
-            'attributes' => ['placeholder' => 'e.g. wallet', 'pattern' => '[a-z][a-z0-9_]*'],
+            'attributes' => ['placeholder' => __('Payment method code placeholder'), 'pattern' => '[a-z][a-z0-9_]*'],
         ])
         @include('payment::admin.payment-methods.form', ['paymentMethod' => null])
         @include('components.admin.form-actions', [
