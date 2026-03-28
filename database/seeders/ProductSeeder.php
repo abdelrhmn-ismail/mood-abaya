@@ -39,7 +39,7 @@ class ProductSeeder extends Seeder
                 $data['image'] = $media['main'];
                 $data['video'] = $media['video'];
             } else {
-                $data['image'] = $this->createTestImage('products', $slug);
+                $data['image'] = $this->createProductMainPlaceholder($slug);
                 $data['video'] = null;
             }
             $data['active'] = true;
@@ -342,8 +342,7 @@ class ProductSeeder extends Seeder
     {
         $product->images()->delete();
         for ($i = 1; $i <= self::GALLERY_IMAGES_PER_PRODUCT; $i++) {
-            $key = "{$slug}-gallery-{$i}";
-            $path = $this->createTestImage('products', $key);
+            $path = $this->createProductGalleryPlaceholder($slug, $i);
             ProductImage::create([
                 'product_id' => $product->id,
                 'sort_order' => $i,
