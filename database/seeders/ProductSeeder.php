@@ -8,7 +8,7 @@ use App\Models\ProductImage;
 use Illuminate\Database\Seeder;
 
 /**
- * Mood Abaya catalog (EN/AR + SAR). Product media paths are fixed strings under public/media —
+ * Mood Abaya catalog (EN/AR + SAR). Image, gallery, and video paths are fixed strings under public/media —
  * deploy those files to production; the seeder only writes DB rows (no scanning or copying).
  */
 class ProductSeeder extends Seeder
@@ -52,14 +52,14 @@ class ProductSeeder extends Seeder
     /**
      * Full URLs on site: /media/... — files must exist at public/media/...
      *
-     * @return array<string, array{image: string, video: ?string, gallery: array<int, string>}>
+     * @return array<string, array{image: string, video: string, gallery: array<int, string>}>
      */
     private function explicitProductMedia(): array
     {
         return [
             'suede-fur-winter-abaya' => [
                 'image' => 'media/products/suede-fur-winter-abaya/main.jpg',
-                'video' => null,
+                'video' => 'media/products/suede-fur-winter-abaya/video.mp4',
                 'gallery' => [
                     'media/products/suede-fur-winter-abaya/gallery-1.jpg',
                     'media/products/suede-fur-winter-abaya/gallery-2.jpg',
@@ -68,7 +68,7 @@ class ProductSeeder extends Seeder
             ],
             'velvet-abaya-side-shawl-sleeve-detailing' => [
                 'image' => 'media/products/velvet-abaya-side-shawl-sleeve-detailing/main.jpg',
-                'video' => null,
+                'video' => 'media/products/velvet-abaya-side-shawl-sleeve-detailing/video.mp4',
                 'gallery' => [
                     'media/products/velvet-abaya-side-shawl-sleeve-detailing/gallery-1.jpg',
                     'media/products/velvet-abaya-side-shawl-sleeve-detailing/gallery-2.jpg',
@@ -77,7 +77,7 @@ class ProductSeeder extends Seeder
             ],
             'heavy-crepe-winter-abaya-shine-inner-dress' => [
                 'image' => 'media/products/heavy-crepe-winter-abaya-shine-inner-dress/main.jpg',
-                'video' => null,
+                'video' => 'media/products/heavy-crepe-winter-abaya-shine-inner-dress/video.mp4',
                 'gallery' => [
                     'media/products/heavy-crepe-winter-abaya-shine-inner-dress/gallery-1.jpg',
                     'media/products/heavy-crepe-winter-abaya-shine-inner-dress/gallery-2.jpg',
@@ -86,7 +86,7 @@ class ProductSeeder extends Seeder
             ],
             'wide-cut-crepe-abaya-back-pleats-lace' => [
                 'image' => 'media/products/wide-cut-crepe-abaya-back-pleats-lace/main.jpg',
-                'video' => null,
+                'video' => 'media/products/wide-cut-crepe-abaya-back-pleats-lace/video.mp4',
                 'gallery' => [
                     'media/products/wide-cut-crepe-abaya-back-pleats-lace/gallery-1.jpg',
                     'media/products/wide-cut-crepe-abaya-back-pleats-lace/gallery-2.jpg',
@@ -95,7 +95,7 @@ class ProductSeeder extends Seeder
             ],
             'velvet-abaya-luxurious-bodice-embellishments' => [
                 'image' => 'media/products/velvet-abaya-luxurious-bodice-embellishments/main.jpg',
-                'video' => null,
+                'video' => 'media/products/velvet-abaya-luxurious-bodice-embellishments/video.mp4',
                 'gallery' => [
                     'media/products/velvet-abaya-luxurious-bodice-embellishments/gallery-1.jpg',
                     'media/products/velvet-abaya-luxurious-bodice-embellishments/gallery-2.jpg',
@@ -104,7 +104,7 @@ class ProductSeeder extends Seeder
             ],
             'velvet-abaya-side-pearl-embellishments' => [
                 'image' => 'media/products/velvet-abaya-side-pearl-embellishments/main.jpg',
-                'video' => null,
+                'video' => 'media/products/velvet-abaya-side-pearl-embellishments/video.mp4',
                 'gallery' => [
                     'media/products/velvet-abaya-side-pearl-embellishments/gallery-1.jpg',
                     'media/products/velvet-abaya-side-pearl-embellishments/gallery-2.jpg',
@@ -113,7 +113,7 @@ class ProductSeeder extends Seeder
             ],
             'elegant-ramadan-abaya' => [
                 'image' => 'media/products/elegant-ramadan-abaya/main.jpg',
-                'video' => null,
+                'video' => 'media/products/elegant-ramadan-abaya/video.mp4',
                 'gallery' => [
                     'media/products/elegant-ramadan-abaya/gallery-1.jpg',
                     'media/products/elegant-ramadan-abaya/gallery-2.jpg',
@@ -122,7 +122,7 @@ class ProductSeeder extends Seeder
             ],
             'elegant-ramadan-occasion-dress' => [
                 'image' => 'media/products/elegant-ramadan-occasion-dress/main.jpg',
-                'video' => null,
+                'video' => 'media/products/elegant-ramadan-occasion-dress/video.mp4',
                 'gallery' => [
                     'media/products/elegant-ramadan-occasion-dress/gallery-1.jpg',
                     'media/products/elegant-ramadan-occasion-dress/gallery-2.jpg',
@@ -131,7 +131,7 @@ class ProductSeeder extends Seeder
             ],
             'elegant-makhawar' => [
                 'image' => 'media/products/elegant-makhawar/main.jpg',
-                'video' => null,
+                'video' => 'media/products/elegant-makhawar/video.mp4',
                 'gallery' => [
                     'media/products/elegant-makhawar/gallery-1.jpg',
                     'media/products/elegant-makhawar/gallery-2.jpg',
@@ -140,7 +140,7 @@ class ProductSeeder extends Seeder
             ],
             'ramadan-makhawar' => [
                 'image' => 'media/products/ramadan-makhawar/main.jpg',
-                'video' => null,
+                'video' => 'media/products/ramadan-makhawar/video.mp4',
                 'gallery' => [
                     'media/products/ramadan-makhawar/gallery-1.jpg',
                     'media/products/ramadan-makhawar/gallery-2.jpg',

@@ -1,14 +1,12 @@
 /**
- * Navbar module – mobile menu toggle
- * Uses data-navbar attributes on the navbar element.
+ * Navbar module – mobile menu toggle (single Material icon via ligature: menu ↔ close)
  */
 const ATTR = 'data-navbar';
 const SELECTORS = {
   navbar: `[id="main-navbar"]`,
   toggle: `[${ATTR}="toggle"]`,
   mobileMenu: `[${ATTR}="mobile-menu"]`,
-  iconOpen: `[${ATTR}="icon-open"]`,
-  iconClose: `[${ATTR}="icon-close"]`,
+  toggleIcon: `[${ATTR}="toggle-icon"]`,
 };
 
 function initNavbar() {
@@ -17,23 +15,32 @@ function initNavbar() {
 
   const toggleBtn = navbar.querySelector(SELECTORS.toggle);
   const mobileMenu = navbar.querySelector(SELECTORS.mobileMenu);
-  const iconOpen = navbar.querySelector(SELECTORS.iconOpen);
-  const iconClose = navbar.querySelector(SELECTORS.iconClose);
+  const toggleIcon = navbar.querySelector(SELECTORS.toggleIcon);
 
   if (!toggleBtn || !mobileMenu) return;
+
+  const labelOpen = toggleBtn.getAttribute('data-label-open') || 'Toggle menu';
+  const labelClose = toggleBtn.getAttribute('data-label-close') || 'Close menu';
+
+  function setIcon(isOpen) {
+    if (!toggleIcon) return;
+    toggleIcon.textContent = isOpen ? 'close' : 'menu';
+  }
 
   function open() {
     mobileMenu.classList.remove('hidden');
     mobileMenu.classList.add('flex');
-    if (iconOpen) iconOpen.classList.add('hidden');
-    if (iconClose) iconClose.classList.remove('hidden');
+    setIcon(true);
+    toggleBtn.setAttribute('aria-expanded', 'true');
+    toggleBtn.setAttribute('aria-label', labelClose);
   }
 
   function close() {
     mobileMenu.classList.add('hidden');
     mobileMenu.classList.remove('flex');
-    if (iconOpen) iconOpen.classList.remove('hidden');
-    if (iconClose) iconClose.classList.add('hidden');
+    setIcon(false);
+    toggleBtn.setAttribute('aria-expanded', 'false');
+    toggleBtn.setAttribute('aria-label', labelOpen);
   }
 
   function toggle() {
@@ -44,12 +51,10 @@ function initNavbar() {
 
   toggleBtn.addEventListener('click', toggle);
 
-  // Close on resize to desktop
   window.addEventListener('resize', () => {
     if (window.matchMedia('(min-width: 768px)').matches) close();
   });
 
-  // Close when clicking a link (for in-page anchors)
   mobileMenu.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', close);
   });

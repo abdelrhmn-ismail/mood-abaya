@@ -18,8 +18,8 @@ class HeroImagesSeeder extends Seeder
      */
     private const HERO_DEFAULTS = [
         // Home slider (3 images for hero carousel)
-        'hero_home_1' => 'https://images.unsplash.com/photo-1736342182213-6c037467cb38',
-        'hero_home_2' => 'https://images.unsplash.com/photo-1750190321711-5378df976bc6',
+        'hero_home_1' => 'https://images.unsplash.com/photo-1750190321711-5378df976bc6',
+        'hero_home_2' => 'https://images.unsplash.com/photo-1736342182213-6c037467cb38',
         'hero_home_3' => 'https://images.unsplash.com/photo-1767469697155-310a287e6972',
         // Page heroes (elegant / modest look – distinct per context where useful)
         'hero_page' => 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1920',

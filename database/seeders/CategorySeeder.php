@@ -7,8 +7,6 @@ use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
 {
-    use CreatesTestImages;
-
     public function run(): void
     {
         $categories = [
@@ -23,6 +21,7 @@ class CategorySeeder extends Seeder
                     'ar' => 'خامات دافئة وإحساس بالفخامة وتصاميم مناسبة للشتاء. تشمل عبايات الشامواه والفرو، عبايات كريب شتوية ثقيلة، وأنواع المخمل.',
                 ],
                 'sort_order' => 1,
+                'image' => 'https://images.unsplash.com/photo-1750190321743-516413df29d0?w=500&auto=format&fit=crop&q=60',
             ],
             [
                 'name' => [
@@ -35,6 +34,7 @@ class CategorySeeder extends Seeder
                     'ar' => 'قطع أنيقة للمناسبات والسهرات والإطلالات الرسمية. مخمل مع شال، تزيينات، وتفاصيل لؤلؤ.',
                 ],
                 'sort_order' => 2,
+                'image' => 'https://images.unsplash.com/photo-1772474500365-c2c520545f44?q=80&w=687',
             ],
             [
                 'name' => [
@@ -47,15 +47,14 @@ class CategorySeeder extends Seeder
                     'ar' => 'موديلات بروح رمضانية ولمسة شرقية مناسبة للتجمعات. عبايات رمضانية، فساتين مناسبات، ومخاور.',
                 ],
                 'sort_order' => 3,
+                'image' => 'https://images.unsplash.com/photo-1556468644-cc4565f9b38b?q=80&w=1468',
             ],
         ];
 
         foreach ($categories as $data) {
-            $slug = $data['slug'];
-            $imagePath = $this->createTestImage('categories', $slug);
             Category::updateOrCreate(
-                ['slug' => $slug],
-                array_merge($data, ['image' => $imagePath, 'active' => true])
+                ['slug' => $data['slug']],
+                array_merge($data, ['active' => true])
             );
         }
     }

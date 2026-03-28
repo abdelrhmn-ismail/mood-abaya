@@ -46,3 +46,16 @@
         transform: translateX(0);
     }
 }
+
+/* Mobile: open state (JS adds .is-open) — RTL off-canvas uses translateX(100%) when closed */
+@media (max-width: 767px) {
+    [dir="rtl"] #admin-sidebar.is-open {
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* Tables: horizontal scroll on narrow viewports */
+.admin-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}

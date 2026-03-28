@@ -267,64 +267,50 @@
 
                 
                 <?php if(isset($relatedProducts) && $relatedProducts->isNotEmpty()): ?>
-                    <div class="mt-14 rounded-2xl border border-slate-200 bg-brand-white p-6 md:p-8">
-                        <h2 class="text-xl font-bold text-brand-black"><?php echo e(__('You may also like')); ?></h2>
-                        <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                            <?php $__currentLoopData = $relatedProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $related): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <?php if (isset($component)) { $__componentOriginalcef45669083f418aab5b4fc994e59833 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalcef45669083f418aab5b4fc994e59833 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.frontend.product-card','data' => ['product' => $related]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('frontend.product-card'); ?>
+                    <?php if (isset($component)) { $__componentOriginal29e5560e62e32c654494c3368361940f = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal29e5560e62e32c654494c3368361940f = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.frontend.product-grid-section','data' => ['title' => __('You may also like'),'products' => $relatedProducts]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('frontend.product-grid-section'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['product' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($related)]); ?>
+<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('You may also like')),'products' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($relatedProducts)]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
-<?php if (isset($__attributesOriginalcef45669083f418aab5b4fc994e59833)): ?>
-<?php $attributes = $__attributesOriginalcef45669083f418aab5b4fc994e59833; ?>
-<?php unset($__attributesOriginalcef45669083f418aab5b4fc994e59833); ?>
+<?php if (isset($__attributesOriginal29e5560e62e32c654494c3368361940f)): ?>
+<?php $attributes = $__attributesOriginal29e5560e62e32c654494c3368361940f; ?>
+<?php unset($__attributesOriginal29e5560e62e32c654494c3368361940f); ?>
 <?php endif; ?>
-<?php if (isset($__componentOriginalcef45669083f418aab5b4fc994e59833)): ?>
-<?php $component = $__componentOriginalcef45669083f418aab5b4fc994e59833; ?>
-<?php unset($__componentOriginalcef45669083f418aab5b4fc994e59833); ?>
+<?php if (isset($__componentOriginal29e5560e62e32c654494c3368361940f)): ?>
+<?php $component = $__componentOriginal29e5560e62e32c654494c3368361940f; ?>
+<?php unset($__componentOriginal29e5560e62e32c654494c3368361940f); ?>
 <?php endif; ?>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        </div>
-                    </div>
                 <?php endif; ?>
 
                 
                 <?php if(isset($recentlyViewed) && $recentlyViewed->isNotEmpty()): ?>
-                    <div class="mt-14 rounded-2xl border border-slate-200 bg-brand-white p-6 md:p-8">
-                        <h2 class="text-xl font-bold text-brand-black"><?php echo e(__('Recently viewed')); ?></h2>
-                        <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-                            <?php $__currentLoopData = $recentlyViewed; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $recent): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <?php if (isset($component)) { $__componentOriginalcef45669083f418aab5b4fc994e59833 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginalcef45669083f418aab5b4fc994e59833 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.frontend.product-card','data' => ['product' => $recent]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('frontend.product-card'); ?>
+                    <?php if (isset($component)) { $__componentOriginal29e5560e62e32c654494c3368361940f = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal29e5560e62e32c654494c3368361940f = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.frontend.product-grid-section','data' => ['title' => __('Recently viewed'),'products' => $recentlyViewed]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('frontend.product-grid-section'); ?>
 <?php if ($component->shouldRender()): ?>
 <?php $__env->startComponent($component->resolveView(), $component->data()); ?>
 <?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
 <?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
 <?php endif; ?>
-<?php $component->withAttributes(['product' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($recent)]); ?>
+<?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute(__('Recently viewed')),'products' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute($recentlyViewed)]); ?>
 <?php echo $__env->renderComponent(); ?>
 <?php endif; ?>
-<?php if (isset($__attributesOriginalcef45669083f418aab5b4fc994e59833)): ?>
-<?php $attributes = $__attributesOriginalcef45669083f418aab5b4fc994e59833; ?>
-<?php unset($__attributesOriginalcef45669083f418aab5b4fc994e59833); ?>
+<?php if (isset($__attributesOriginal29e5560e62e32c654494c3368361940f)): ?>
+<?php $attributes = $__attributesOriginal29e5560e62e32c654494c3368361940f; ?>
+<?php unset($__attributesOriginal29e5560e62e32c654494c3368361940f); ?>
 <?php endif; ?>
-<?php if (isset($__componentOriginalcef45669083f418aab5b4fc994e59833)): ?>
-<?php $component = $__componentOriginalcef45669083f418aab5b4fc994e59833; ?>
-<?php unset($__componentOriginalcef45669083f418aab5b4fc994e59833); ?>
+<?php if (isset($__componentOriginal29e5560e62e32c654494c3368361940f)): ?>
+<?php $component = $__componentOriginal29e5560e62e32c654494c3368361940f; ?>
+<?php unset($__componentOriginal29e5560e62e32c654494c3368361940f); ?>
 <?php endif; ?>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        </div>
-                    </div>
                 <?php endif; ?>
             </div>
         </div>

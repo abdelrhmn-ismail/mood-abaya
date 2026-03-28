@@ -1,5 +1,5 @@
 /**
- * Navbar – mobile menu toggle
+ * Navbar – mobile menu toggle (single Material icon: menu ↔ close via ligature text)
  */
 (function () {
     'use strict';
@@ -8,8 +8,7 @@
         navbar: '#main-navbar',
         toggle: '[data-navbar="toggle"]',
         mobileMenu: '[data-navbar="mobile-menu"]',
-        iconOpen: '[data-navbar="icon-open"]',
-        iconClose: '[data-navbar="icon-close"]',
+        toggleIcon: '[data-navbar="toggle-icon"]',
     };
 
     function initNavbar() {
@@ -18,23 +17,32 @@
 
         var toggleBtn = navbar.querySelector(SELECTORS.toggle);
         var mobileMenu = navbar.querySelector(SELECTORS.mobileMenu);
-        var iconOpen = navbar.querySelector(SELECTORS.iconOpen);
-        var iconClose = navbar.querySelector(SELECTORS.iconClose);
+        var toggleIcon = navbar.querySelector(SELECTORS.toggleIcon);
 
         if (!toggleBtn || !mobileMenu) return;
+
+        var labelOpen = toggleBtn.getAttribute('data-label-open') || 'Toggle menu';
+        var labelClose = toggleBtn.getAttribute('data-label-close') || 'Close menu';
+
+        function setIcon(isOpen) {
+            if (!toggleIcon) return;
+            toggleIcon.textContent = isOpen ? 'close' : 'menu';
+        }
 
         function open() {
             mobileMenu.classList.remove('hidden');
             mobileMenu.classList.add('flex');
-            if (iconOpen) iconOpen.classList.add('hidden');
-            if (iconClose) iconClose.classList.remove('hidden');
+            setIcon(true);
+            toggleBtn.setAttribute('aria-expanded', 'true');
+            toggleBtn.setAttribute('aria-label', labelClose);
         }
 
         function close() {
             mobileMenu.classList.add('hidden');
             mobileMenu.classList.remove('flex');
-            if (iconOpen) iconOpen.classList.remove('hidden');
-            if (iconClose) iconClose.classList.add('hidden');
+            setIcon(false);
+            toggleBtn.setAttribute('aria-expanded', 'false');
+            toggleBtn.setAttribute('aria-label', labelOpen);
         }
 
         function toggle() {

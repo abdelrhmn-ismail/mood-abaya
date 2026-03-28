@@ -32,14 +32,11 @@
         {{-- Sidebar overlay (mobile) --}}
         <div id="sidebar-overlay" class="fixed inset-0 z-20 hidden bg-black/50 md:hidden" aria-hidden="true"></div>
         {{-- Sidebar --}}
-        <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-30 w-64 -translate-x-full transform bg-brand-teal text-white shadow-xl transition-transform duration-200 ease-in-out md:relative md:translate-x-0 md:flex-shrink-0">
-            <div class="flex h-16 items-center justify-between border-b border-brand-teal-dark px-4 md:justify-center">
-                <a href="{{ route('admin.dashboard') }}" class="text-xl font-semibold">{{ site_title() }} Admin</a>
-                <button type="button" id="sidebar-close" class="rounded-lg p-2 hover:bg-brand-teal-dark md:hidden" aria-label="{{ __('Close menu') }}">
-                    <span class="material-icons">close</span>
-                </button>
+        <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-30 w-64 max-w-[85vw] -translate-x-full transform bg-brand-teal text-white shadow-xl transition-transform duration-200 ease-in-out md:relative md:max-w-none md:translate-x-0 md:flex-shrink-0">
+            <div class="flex h-14 items-center justify-center border-b border-brand-teal-dark px-3 sm:h-16 sm:px-4">
+                <a href="{{ route('admin.dashboard') }}" class="truncate text-center text-base font-semibold sm:text-lg md:text-xl">{{ site_title() }} Admin</a>
             </div>
-            <nav class="space-y-1 overflow-y-auto p-4">
+            <nav class="max-h-[calc(100vh-3.5rem)] space-y-1 overflow-y-auto overscroll-contain p-3 sm:max-h-[calc(100vh-4rem)] sm:p-4 md:max-h-none">
                 <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.dashboard') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">dashboard</span> {{ __('Dashboard') }}
                 </a>
@@ -94,36 +91,38 @@
             </nav>
         </aside>
         <div class="flex min-w-0 flex-1 flex-col">
-            <header class="flex h-16 flex-shrink-0 items-center justify-between gap-4 border-b border-slate-200 bg-brand-white px-4 md:px-6">
-                <div class="flex items-center gap-3">
-                    <button type="button" id="sidebar-toggle" class="rounded-lg p-2 text-brand-teal hover:bg-brand-gold/10 md:hidden" aria-label="{{ __('Open menu') }}">
-                        <span class="material-icons">menu</span>
+            <header class="flex min-h-14 flex-shrink-0 flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-brand-white px-3 py-2 sm:min-h-16 sm:gap-3 sm:px-4 md:flex-nowrap md:px-6 md:py-0">
+                <div class="flex min-w-0 flex-1 items-center gap-2 sm:gap-3 md:min-w-0 md:flex-none">
+                    <button type="button" id="sidebar-toggle" class="relative inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg p-0 text-brand-teal hover:bg-brand-gold/10 md:hidden" aria-expanded="false" aria-controls="admin-sidebar" aria-label="{{ __('Open menu') }}" data-label-open="{{ __('Open menu') }}" data-label-close="{{ __('Close menu') }}">
+                        <span class="material-icons absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl leading-none" data-sidebar-icon-open>menu</span>
+                        <span class="material-icons absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 text-2xl leading-none" data-sidebar-icon-close>close</span>
                     </button>
                     @if(!$__env->hasSection('heading') || trim((string) $__env->yieldContent('heading')) !== '')
-                        <h1 class="truncate text-lg font-semibold text-brand-black">@yield('heading', __('Admin'))</h1>
+                        <h1 class="min-w-0 truncate text-base font-semibold text-brand-black sm:text-lg">@yield('heading', __('Admin'))</h1>
                     @endif
                 </div>
-                <div class="flex items-center gap-3">
-                    <a href="{{ url('/') }}" class="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-brand-black transition hover:bg-brand-gold/10 hover:text-brand-teal" target="_blank">
-                        <span class="material-icons text-lg">storefront</span> {{ __('View store') }}
+                <div class="flex w-full flex-wrap items-center justify-end gap-2 sm:w-auto sm:gap-3">
+                    <a href="{{ url('/') }}" title="{{ __('View store') }}" class="inline-flex items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs font-medium text-brand-black transition hover:bg-brand-gold/10 hover:text-brand-teal sm:gap-1.5 sm:px-3 sm:py-2 sm:text-sm" target="_blank" rel="noopener noreferrer">
+                        <span class="material-icons text-base sm:text-lg">storefront</span>
+                        <span class="hidden sm:inline">{{ __('View store') }}</span>
                     </a>
                     <div class="relative">
                         <label for="admin-locale" class="sr-only">{{ __('Language') }}</label>
-                        <select id="admin-locale" class="appearance-none rounded-xl border border-slate-200 bg-slate-50 py-2 text-sm font-medium text-brand-black focus:border-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal/20 {{ app()->getLocale() === 'ar' ? 'pl-8 pr-3' : 'pl-3 pr-8' }}" onchange="window.location.href='{{ url('/locale') }}/'+this.value">
+                        <select id="admin-locale" class="appearance-none rounded-xl border border-slate-200 bg-slate-50 py-1.5 text-xs font-medium text-brand-black focus:border-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal/20 sm:py-2 sm:text-sm {{ app()->getLocale() === 'ar' ? 'pl-7 pr-2 sm:pl-8 sm:pr-3' : 'pl-2 pr-7 sm:pl-3 sm:pr-8' }}" onchange="window.location.href='{{ url('/locale') }}/'+this.value">
                             <option value="en" {{ app()->getLocale() === 'en' ? 'selected' : '' }}>{{ __('English') }}</option>
                             <option value="ar" {{ app()->getLocale() === 'ar' ? 'selected' : '' }}>{{ __('Arabic') }}</option>
                         </select>
-                        <span class="pointer-events-none absolute top-1/2 -translate-y-1/2 text-slate-400 {{ app()->getLocale() === 'ar' ? 'left-2' : 'right-2' }}">
-                            <span class="material-icons text-lg">arrow_drop_down</span>
+                        <span class="pointer-events-none absolute top-1/2 -translate-y-1/2 text-slate-400 {{ app()->getLocale() === 'ar' ? 'left-1.5 sm:left-2' : 'right-1.5 sm:right-2' }}">
+                            <span class="material-icons text-base sm:text-lg">arrow_drop_down</span>
                         </span>
                     </div>
                     <form method="POST" action="{{ route('logout') }}" class="inline">
                         @csrf
-                        <button type="submit" class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-brand-black transition hover:bg-brand-gold/10 hover:text-brand-teal">{{ __('Logout') }}</button>
+                        <button type="submit" class="rounded-xl border border-slate-200 bg-slate-50 px-2 py-1.5 text-xs font-medium text-brand-black transition hover:bg-brand-gold/10 hover:text-brand-teal sm:px-3 sm:py-2 sm:text-sm">{{ __('Logout') }}</button>
                     </form>
                 </div>
             </header>
-            <main class="min-w-0 flex-1 overflow-auto p-4 md:p-6">
+            <main class="min-w-0 flex-1 overflow-auto p-3 sm:p-4 md:p-6">
                 @if(session('success'))
                     <div class="mb-4 rounded-lg bg-green-100 p-4 text-green-800" role="alert">{{ __(session('success')) }}</div>
                 @endif

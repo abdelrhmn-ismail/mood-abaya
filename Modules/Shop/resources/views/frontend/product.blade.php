@@ -264,26 +264,12 @@
 
                 {{-- You may also like (related) --}}
                 @if(isset($relatedProducts) && $relatedProducts->isNotEmpty())
-                    <div class="mt-14 rounded-2xl border border-slate-200 bg-brand-white p-6 md:p-8">
-                        <h2 class="text-xl font-bold text-brand-black">{{ __('You may also like') }}</h2>
-                        <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                            @foreach($relatedProducts as $related)
-                                <x-frontend.product-card :product="$related" />
-                            @endforeach
-                        </div>
-                    </div>
+                    <x-frontend.product-grid-section :title="__('You may also like')" :products="$relatedProducts" />
                 @endif
 
                 {{-- Recently viewed --}}
                 @if(isset($recentlyViewed) && $recentlyViewed->isNotEmpty())
-                    <div class="mt-14 rounded-2xl border border-slate-200 bg-brand-white p-6 md:p-8">
-                        <h2 class="text-xl font-bold text-brand-black">{{ __('Recently viewed') }}</h2>
-                        <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-                            @foreach($recentlyViewed as $recent)
-                                <x-frontend.product-card :product="$recent" />
-                            @endforeach
-                        </div>
-                    </div>
+                    <x-frontend.product-grid-section :title="__('Recently viewed')" :products="$recentlyViewed" />
                 @endif
             </div>
         </div>

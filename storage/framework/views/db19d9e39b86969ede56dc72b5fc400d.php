@@ -126,9 +126,9 @@
             <?php endif; ?>
         </div>
 
-        <button type="button" class="rounded-xl p-2 text-brand-teal hover:bg-brand-gold/10 md:hidden" aria-label="<?php echo e(__('Toggle menu')); ?>" data-navbar="toggle">
-            <span class="material-icons" data-navbar="icon-open">menu</span>
-            <span class="material-icons hidden" data-navbar="icon-close">close</span>
+        
+        <button type="button" class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-brand-teal hover:bg-brand-gold/10 md:hidden" aria-label="<?php echo e(__('Toggle menu')); ?>" aria-expanded="false" data-navbar="toggle" data-label-open="<?php echo e(__('Toggle menu')); ?>" data-label-close="<?php echo e(__('Close menu')); ?>">
+            <span class="material-icons text-2xl leading-none select-none" data-navbar="toggle-icon" aria-hidden="true">menu</span>
         </button>
     </div>
 
