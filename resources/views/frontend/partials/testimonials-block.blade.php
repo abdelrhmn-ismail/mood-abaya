@@ -10,7 +10,7 @@
                     <p class="mt-2 flex-1 text-brand-black/80">&ldquo;{{ $t->quote }}&rdquo;</p>
                     <footer class="mt-4 flex items-center gap-3">
                         @if($t->photo)
-                            <img src="{{ asset('storage/' . $t->photo) }}" alt="" class="h-12 w-12 rounded-full object-cover">
+                            <img src="{{ get_image_url($t->photo) }}" alt="" class="h-12 w-12 rounded-full object-cover">
                         @else
                             <span class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-teal/10 text-brand-teal">
                                 <span class="material-icons">person</span>

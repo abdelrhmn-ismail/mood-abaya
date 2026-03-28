@@ -5,6 +5,10 @@
 
     RewriteEngine On
 
+    # Send /media/* to Laravel so files are served with response()->file() (avoids 403 when Apache cannot read OS-level permissions on public/media files).
+    RewriteCond %{REQUEST_URI} /media/
+    RewriteRule ^ index.php [L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

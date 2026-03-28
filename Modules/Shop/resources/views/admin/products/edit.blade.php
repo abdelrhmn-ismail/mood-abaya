@@ -54,14 +54,14 @@
     @include('components.admin.form-field', ['name' => 'og_image', 'label' => __('OG image URL'), 'type' => 'text', 'value' => old('og_image', $product->og_image), 'attributes' => ['placeholder' => 'https://']])
     @include('components.admin.form-field', ['name' => 'price', 'label' => __('Price (SAR)'), 'type' => 'number', 'value' => old('price', $product->price), 'required' => true, 'attributes' => ['step' => '0.01', 'min' => 0]])
     @include('components.admin.form-field', ['name' => 'compare_at_price', 'label' => __('Compare at price (SAR)'), 'type' => 'number', 'value' => old('compare_at_price', $product->compare_at_price), 'attributes' => ['step' => '0.01', 'min' => 0, 'placeholder' => __('Original price for discount display')]])
-    @include('components.admin.form-field', ['name' => 'image', 'label' => __('Main image'), 'type' => 'file', 'value' => '', 'attributes' => ['accept' => 'image/*', 'current' => $product->image, 'current_url' => $product->image ? \Illuminate\Support\Facades\Storage::url($product->image) : '']])
+    @include('components.admin.form-field', ['name' => 'image', 'label' => __('Main image'), 'type' => 'file', 'value' => '', 'attributes' => ['accept' => 'image/*', 'current' => $product->image, 'current_url' => $product->image ? get_image_url($product->image) : '']])
     <div>
         <label class="mb-2 block text-sm font-medium text-gray-700">{{ __('Gallery images') }}</label>
         @if($product->images->isNotEmpty())
             <div class="mb-3 flex flex-wrap gap-3">
                 @foreach($product->images as $img)
                     <div class="relative inline-block">
-                        <img src="{{ \Illuminate\Support\Facades\Storage::url($img->image) }}" alt="" class="h-24 w-24 rounded border object-cover">
+                        <img src="{{ get_image_url($img->image) }}" alt="" class="h-24 w-24 rounded border object-cover">
                         <label class="absolute right-1 top-1 flex items-center gap-1 rounded bg-red-100 px-2 py-1 text-xs text-red-700">
                             <input type="checkbox" name="delete_image_ids[]" value="{{ $img->id }}" class="rounded">
                             {{ __('Delete') }}

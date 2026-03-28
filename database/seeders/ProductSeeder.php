@@ -10,7 +10,7 @@ use Illuminate\Database\Seeder;
 
 /**
  * Seeds only the Mood Abaya catalog products defined below (EN/AR + SAR prices).
- * Images and videos are imported from `storage/app/seed-assets/product-media/{slug}/` when present
+ * Images and videos are imported from `storage/app/seed-assets/product-media/{slug}/` into `public/media/products/{slug}/` when present
  * (same slug as the product); otherwise minimal PNG placeholders are generated.
  */
 class ProductSeeder extends Seeder

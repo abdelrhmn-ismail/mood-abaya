@@ -13,7 +13,7 @@
     if ($setting) {
         $val = \App\Models\Setting::get($setting, '');
         if ($val) {
-            $image = str_starts_with($val, 'http') ? $val : \Illuminate\Support\Facades\Storage::url($val);
+            $image = get_image_url($val) ?? $val;
         }
     }
 @endphp

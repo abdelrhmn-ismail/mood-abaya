@@ -36,7 +36,7 @@
         @endforeach
     </div>
     @include('components.admin.form-field', ['name' => 'slug', 'label' => __('Slug'), 'type' => 'text', 'value' => old('slug', $category->slug)])
-    @include('components.admin.form-field', ['name' => 'image', 'label' => __('Image'), 'type' => 'file', 'value' => '', 'attributes' => ['accept' => 'image/*', 'current' => $category->image, 'current_url' => $category->image ? \Illuminate\Support\Facades\Storage::url($category->image) : '']])
+    @include('components.admin.form-field', ['name' => 'image', 'label' => __('Image'), 'type' => 'file', 'value' => '', 'attributes' => ['accept' => 'image/*', 'current' => $category->image, 'current_url' => $category->image ? get_image_url($category->image) : '']])
     @include('components.admin.form-field', ['name' => 'sort_order', 'label' => __('Sort order'), 'type' => 'number', 'value' => old('sort_order', $category->sort_order), 'attributes' => ['min' => 0]])
     @include('components.admin.form-field', ['name' => 'active', 'label' => '', 'type' => 'checkbox', 'value' => $category->active, 'attributes' => ['help' => __('Active')]])
     @include('components.admin.form-actions', [

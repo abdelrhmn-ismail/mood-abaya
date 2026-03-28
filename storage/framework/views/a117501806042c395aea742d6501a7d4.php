@@ -11,7 +11,7 @@
             </button>
             <div class="max-h-[90vh] overflow-y-auto p-6">
                 <?php if($img = trim(\App\Models\Setting::get('home_popup_image', ''))): ?>
-                    <?php $imgUrl = str_starts_with($img, 'http') ? $img : \Illuminate\Support\Facades\Storage::url($img); ?>
+                    <?php $imgUrl = get_image_url($img) ?? $img; ?>
                     <div class="-mx-6 -mt-6 mb-4">
                         <img src="<?php echo e($imgUrl); ?>" alt="" class="h-48 w-full object-cover" loading="lazy">
                     </div>

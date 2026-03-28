@@ -86,7 +86,7 @@
                             <span class="material-icons">attach_file</span>
                         </span>
                         <div class="min-w-0 flex-1">
-                            <a href="{{ \Illuminate\Support\Facades\Storage::url($payment->proof_path) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-sm font-medium text-brand-teal hover:text-brand-teal-dark">
+                            <a href="{{ public_media_url($payment->proof_path) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-sm font-medium text-brand-teal hover:text-brand-teal-dark">
                                 <span class="material-icons text-lg">open_in_new</span> {{ __('View proof') }}
                             </a>
                         </div>

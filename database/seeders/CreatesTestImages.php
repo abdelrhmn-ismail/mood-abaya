@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 trait CreatesTestImages
 {
@@ -17,12 +17,14 @@ trait CreatesTestImages
     }
 
     /**
-     * Store a placeholder image in the given directory and return the path (e.g. "categories/abayas.jpg").
+     * Store a placeholder under public/media and return the path (e.g. "media/categories/foo.png").
      */
     protected function createTestImage(string $directory, string $filename): string
     {
-        $path = $directory . '/' . $filename . '.png';
-        Storage::disk('public')->put($path, self::minimalPng());
+        $path = 'media/'.$directory.'/'.$filename.'.png';
+        $full = public_path($path);
+        File::makeDirectory(dirname($full), 0755, true, true);
+        File::put($full, self::minimalPng());
 
         return $path;
     }

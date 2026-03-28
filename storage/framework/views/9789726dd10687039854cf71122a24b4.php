@@ -43,7 +43,7 @@ unset($__defined_vars, $__key, $__value); ?>
         <?php else: ?>
             <div class="relative aspect-square w-full shrink-0 overflow-hidden bg-slate-100">
                 <?php $__currentLoopData = $cardImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <img src="<?php echo e(asset('storage/' . $item->image)); ?>" alt="<?php echo e($product->name); ?>"
+                    <img src="<?php echo e(get_image_url($item->image)); ?>" alt="<?php echo e($product->name); ?>"
                          class="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105 <?php echo e($index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'); ?>"
                          :class="active === <?php echo e($index); ?> ? 'opacity-100 z-10' : 'opacity-0 z-0'"
                          loading="lazy">

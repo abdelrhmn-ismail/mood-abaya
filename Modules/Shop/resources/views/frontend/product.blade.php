@@ -3,7 +3,7 @@
 @section('title', ($product->meta_title ?: $product->name) . ' – ' . site_title())
 @section('description', $product->meta_description ?: Str::limit(strip_tags($product->description ?? ''), 160))
 @section('meta_keywords', $product->meta_keywords ?? '')
-@section('og_image', $product->og_image ? (str_starts_with($product->og_image, 'http') ? $product->og_image : asset($product->og_image)) : '')
+@section('og_image', get_image_url($product->og_image) ?? '')
 
 @push('scripts')
     <script type="application/ld+json">
@@ -43,7 +43,7 @@
                             @else
                                 <div class="relative aspect-square w-full bg-slate-100">
                                     @foreach($displayImages as $index => $item)
-                                        <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $product->name }}"
+                                        <img src="{{ get_image_url($item->image) }}" alt="{{ $product->name }}"
                                              class="absolute inset-0 h-full w-full object-cover transition-opacity duration-300 {{ $index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' }}"
                                              :class="active === {{ $index }} ? 'opacity-100 z-10' : 'opacity-0 z-0'">
                                     @endforeach
@@ -55,7 +55,7 @@
                                                     :class="active === {{ $index }} ? 'border-brand-teal ring-1 ring-brand-teal' : 'border-slate-200 hover:border-slate-300'"
                                                     @@click="active = {{ $index }}"
                                                     aria-label="{{ __('Image') }} {{ $index + 1 }}">
-                                                <img src="{{ asset('storage/' . $item->image) }}" alt="" class="h-full w-full object-cover">
+                                                <img src="{{ get_image_url($item->image) }}" alt="" class="h-full w-full object-cover">
                                             </button>
                                         @endforeach
                                     </div>
@@ -74,8 +74,8 @@
                             <div class="overflow-hidden rounded-2xl border border-slate-200 bg-black shadow-sm">
                                 <p class="border-b border-slate-800 bg-slate-900 px-4 py-2 text-sm font-medium text-white">{{ __('Product video') }}</p>
                                 <video class="aspect-video w-full object-contain" controls playsinline preload="metadata"
-                                       @if($displayImages->isNotEmpty()) poster="{{ asset('storage/' . $displayImages->first()->image) }}" @endif>
-                                    <source src="{{ asset('storage/' . $product->video) }}" type="{{ $videoMime }}">
+                                       @if($displayImages->isNotEmpty()) poster="{{ get_image_url($displayImages->first()->image) }}" @endif>
+                                    <source src="{{ public_media_url($product->video) }}" type="{{ $videoMime }}">
                                     {{ __('Your browser does not support the video tag.') }}
                                 </video>
                             </div>

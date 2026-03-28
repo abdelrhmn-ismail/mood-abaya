@@ -1,7 +1,7 @@
 <?php $__env->startSection('title', ($product->meta_title ?: $product->name) . ' – ' . site_title()); ?>
 <?php $__env->startSection('description', $product->meta_description ?: Str::limit(strip_tags($product->description ?? ''), 160)); ?>
 <?php $__env->startSection('meta_keywords', $product->meta_keywords ?? ''); ?>
-<?php $__env->startSection('og_image', $product->og_image ? (str_starts_with($product->og_image, 'http') ? $product->og_image : asset($product->og_image)) : ''); ?>
+<?php $__env->startSection('og_image', get_image_url($product->og_image) ?? ''); ?>
 
 <?php $__env->startPush('scripts'); ?>
     <script type="application/ld+json">
@@ -41,7 +41,7 @@
                             <?php else: ?>
                                 <div class="relative aspect-square w-full bg-slate-100">
                                     <?php $__currentLoopData = $displayImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <img src="<?php echo e(asset('storage/' . $item->image)); ?>" alt="<?php echo e($product->name); ?>"
+                                        <img src="<?php echo e(get_image_url($item->image)); ?>" alt="<?php echo e($product->name); ?>"
                                              class="absolute inset-0 h-full w-full object-cover transition-opacity duration-300 <?php echo e($index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'); ?>"
                                              :class="active === <?php echo e($index); ?> ? 'opacity-100 z-10' : 'opacity-0 z-0'">
                                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -53,7 +53,7 @@
                                                     :class="active === <?php echo e($index); ?> ? 'border-brand-teal ring-1 ring-brand-teal' : 'border-slate-200 hover:border-slate-300'"
                                                     @click="active = <?php echo e($index); ?>"
                                                     aria-label="<?php echo e(__('Image')); ?> <?php echo e($index + 1); ?>">
-                                                <img src="<?php echo e(asset('storage/' . $item->image)); ?>" alt="" class="h-full w-full object-cover">
+                                                <img src="<?php echo e(get_image_url($item->image)); ?>" alt="" class="h-full w-full object-cover">
                                             </button>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </div>
@@ -72,8 +72,8 @@
                             <div class="overflow-hidden rounded-2xl border border-slate-200 bg-black shadow-sm">
                                 <p class="border-b border-slate-800 bg-slate-900 px-4 py-2 text-sm font-medium text-white"><?php echo e(__('Product video')); ?></p>
                                 <video class="aspect-video w-full object-contain" controls playsinline preload="metadata"
-                                       <?php if($displayImages->isNotEmpty()): ?> poster="<?php echo e(asset('storage/' . $displayImages->first()->image)); ?>" <?php endif; ?>>
-                                    <source src="<?php echo e(asset('storage/' . $product->video)); ?>" type="<?php echo e($videoMime); ?>">
+                                       <?php if($displayImages->isNotEmpty()): ?> poster="<?php echo e(get_image_url($displayImages->first()->image)); ?>" <?php endif; ?>>
+                                    <source src="<?php echo e(public_media_url($product->video)); ?>" type="<?php echo e($videoMime); ?>">
                                     <?php echo e(__('Your browser does not support the video tag.')); ?>
 
                                 </video>

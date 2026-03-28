@@ -17,7 +17,7 @@
             <article class="rounded-2xl border border-slate-200 bg-brand-white shadow-sm">
                 @if($post->image)
                     <div class="aspect-video w-full overflow-hidden rounded-t-2xl">
-                        <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="h-full w-full object-cover" loading="lazy">
+                        <img src="{{ get_image_url($post->image) }}" alt="{{ $post->title }}" class="h-full w-full object-cover" loading="lazy">
                     </div>
                 @endif
                 <div class="p-6 md:p-8">

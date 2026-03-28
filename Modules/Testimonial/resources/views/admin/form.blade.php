@@ -22,7 +22,7 @@
     'attributes' => [
         'accept' => 'image/*',
         'current' => $testimonial?->photo,
-        'current_url' => $testimonial?->photo ? asset('storage/' . $testimonial->photo) : '',
+        'current_url' => $testimonial?->photo ? get_image_url($testimonial->photo) : '',
     ],
 ])
 @include('components.admin.form-field', [

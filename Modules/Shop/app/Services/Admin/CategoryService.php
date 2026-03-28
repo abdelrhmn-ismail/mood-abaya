@@ -69,7 +69,7 @@ class CategoryService
         $data['slug'] = $data['slug'] ?: Str::slug($nameForSlug);
         $data['slug'] = $this->ensureUniqueSlug($data['slug']);
         if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
-            $data['image'] = $data['image']->store('categories', 'public');
+            $data['image'] = upload_image($data['image'], 'categories');
         } else {
             unset($data['image']);
         }
@@ -94,7 +94,7 @@ class CategoryService
             $data['slug'] = $this->ensureUniqueSlug($data['slug'], $category->id);
         }
         if (isset($data['image']) && $data['image'] instanceof UploadedFile) {
-            $data['image'] = $data['image']->store('categories', 'public');
+            $data['image'] = upload_image($data['image'], 'categories');
         } else {
             unset($data['image']);
         }

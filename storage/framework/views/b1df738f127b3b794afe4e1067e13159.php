@@ -4,10 +4,7 @@
 <?php $__env->startSection('content'); ?>
     <?php
         $heroRaw = fn ($key, $default) => \App\Models\Setting::get($key, $default);
-        $heroUrl = function ($val) {
-            if (empty($val)) return $val;
-            return str_starts_with($val, 'http') ? $val : \Illuminate\Support\Facades\Storage::url($val);
-        };
+        $heroUrl = fn ($val) => get_image_url($val) ?? $val;
         $hero1 = $heroUrl($heroRaw('hero_home_1', 'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=1920'));
         $hero2 = $heroUrl($heroRaw('hero_home_2', 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=1920'));
         $hero3 = $heroUrl($heroRaw('hero_home_3', 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1920&q=80'));
@@ -112,7 +109,7 @@
                 <?php $__empty_1 = true; $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <a href="<?php echo e(route('categories.show', $category->slug)); ?>" class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-brand-white shadow-sm transition hover:shadow-xl hover:border-brand-teal/30">
                         <?php if($category->image): ?>
-                            <img src="<?php echo e(asset('storage/' . $category->image)); ?>" alt="<?php echo e($category->name); ?>" class="h-48 w-full object-cover transition duration-300 group-hover:scale-105">
+                            <img src="<?php echo e(get_image_url($category->image)); ?>" alt="<?php echo e($category->name); ?>" class="h-48 w-full object-cover transition duration-300 group-hover:scale-105">
                         <?php else: ?>
                             <div class="flex h-48 w-full items-center justify-center bg-gradient-to-br from-brand-teal/10 to-brand-gold/10">
                                 <span class="material-icons text-6xl text-brand-teal/50">category</span>

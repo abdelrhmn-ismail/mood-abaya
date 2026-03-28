@@ -10,7 +10,7 @@
                     <p class="mt-2 flex-1 text-brand-black/80">&ldquo;<?php echo e($t->quote); ?>&rdquo;</p>
                     <footer class="mt-4 flex items-center gap-3">
                         <?php if($t->photo): ?>
-                            <img src="<?php echo e(asset('storage/' . $t->photo)); ?>" alt="" class="h-12 w-12 rounded-full object-cover">
+                            <img src="<?php echo e(get_image_url($t->photo)); ?>" alt="" class="h-12 w-12 rounded-full object-cover">
                         <?php else: ?>
                             <span class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-teal/10 text-brand-teal">
                                 <span class="material-icons">person</span>

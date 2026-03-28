@@ -182,7 +182,7 @@
                     @if($payment->method === 'bank' && $payment->status === 'pending_approval')
                         @if($payment->proof_path)
                             <p class="mt-3">
-                                <a href="{{ \Illuminate\Support\Facades\Storage::url($payment->proof_path) }}" target="_blank" class="inline-flex items-center gap-1 text-sm text-brand-teal hover:text-brand-teal-dark">
+                                <a href="{{ public_media_url($payment->proof_path) }}" target="_blank" class="inline-flex items-center gap-1 text-sm text-brand-teal hover:text-brand-teal-dark">
                                     <span class="material-icons text-lg">attach_file</span> {{ __('View proof') }}
                                 </a>
                             </p>

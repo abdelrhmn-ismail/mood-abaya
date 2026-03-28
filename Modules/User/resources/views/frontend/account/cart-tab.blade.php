@@ -21,7 +21,7 @@
                     <li class="flex flex-col gap-4 py-4 sm:flex-row sm:items-center sm:gap-6">
                         <a href="{{ route('products.show', $product->slug) }}" class="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-slate-100 sm:h-24 sm:w-24">
                             @if($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
+                                <img src="{{ get_image_url($product->image) }}" alt="{{ $product->name }}" class="h-full w-full object-cover">
                             @else
                                 <span class="flex h-full w-full items-center justify-center text-slate-400">
                                     <span class="material-icons text-4xl">inventory_2</span>

@@ -16,7 +16,7 @@
                         <article class="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-brand-white shadow-sm transition hover:shadow-lg">
                             <a href="{{ route('blog.show', $post->slug) }}" class="block aspect-video w-full overflow-hidden bg-slate-100">
                                 @if($post->image)
-                                    <img src="{{ asset('storage/' . $post->image) }}" alt="{{ $post->title }}" class="h-full w-full object-cover transition duration-300 hover:scale-105" loading="lazy">
+                                    <img src="{{ get_image_url($post->image) }}" alt="{{ $post->title }}" class="h-full w-full object-cover transition duration-300 hover:scale-105" loading="lazy">
                                 @else
                                     <span class="flex h-full w-full items-center justify-center text-slate-300">
                                         <span class="material-icons text-6xl">article</span>

@@ -63,7 +63,7 @@
     'attributes' => [
         'accept' => 'image/*',
         'current' => $post?->image,
-        'current_url' => $post?->image ? \Illuminate\Support\Facades\Storage::url($post->image) : '',
+        'current_url' => $post?->image ? get_image_url($post->image) : '',
     ],
 ])
 @include('components.admin.form-field', [

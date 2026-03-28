@@ -40,6 +40,7 @@ return [
 
         'public' => [
             'driver' => 'local',
+            // Legacy: symlink target for `php artisan storage:link`. New uploads use public/media via helpers.
             'root' => public_path('storage'),
             'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
             'visibility' => 'public',

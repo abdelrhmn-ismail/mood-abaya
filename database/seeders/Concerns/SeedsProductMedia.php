@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\File;
 trait SeedsProductMedia
 {
     /**
-     * Expected layout: `storage/app/seed-assets/product-media/{product-slug}/`
-     * with JPG/PNG/WebP images and optional MP4/WebM/MOV videos (recurses into subfolders).
+     * Source assets: `storage/app/seed-assets/product-media/{product-slug}/`
+     * (images/videos; subfolders allowed). Output: `public/media/products/{slug}/`.
      */
     private function productMediaSourceRoot(): string
     {
@@ -64,8 +64,8 @@ trait SeedsProductMedia
     private function copyFileToPublic(string $relBase, string $name, string $src): string
     {
         $ext = strtolower(pathinfo($src, PATHINFO_EXTENSION));
-        $relative = $relBase.'/'.$name.'.'.$ext;
-        $full = storage_path('app/public/'.$relative);
+        $relative = 'media/'.$relBase.'/'.$name.'.'.$ext;
+        $full = public_path($relative);
         File::makeDirectory(dirname($full), 0755, true, true);
         if (! File::copy($src, $full)) {
             throw new \RuntimeException('Failed to copy media file to: '.$full);

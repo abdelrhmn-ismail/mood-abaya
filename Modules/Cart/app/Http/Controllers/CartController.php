@@ -31,22 +31,22 @@ class CartController extends Controller
             $image = $variant?->image ?? $product->image;
 
             return [
-                'id'           => $item->id,
-                'product_id'   => $item->product_id,
+                'id' => $item->id,
+                'product_id' => $item->product_id,
                 'product_name' => $product->name,
                 'product_slug' => $product->slug,
-                'image'        => $image ? asset('storage/' . $image) : null,
+                'image' => $image ? get_image_url($image) : null,
                 'variant_name' => $variant?->getDisplayName(),
-                'quantity'     => $item->quantity,
-                'price'        => (float) $item->getEffectivePrice(),
-                'line_total'   => round($item->getEffectivePrice() * $item->quantity, 2),
+                'quantity' => $item->quantity,
+                'price' => (float) $item->getEffectivePrice(),
+                'line_total' => round($item->getEffectivePrice() * $item->quantity, 2),
             ];
         })->values();
 
         return response()->json([
-            'items'    => $items,
+            'items' => $items,
             'subtotal' => $this->cartService->getTotal(),
-            'count'    => $this->cartService->getItemCount(),
+            'count' => $this->cartService->getItemCount(),
         ]);
     }
 
@@ -59,10 +59,10 @@ class CartController extends Controller
         );
         if ($request->expectsJson() || $request->ajax()) {
             return response()->json([
-                'success'    => true,
-                'message'    => __('Item added to cart.'),
+                'success' => true,
+                'message' => __('Item added to cart.'),
                 'cart_count' => $this->cartService->getItemCount(),
-                'cart'       => $this->getCartPayload(),
+                'cart' => $this->getCartPayload(),
             ]);
         }
 
@@ -76,7 +76,7 @@ class CartController extends Controller
         if ($request->expectsJson() || $request->ajax()) {
             return response()->json([
                 'success' => true,
-                'cart'    => $this->getCartPayload(),
+                'cart' => $this->getCartPayload(),
             ]);
         }
 
@@ -90,7 +90,7 @@ class CartController extends Controller
         if ($request->expectsJson() || $request->ajax()) {
             return response()->json([
                 'success' => true,
-                'cart'    => $this->getCartPayload(),
+                'cart' => $this->getCartPayload(),
             ]);
         }
 
@@ -107,22 +107,22 @@ class CartController extends Controller
             $image = $variant?->image ?? $product->image;
 
             return [
-                'id'           => $item->id,
-                'product_id'   => $item->product_id,
+                'id' => $item->id,
+                'product_id' => $item->product_id,
                 'product_name' => $product->name,
                 'product_slug' => $product->slug,
-                'image'        => $image ? asset('storage/' . $image) : null,
+                'image' => $image ? get_image_url($image) : null,
                 'variant_name' => $variant?->getDisplayName(),
-                'quantity'     => $item->quantity,
-                'price'        => (float) $item->getEffectivePrice(),
-                'line_total'   => round($item->getEffectivePrice() * $item->quantity, 2),
+                'quantity' => $item->quantity,
+                'price' => (float) $item->getEffectivePrice(),
+                'line_total' => round($item->getEffectivePrice() * $item->quantity, 2),
             ];
         })->values();
 
         return [
-            'items'    => $items,
+            'items' => $items,
             'subtotal' => $this->cartService->getTotal(),
-            'count'    => $this->cartService->getItemCount(),
+            'count' => $this->cartService->getItemCount(),
         ];
     }
 }

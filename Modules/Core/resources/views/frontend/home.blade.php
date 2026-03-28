@@ -6,10 +6,7 @@
 @section('content')
     @php
         $heroRaw = fn ($key, $default) => \App\Models\Setting::get($key, $default);
-        $heroUrl = function ($val) {
-            if (empty($val)) return $val;
-            return str_starts_with($val, 'http') ? $val : \Illuminate\Support\Facades\Storage::url($val);
-        };
+        $heroUrl = fn ($val) => get_image_url($val) ?? $val;
         $hero1 = $heroUrl($heroRaw('hero_home_1', 'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=1920'));
         $hero2 = $heroUrl($heroRaw('hero_home_2', 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=1920'));
         $hero3 = $heroUrl($heroRaw('hero_home_3', 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1920&q=80'));
@@ -108,7 +105,7 @@
                 @forelse($categories as $category)
                     <a href="{{ route('categories.show', $category->slug) }}" class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-brand-white shadow-sm transition hover:shadow-xl hover:border-brand-teal/30">
                         @if($category->image)
-                            <img src="{{ asset('storage/' . $category->image) }}" alt="{{ $category->name }}" class="h-48 w-full object-cover transition duration-300 group-hover:scale-105">
+                            <img src="{{ get_image_url($category->image) }}" alt="{{ $category->name }}" class="h-48 w-full object-cover transition duration-300 group-hover:scale-105">
                         @else
                             <div class="flex h-48 w-full items-center justify-center bg-gradient-to-br from-brand-teal/10 to-brand-gold/10">
                                 <span class="material-icons text-6xl text-brand-teal/50">category</span>

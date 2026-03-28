@@ -15,7 +15,7 @@
         @else
             <div class="relative aspect-square w-full shrink-0 overflow-hidden bg-slate-100">
                 @foreach($cardImages as $index => $item)
-                    <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $product->name }}"
+                    <img src="{{ get_image_url($item->image) }}" alt="{{ $product->name }}"
                          class="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-105 {{ $index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' }}"
                          :class="active === {{ $index }} ? 'opacity-100 z-10' : 'opacity-0 z-0'"
                          loading="lazy">

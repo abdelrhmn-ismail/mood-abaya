@@ -20,6 +20,11 @@ class CheckMaintenanceMode
             return $next($request);
         }
 
+        // Public uploads (served via ServePublicMediaController)
+        if ($request->is('media') || $request->is('media/*')) {
+            return $next($request);
+        }
+
         // Allow admin panel (and auth routes so admin can log in)
         if ($request->is('admin') || $request->is('admin/*') || $request->is('login') || $request->is('logout') || $request->is('register')) {
             return $next($request);
