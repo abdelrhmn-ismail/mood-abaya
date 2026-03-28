@@ -36,7 +36,7 @@ class CheckMaintenanceMode
             return $next($request);
         }
 
-        return response()->view('frontend.maintenance', [
+        return response()->view('core::frontend.maintenance', [
             'coming_back_at' => $this->getComingBackAt(),
         ], 503);
     }

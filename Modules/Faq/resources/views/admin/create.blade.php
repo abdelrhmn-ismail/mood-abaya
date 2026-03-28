@@ -5,12 +5,12 @@
 
 @section('content')
 @component('components.admin.card', ['title' => null])
-<form action="{{ route('faq::admin.store') }}" method="POST" class="space-y-6">
+<form action="{{ route('admin.faqs.store') }}" method="POST" class="space-y-6">
     @csrf
     @include('faq::admin.form', ['faq' => null])
     @include('components.admin.form-actions', [
         'submitLabel' => __('Add FAQ'),
-        'cancelUrl' => route('faq::admin.index'),
+        'cancelUrl' => route('admin.faqs.index'),
     ])
 </form>
 @endcomponent

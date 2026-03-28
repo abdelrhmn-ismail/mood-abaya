@@ -7,7 +7,7 @@
 @component('components.admin.card', ['title' => null])
     <p class="mb-4 text-sm text-gray-600">{{ __('Customer quotes shown on the home and about pages.') }}</p>
     <div class="mb-4">
-        <a href="{{ route('testimonial::admin.create') }}" class="inline-flex items-center gap-1.5 rounded-lg bg-brand-teal px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-teal-dark">
+        <a href="{{ route('admin.testimonials.create') }}" class="inline-flex items-center gap-1.5 rounded-lg bg-brand-teal px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-teal-dark">
             <span class="material-icons text-lg">add</span> {{ __('Add testimonial') }}
         </a>
     </div>
@@ -36,8 +36,8 @@
                             @endif
                         </td>
                         <td class="px-4 py-3 text-right">
-                            <a href="{{ route('testimonial::admin.edit', $t) }}" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-brand-teal transition hover:bg-brand-gold/10">{{ __('Edit') }}</a>
-                            <form action="{{ route('testimonial::admin.destroy', $t) }}" method="POST" class="inline-block" onsubmit="return confirm('{{ __('Are you sure you want to delete this testimonial?') }}');">
+                            <a href="{{ route('admin.testimonials.edit', $t) }}" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-brand-teal transition hover:bg-brand-gold/10">{{ __('Edit') }}</a>
+                            <form action="{{ route('admin.testimonials.destroy', $t) }}" method="POST" class="inline-block" onsubmit="return confirm('{{ __('Are you sure you want to delete this testimonial?') }}');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50">{{ __('Delete') }}</button>

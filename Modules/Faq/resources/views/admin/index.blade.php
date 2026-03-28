@@ -8,7 +8,7 @@
     <p class="mb-4 text-sm text-gray-600">{{ __('Manage questions and answers shown on the Contact page.') }}</p>
     <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
         <span class="text-sm text-gray-500">{{ $faqs->count() }} {{ __('items') }}</span>
-        <a href="{{ route('faq::admin.create') }}" class="inline-flex items-center gap-1.5 rounded-lg bg-brand-teal px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-teal-dark">
+        <a href="{{ route('admin.faqs.create') }}" class="inline-flex items-center gap-1.5 rounded-lg bg-brand-teal px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-teal-dark">
             <span class="material-icons text-lg">add</span> {{ __('Add FAQ') }}
         </a>
     </div>
@@ -37,8 +37,8 @@
                             @endif
                         </td>
                         <td class="px-4 py-3 text-right">
-                            <a href="{{ route('faq::admin.edit', $faq) }}" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-brand-teal transition hover:bg-brand-gold/10">{{ __('Edit') }}</a>
-                            <form action="{{ route('faq::admin.destroy', $faq) }}" method="POST" class="inline-block" onsubmit="return confirm('{{ __('Are you sure you want to delete this FAQ?') }}');">
+                            <a href="{{ route('admin.faqs.edit', $faq) }}" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-brand-teal transition hover:bg-brand-gold/10">{{ __('Edit') }}</a>
+                            <form action="{{ route('admin.faqs.destroy', $faq) }}" method="POST" class="inline-block" onsubmit="return confirm('{{ __('Are you sure you want to delete this FAQ?') }}');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition hover:bg-red-50">{{ __('Delete') }}</button>
