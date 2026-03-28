@@ -6,7 +6,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
-    <title><?php echo $__env->yieldContent('title', __('Admin')); ?> - <?php echo e(config('app.name')); ?></title>
+    <?php if(site_favicon_url()): ?>
+    <link rel="icon" href="<?php echo e(site_favicon_url()); ?>">
+    <?php endif; ?>
+    <title><?php echo $__env->yieldContent('title', __('Admin')); ?> - <?php echo e(site_title()); ?></title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +34,7 @@
         
         <aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-30 w-64 -translate-x-full transform bg-brand-teal text-white shadow-xl transition-transform duration-200 ease-in-out md:relative md:translate-x-0 md:flex-shrink-0">
             <div class="flex h-16 items-center justify-between border-b border-brand-teal-dark px-4 md:justify-center">
-                <a href="<?php echo e(route('admin.dashboard')); ?>" class="text-xl font-semibold"><?php echo e(config('app.name')); ?> Admin</a>
+                <a href="<?php echo e(route('admin.dashboard')); ?>" class="text-xl font-semibold"><?php echo e(site_title()); ?> Admin</a>
                 <button type="button" id="sidebar-close" class="rounded-lg p-2 hover:bg-brand-teal-dark md:hidden" aria-label="<?php echo e(__('Close menu')); ?>">
                     <span class="material-icons">close</span>
                 </button>
@@ -59,6 +62,10 @@
                 </a>
                 <a href="<?php echo e(route('admin.payments.index')); ?>" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm <?php echo e(request()->routeIs('admin.payments.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20'); ?>">
                     <span class="material-icons text-lg">payment</span> <?php echo e(__('Payments')); ?>
+
+                </a>
+                <a href="<?php echo e(route('admin.payment-methods.index')); ?>" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm <?php echo e(request()->routeIs('admin.payment-methods.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20'); ?>">
+                    <span class="material-icons text-lg">account_balance</span> <?php echo e(__('Payment methods')); ?>
 
                 </a>
                 <a href="<?php echo e(route('admin.products.index')); ?>" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm <?php echo e(request()->routeIs('admin.products.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20'); ?>">
@@ -136,10 +143,10 @@
             </header>
             <main class="min-w-0 flex-1 overflow-auto p-4 md:p-6">
                 <?php if(session('success')): ?>
-                    <div class="mb-4 rounded-lg bg-green-100 p-4 text-green-800"><?php echo e(session('success')); ?></div>
+                    <div class="mb-4 rounded-lg bg-green-100 p-4 text-green-800" role="alert"><?php echo e(__(session('success'))); ?></div>
                 <?php endif; ?>
                 <?php if(session('error')): ?>
-                    <div class="mb-4 rounded-lg bg-red-100 p-4 text-red-800"><?php echo e(session('error')); ?></div>
+                    <div class="mb-4 rounded-lg bg-red-100 p-4 text-red-800" role="alert"><?php echo e(__(session('error'))); ?></div>
                 <?php endif; ?>
                 <?php echo $__env->yieldContent('content'); ?>
             </main>

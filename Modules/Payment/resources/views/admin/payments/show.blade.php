@@ -12,10 +12,10 @@
             <strong class="text-gray-900">{{ __('Payment') }} #{{ $payment->id }}</strong>
         </span>
         <span class="rounded-full px-3 py-1 text-xs font-medium
-            @if($payment->method === 'bank') bg-brand-gold/30 text-brand-teal
+            @if($payment->status === 'pending_approval') bg-brand-gold/30 text-brand-teal
             @else bg-gray-100 text-gray-800
             @endif">
-            {{ ucfirst($payment->method) }}
+            {{ payment_method_label($payment->method) }}
         </span>
         <span class="rounded-full px-3 py-1 text-xs font-medium
             @if($payment->status === 'paid') bg-green-100 text-green-800
@@ -53,7 +53,7 @@
                     </span>
                     <div class="min-w-0 flex-1">
                         <p class="text-xs font-medium uppercase tracking-wide text-gray-500">{{ __('Method') }}</p>
-                        <p class="mt-0.5 text-sm font-medium text-gray-900">{{ ucfirst($payment->method) }}</p>
+                        <p class="mt-0.5 text-sm font-medium text-gray-900">{{ payment_method_label($payment->method) }}</p>
                     </div>
                 </div>
                 <div class="flex items-start gap-3">
@@ -95,7 +95,11 @@
             @endif
 
             @component('components.admin.card', ['title' => __('Actions')])
-                @if($payment->method === 'cash' && $payment->status !== 'paid')
+                @php
+                    $showMarkPaid = $payment->method === 'cash' && $payment->status !== 'paid';
+                    $showApproveReject = $payment->status === 'pending_approval';
+                @endphp
+                @if($showMarkPaid)
                     <form action="{{ route('admin.payments.markPaid', $payment) }}" method="POST" class="mb-4">
                         @csrf
                         <button type="submit" class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-green-700">
@@ -103,7 +107,7 @@
                         </button>
                     </form>
                 @endif
-                @if($payment->method === 'bank' && $payment->status === 'pending_approval')
+                @if($showApproveReject)
                     <div class="flex flex-wrap gap-3">
                         <form action="{{ route('admin.payments.approve', $payment) }}" method="POST" class="inline">
                             @csrf
@@ -119,7 +123,7 @@
                         </form>
                     </div>
                 @endif
-                @if(($payment->method === 'cash' && $payment->status === 'paid') || ($payment->method === 'bank' && $payment->status !== 'pending_approval'))
+                @if(!$showMarkPaid && !$showApproveReject)
                     <p class="text-sm text-gray-500">{{ __('No actions available.') }}</p>
                 @endif
             @endcomponent

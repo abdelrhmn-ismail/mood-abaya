@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', __($page->page_name) . ' – ' . config('app.name'))
+@section('title', __($page->page_name) . ' – ' . site_title())
 @section('description', __($page->page_name))
 
 @section('content')

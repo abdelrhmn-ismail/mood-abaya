@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', __('Order') . ' ' . $order->order_number . ' – ' . config('app.name'))
+@section('title', __('Order') . ' ' . $order->order_number . ' – ' . site_title())
 @section('description', __('Order details'))
 
 @section('content')
@@ -11,18 +11,18 @@
         <div class="mt-10 space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <p class="text-slate-600"><strong>{{ __('Date') }}:</strong> {{ $order->created_at->format('Y-m-d H:i') }}</p>
             <p class="text-slate-600"><strong>{{ __('Status') }}:</strong> {{ __($order->status) }}</p>
-            <p class="text-slate-600"><strong>{{ __('Payment') }}:</strong> {{ __($order->payment_method) }} – {{ __($order->payment_status) }}</p>
+            <p class="text-slate-600"><strong>{{ __('Payment') }}:</strong> {{ payment_method_label($order->payment_method) }} – {{ __($order->payment_status) }}</p>
 
             <h2 class="mt-6 text-xl font-semibold text-slate-900">{{ __('Items') }}</h2>
             <ul class="divide-y divide-slate-200">
                 @foreach($order->items as $item)
                     <li class="flex justify-between py-3">
                         <span class="text-slate-900">{{ $item->product?->name ?? '-' }} × {{ $item->quantity }}</span>
-                        <span class="text-slate-600">{{ number_format($item->quantity * $item->price, 2) }} SAR</span>
+                        <span class="text-slate-600">{{ number_format($item->quantity * $item->price, 2) }} {{ __('SAR') }}</span>
                     </li>
                 @endforeach
             </ul>
-            <p class="border-t border-slate-200 pt-4 font-semibold text-slate-900">{{ __('Total') }}: {{ number_format($order->total, 2) }} SAR</p>
+            <p class="border-t border-slate-200 pt-4 font-semibold text-slate-900">{{ __('Total') }}: {{ number_format($order->total, 2) }} {{ __('SAR') }}</p>
 
             @if($order->shippings->isNotEmpty())
                 @php $shipping = $order->shippings->first(); @endphp

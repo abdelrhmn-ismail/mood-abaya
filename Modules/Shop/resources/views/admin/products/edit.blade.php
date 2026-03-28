@@ -100,7 +100,7 @@
                         <tr class="border-t border-gray-100">
                             <td class="px-3 py-2 font-mono">{{ $v->sku ?? '—' }}</td>
                             <td class="px-3 py-2">{{ $v->getDisplayName() }}</td>
-                            <td class="px-3 py-2">{{ number_format($v->price, 2) }} SAR</td>
+                            <td class="px-3 py-2">{{ number_format($v->price, 2) }} {{ __('SAR') }}</td>
                             <td class="px-3 py-2">{{ $v->stock }}</td>
                             <td class="px-3 py-2 text-right">
                                 <form action="{{ route('admin.products.variants.destroy', [$product, $v]) }}" method="POST" class="inline" onsubmit="return confirm('{{ __('Remove this variant?') }}');">
@@ -118,7 +118,7 @@
             @csrf
             <div class="min-w-[120px]">
                 <label class="block text-xs font-medium text-gray-600">{{ __('SKU') }}</label>
-                <input type="text" name="sku" class="mt-1 block w-full rounded-lg border border-gray-300 text-sm" placeholder="SKU-M">
+                <input type="text" name="sku" class="mt-1 block w-full rounded-lg border border-gray-300 text-sm" placeholder="{{ __('e.g. SKU-M') }}">
             </div>
             <div class="min-w-[100px]">
                 <label class="block text-xs font-medium text-gray-600">{{ __('Price (SAR)') }} *</label>

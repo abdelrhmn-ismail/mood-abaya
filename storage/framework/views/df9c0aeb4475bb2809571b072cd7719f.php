@@ -1,4 +1,4 @@
-<?php $__env->startSection('title', __('Checkout') . ' – ' . config('app.name')); ?>
+<?php $__env->startSection('title', __('Checkout') . ' – ' . site_title()); ?>
 <?php $__env->startSection('description', __('Checkout')); ?>
 
 <?php $__env->startSection('content'); ?>
@@ -193,17 +193,38 @@ unset($__errorArgs, $__bag); ?>
                 <div class="relative lg:contents">
                     <div class="sticky top-24 z-10 self-start rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
                         <h2 class="text-xl font-semibold text-brand-black"><?php echo e(__('Payment Method')); ?></h2>
+                        <?php
+                            $firstCode = ($paymentMethods ?? collect())->first()?->code ?? 'cash';
+                            $selectedPm = old('payment_method', $firstCode);
+                        ?>
                         <div class="mt-3 space-y-3">
-                            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-300 bg-white p-4 transition has-[:checked]:border-slate-900 has-[:checked]:ring-2 has-[:checked]:ring-slate-900/20">
-                                <input type="radio" name="payment_method" value="cash" <?php echo e(old('payment_method', 'cash') === 'cash' ? 'checked' : ''); ?> class="text-brand-black">
-                                <span class="font-medium text-brand-black"><?php echo e(__('Cash on Delivery')); ?></span>
-                            </label>
-                            <label class="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-300 bg-white p-4 transition has-[:checked]:border-slate-900 has-[:checked]:ring-2 has-[:checked]:ring-slate-900/20">
-                                <input type="radio" name="payment_method" value="bank" <?php echo e(old('payment_method') === 'bank' ? 'checked' : ''); ?> class="text-brand-black" id="pay_bank">
-                                <span class="font-medium text-brand-black"><?php echo e(__('Bank Transfer')); ?></span>
-                            </label>
+                            <?php $__empty_1 = true; $__currentLoopData = $paymentMethods ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pm): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <label class="payment-method-option flex cursor-pointer items-start gap-3 rounded-xl border border-slate-300 bg-white p-4 transition has-[:checked]:border-slate-900 has-[:checked]:ring-2 has-[:checked]:ring-slate-900/20">
+                                    <input type="radio" name="payment_method" value="<?php echo e($pm->code); ?>" id="pay_<?php echo e($pm->code); ?>"
+                                        class="payment-method-radio mt-1 text-brand-black"
+                                        data-requires-proof="<?php echo e($pm->requires_proof ? '1' : '0'); ?>"
+                                        <?php echo e($selectedPm === $pm->code ? 'checked' : ''); ?>>
+                                    <span class="font-medium text-brand-black">
+                                        <?php echo e($pm->nameForLocale()); ?>
+
+                                        <?php if($pm->descriptionForLocale()): ?>
+                                            <span class="mt-1 block text-sm font-normal text-slate-600"><?php echo e($pm->descriptionForLocale()); ?></span>
+                                        <?php endif; ?>
+                                    </span>
+                                </label>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <p class="text-sm text-red-600"><?php echo e(__('No payment methods available.')); ?></p>
+                            <?php endif; ?>
                         </div>
-                        <div id="bank-proof-wrap" class="mt-3 hidden">
+                        <?php $__currentLoopData = $paymentMethods ?? []; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pm): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <?php if($pm->instructionsForLocale()): ?>
+                                <div id="payment-instr-<?php echo e($pm->code); ?>" class="payment-method-instructions mt-3 hidden rounded-xl border border-brand-teal/30 bg-brand-teal/5 p-4 text-left text-sm text-slate-700">
+                                    <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-brand-teal"><?php echo e(__('Payment details')); ?></p>
+                                    <div class="whitespace-pre-wrap text-slate-800"><?php echo nl2br(e($pm->instructionsForLocale())); ?></div>
+                                </div>
+                            <?php endif; ?>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <div id="payment-proof-wrap" class="mt-3 hidden">
                             <label for="proof" class="mb-1 block text-sm font-medium text-slate-700"><?php echo e(__('Upload payment receipt (image or PDF)')); ?> *</label>
                             <input type="file" name="proof" id="proof" accept=".jpg,.jpeg,.png,.pdf" class="block w-full text-sm text-slate-600 file:mr-4 file:rounded-xl file:border-0 file:bg-slate-100 file:px-4 file:py-2 file:text-sm file:font-medium file:text-slate-800">
                             <?php $__errorArgs = ['proof'];
@@ -281,18 +302,22 @@ unset($__errorArgs, $__bag); ?>
 
     <?php $__env->startPush('scripts'); ?>
     <script>
-        document.querySelectorAll('input[name="payment_method"]').forEach(function (radio) {
-            radio.addEventListener('change', function () {
-                document.getElementById('bank-proof-wrap').classList.toggle('hidden', this.value !== 'bank');
-                document.getElementById('proof').required = this.value === 'bank';
-            });
-        });
-        if (document.getElementById('pay_bank')) {
-            if (document.getElementById('pay_bank').checked) {
-                document.getElementById('bank-proof-wrap').classList.remove('hidden');
-                document.getElementById('proof').required = true;
-            }
+        function checkoutPaymentUi() {
+            var selected = document.querySelector('input[name="payment_method"]:checked');
+            var code = selected ? selected.value : '';
+            document.querySelectorAll('.payment-method-instructions').forEach(function (el) { el.classList.add('hidden'); });
+            var instr = document.getElementById('payment-instr-' + code);
+            if (instr) { instr.classList.remove('hidden'); }
+            var proofWrap = document.getElementById('payment-proof-wrap');
+            var proof = document.getElementById('proof');
+            var requiresProof = selected && selected.getAttribute('data-requires-proof') === '1';
+            if (proofWrap) { proofWrap.classList.toggle('hidden', !requiresProof); }
+            if (proof) { proof.required = !!requiresProof; }
         }
+        document.querySelectorAll('input[name="payment_method"]').forEach(function (radio) {
+            radio.addEventListener('change', checkoutPaymentUi);
+        });
+        checkoutPaymentUi();
         // When "Use a saved address" is selected, remove required from hidden "new address" fields so validation doesn't block submit.
         (function () {
             var form = document.querySelector('form[action*="checkout.store"]');

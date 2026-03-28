@@ -25,6 +25,9 @@ class CheckoutController extends Controller
         if ($data['items']->isEmpty()) {
             return redirect()->route('cart')->with('error', __('Your cart is empty.'));
         }
+        if ($data['paymentMethods']->isEmpty()) {
+            return redirect()->route('cart')->with('error', __('No payment methods are available. Please contact us.'));
+        }
 
         return view('order::frontend.checkout', $data);
     }
@@ -34,6 +37,9 @@ class CheckoutController extends Controller
         $data = $this->checkoutService->getCheckoutData();
         if ($data['items']->isEmpty()) {
             return redirect()->route('cart')->with('error', __('Your cart is empty.'));
+        }
+        if ($data['paymentMethods']->isEmpty()) {
+            return redirect()->route('cart')->with('error', __('No payment methods are available. Please contact us.'));
         }
 
         $validated = $request->validated();

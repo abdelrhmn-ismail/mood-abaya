@@ -4,6 +4,7 @@ namespace Modules\Payment\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
+use Modules\Payment\Services\PaymentMethodService;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -34,6 +35,7 @@ class PaymentServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->singleton(PaymentMethodService::class);
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
     }

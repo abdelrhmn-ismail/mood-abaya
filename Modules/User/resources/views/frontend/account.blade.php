@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', __('My Account') . ' – ' . config('app.name'))
+@section('title', __('My Account') . ' – ' . site_title())
 @section('description', __('My Account'))
 
 @section('content')

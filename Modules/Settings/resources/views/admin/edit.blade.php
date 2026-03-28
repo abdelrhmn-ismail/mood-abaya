@@ -36,7 +36,7 @@
             'label' => __('Site name'),
             'type' => 'text',
             'value' => $settings['site_name'] ?? '',
-            'attributes' => ['placeholder' => config('app.name')],
+            'attributes' => ['placeholder' => site_title()],
         ])
         <div class="border-t border-gray-200 pt-6">
             <h3 class="mb-2 text-sm font-medium text-gray-700">{{ __('Titles and labels') }}</h3>
@@ -56,7 +56,7 @@
             'label' => __('Meta title'),
             'type' => 'text',
             'value' => $settings['meta_title'] ?? '',
-            'attributes' => ['placeholder' => config('app.name')],
+            'attributes' => ['placeholder' => site_title()],
         ])
         @include('components.admin.form-field', [
             'name' => 'meta_description',

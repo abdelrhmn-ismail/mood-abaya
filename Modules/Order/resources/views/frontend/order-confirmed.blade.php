@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', __('Order Confirmed') . ' – ' . config('app.name'))
+@section('title', __('Order Confirmed') . ' – ' . site_title())
 @section('description', __('Order Confirmed'))
 
 @section('content')
@@ -15,12 +15,14 @@
                 <h1 class="mt-4 text-3xl font-bold text-slate-900">{{ __('Order Confirmed') }}</h1>
                 <p class="mt-2 text-slate-600">{{ __('Thank you for your order. We will contact you shortly.') }}</p>
                 <p class="mt-4 font-mono text-lg font-semibold text-slate-900">{{ $order->order_number }}</p>
-                <p class="mt-1 text-sm text-slate-500">{{ __('Total') }}: {{ number_format($order->total, 2) }} {{ __('SAR') }} · {{ __('Payment') }}: {{ $order->payment_method === 'bank' ? __('Bank Transfer') : __('Cash on Delivery') }}</p>
+                <p class="mt-1 text-sm text-slate-500">{{ __('Total') }}: {{ number_format($order->total, 2) }} {{ __('SAR') }} · {{ __('Payment') }}: {{ payment_method_label($order->payment_method) }}</p>
 
-                @if($order->payment_method === 'bank')
+                @if($order->payment_status === 'pending_approval')
                     <p class="mt-6 text-sm text-slate-600">{{ __('We have received your payment proof. Our team will confirm and process your order.') }}</p>
-                @else
+                @elseif($order->payment_method === 'cash')
                     <p class="mt-6 text-sm text-slate-600">{{ __('Pay when you receive your order.') }}</p>
+                @else
+                    <p class="mt-6 text-sm text-slate-600">{{ __('Thank you for your order.') }}</p>
                 @endif
 
                 <div class="mt-8 flex flex-wrap justify-center gap-4">

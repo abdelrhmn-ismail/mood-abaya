@@ -5,11 +5,13 @@ namespace Modules\Order\Services;
 use App\Models\BillingAddress;
 use App\Models\Order;
 use App\Models\OrderItem;
-use Modules\Order\Services\ShippingService;
+use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Modules\Cart\Services\CartService;
+use Modules\Order\Services\ShippingService;
 use Modules\Payment\Services\BankPaymentService;
+use Modules\Payment\Services\PaymentMethodService;
 use Modules\Payment\Services\PaymentService;
 
 class CheckoutService
@@ -18,6 +20,7 @@ class CheckoutService
         private CartService $cartService,
         private PaymentService $paymentService,
         private BankPaymentService $bankPaymentService,
+        private PaymentMethodService $paymentMethodService,
         private ShippingService $shippingService
     ) {}
 
@@ -47,20 +50,25 @@ class CheckoutService
             'shippingFreeOver' => $this->shippingService->getFreeOver(),
             'total' => $total,
             'billingAddresses' => $billingAddresses,
+            'paymentMethods' => $this->paymentMethodService->getActiveForCheckout(),
         ];
     }
 
     /** @param array<string, mixed>|null $billingAddress Snapshot to store on order (null = use shipping as billing) */
-    public function placeOrder(array $address, string $paymentMethod, $proofFile = null, ?array $billingAddress = null, float $shippingAmount = 0, ?string $shippingLabel = null): Order
+    public function placeOrder(array $address, string $paymentMethodCode, $proofFile = null, ?array $billingAddress = null, float $shippingAmount = 0, ?string $shippingLabel = null): Order
     {
-        $paymentMethod = $paymentMethod === 'bank' ? 'bank' : 'cash';
+        $method = $this->paymentMethodService->getActiveByCode($paymentMethodCode);
+        if (! $method instanceof PaymentMethod) {
+            throw new \InvalidArgumentException(__('Selected payment method is not available.'));
+        }
+
         $items = $this->cartService->getCart();
         if ($items->isEmpty()) {
             throw new \InvalidArgumentException(__('Your cart is empty.'));
         }
 
         $proofPath = null;
-        if ($paymentMethod === 'bank' && $proofFile) {
+        if ($method->requires_proof && $proofFile) {
             $proofPath = $this->bankPaymentService->storeProof($proofFile);
         }
 
@@ -68,7 +76,10 @@ class CheckoutService
             ? json_encode($billingAddress)
             : null;
 
-        return DB::transaction(function () use ($items, $address, $paymentMethod, $proofPath, $billingSnapshot, $shippingAmount, $shippingLabel) {
+        $code = $method->code;
+        $paymentStatus = $method->requires_admin_approval ? 'pending_approval' : 'pending';
+
+        return DB::transaction(function () use ($items, $address, $code, $method, $proofPath, $billingSnapshot, $shippingAmount, $shippingLabel, $paymentStatus) {
             $orderNumber = $this->generateOrderNumber();
             $subtotal = 0;
 
@@ -76,8 +87,8 @@ class CheckoutService
                 'user_id' => Auth::id(),
                 'order_number' => $orderNumber,
                 'status' => 'pending',
-                'payment_method' => $paymentMethod,
-                'payment_status' => $paymentMethod === 'bank' ? 'pending_approval' : 'pending',
+                'payment_method' => $code,
+                'payment_status' => $paymentStatus,
                 'shipping_address' => is_array($address) ? json_encode($address) : $address,
                 'billing_address' => $billingSnapshot,
                 'notes' => $address['notes'] ?? null,
@@ -101,7 +112,7 @@ class CheckoutService
 
             $order->update(['total' => round($subtotal + $shippingAmount, 2)]);
 
-            $this->paymentService->createPaymentForOrder($order, $paymentMethod, $proofPath);
+            $this->paymentService->createPaymentForOrder($order, $method, $proofPath);
 
             $this->cartService->clearCart();
 

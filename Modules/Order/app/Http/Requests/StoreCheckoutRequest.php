@@ -4,6 +4,7 @@ namespace Modules\Order\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Modules\Payment\Services\PaymentMethodService;
 
 class StoreCheckoutRequest extends FormRequest
 {
@@ -15,11 +16,26 @@ class StoreCheckoutRequest extends FormRequest
     public function rules(): array
     {
         $codes = array_column(config('phone_codes', []), 'code');
+        $activeCodes = app(PaymentMethodService::class)->getActiveCodes();
+        if ($activeCodes === []) {
+            $activeCodes = ['__none__'];
+        }
 
         return [
             'notes' => ['nullable', 'string', 'max:1000'],
-            'payment_method' => ['required', 'in:cash,bank'],
-            'proof' => ['required_if:payment_method,bank', 'nullable', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:5120'],
+            'payment_method' => ['required', Rule::in($activeCodes)],
+            'proof' => [
+                'nullable',
+                'file',
+                'mimes:jpg,jpeg,png,pdf',
+                'max:5120',
+                Rule::requiredIf(function () {
+                    $code = $this->input('payment_method');
+                    $m = app(PaymentMethodService::class)->getActiveByCode($code);
+
+                    return $m && $m->requires_proof;
+                }),
+            ],
             'billing_use' => ['required', 'in:saved,new'],
             'billing_address_id' => [
                 'required_if:billing_use,saved',

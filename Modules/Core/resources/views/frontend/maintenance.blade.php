@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ __('Maintenance') }} – {{ config('app.name') }}</title>
+    <title>{{ __('Maintenance') }} – {{ site_title() }}</title>
     <link rel="stylesheet" href="{{ asset('css/core/tailwind.css') }}">
     <link rel="stylesheet" href="{{ asset('css/core/brand.css') }}">
     @include('components.color-overrides')
@@ -22,7 +22,7 @@
                 {{ __('Coming back at') }} {{ $coming_back_at }}
             </p>
         @endif
-        <p class="mt-8 text-sm text-slate-500">{{ config('app.name') }}</p>
+        <p class="mt-8 text-sm text-slate-500">{{ site_title() }}</p>
     </div>
 </body>
 </html>

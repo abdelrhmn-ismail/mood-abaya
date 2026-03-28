@@ -13,7 +13,7 @@
         $siteMetaDesc = \App\Models\Setting::get('meta_description', '');
         $siteMetaKeywords = \App\Models\Setting::get('meta_keywords', '');
         $siteOgImage = \App\Models\Setting::get('og_image', '');
-        $defaultTitle = $siteMetaTitle ?: config('app.name');
+        $defaultTitle = $siteMetaTitle ?: site_title();
         $defaultDesc = $siteMetaDesc ?: __('Quality products for everyone. Shop with confidence.');
     @endphp
     <title>@yield('title', $defaultTitle)</title>

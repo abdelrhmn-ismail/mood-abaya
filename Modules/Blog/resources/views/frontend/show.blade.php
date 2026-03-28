@@ -1,12 +1,12 @@
 @extends('frontend.layouts.app')
 
-@section('title', ($post->meta_title ?: $post->title) . ' – ' . config('app.name'))
+@section('title', ($post->meta_title ?: $post->title) . ' – ' . site_title())
 @section('description', $post->meta_description ?: Str::limit(strip_tags($post->excerpt ?? $post->body ?? ''), 160))
 
 @section('content')
     <section class="bg-slate-50 py-8 md:py-12">
         <div class="container mx-auto max-w-3xl px-4">
-            <nav class="mb-6 flex flex-wrap items-center gap-1 text-sm text-brand-black/70" aria-label="Breadcrumb">
+            <nav class="mb-6 flex flex-wrap items-center gap-1 text-sm text-brand-black/70" aria-label="{{ __('Breadcrumb') }}">
                 <a href="{{ route('home') }}" class="transition hover:text-brand-teal">{{ site_label('nav_home') }}</a>
                 <span class="material-icons text-base text-brand-black/40">chevron_right</span>
                 <a href="{{ route('blog.index') }}" class="transition hover:text-brand-teal">{{ __('Blog') }}</a>

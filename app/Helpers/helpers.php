@@ -44,6 +44,38 @@ if (!function_exists('site_label')) {
     }
 }
 
+if (!function_exists('site_title')) {
+    /**
+     * Site display name for page titles, admin chrome, and suffixes. Uses Settings site_name, else APP_NAME.
+     */
+    function site_title(): string
+    {
+        try {
+            $v = Setting::get('site_name', '');
+            if ($v !== null && trim((string) $v) !== '') {
+                return trim((string) $v);
+            }
+        } catch (\Throwable) {
+        }
+
+        return (string) config('app.name');
+    }
+}
+
+if (!function_exists('payment_method_label')) {
+    /**
+     * Human-readable payment method name for order receipts (from configured methods).
+     */
+    function payment_method_label(?string $code): string
+    {
+        if ($code === null || $code === '') {
+            return '';
+        }
+
+        return app(\Modules\Payment\Services\PaymentMethodService::class)->labelForCode($code);
+    }
+}
+
 if (!function_exists('site_logo_url')) {
     function site_logo_url(): ?string
     {

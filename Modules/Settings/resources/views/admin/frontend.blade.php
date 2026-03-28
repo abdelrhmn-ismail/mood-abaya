@@ -154,7 +154,7 @@
                             @if($imgUrl)
                                 <p class="mt-2 text-xs font-medium text-slate-600">{{ __('Current image') }}</p>
                                 <div class="mt-1 min-h-[7rem] overflow-hidden rounded-lg border border-gray-200 bg-white hero-preview" data-error-msg="{{ __('Image unavailable or failed to load') }}">
-                                    <img src="{{ $imgUrl }}" alt="" class="h-28 w-full object-cover" loading="lazy" onerror="var el=this.closest('.hero-preview'); if(el){ var msg=el.getAttribute('data-error-msg')||'Image unavailable'; el.innerHTML='<span class=\'flex h-28 items-center justify-center text-xs text-amber-600\'>'+msg+'</span>'; }">
+                                    <img src="{{ $imgUrl }}" alt="" class="h-28 w-full object-cover" loading="lazy" onerror="var el=this.closest('.hero-preview'); if(el){ var msg=el.getAttribute('data-error-msg'); if(msg) el.innerHTML='<span class=\'flex h-28 items-center justify-center text-xs text-amber-600\'>'+msg+'</span>'; }">
                                 </div>
                             @endif
                             <div class="mt-2">
@@ -177,7 +177,7 @@
                             @if($imgUrl)
                                 <p class="mt-2 text-xs font-medium text-slate-600">{{ __('Current image') }}</p>
                                 <div class="mt-1 min-h-[7rem] overflow-hidden rounded-lg border border-gray-200 bg-white hero-preview" data-error-msg="{{ __('Image unavailable or failed to load') }}">
-                                    <img src="{{ $imgUrl }}" alt="" class="h-28 w-full object-cover" loading="lazy" onerror="var el=this.closest('.hero-preview'); if(el){ var msg=el.getAttribute('data-error-msg')||'Image unavailable'; el.innerHTML='<span class=\'flex h-28 items-center justify-center text-xs text-amber-600\'>'+msg+'</span>'; }">
+                                    <img src="{{ $imgUrl }}" alt="" class="h-28 w-full object-cover" loading="lazy" onerror="var el=this.closest('.hero-preview'); if(el){ var msg=el.getAttribute('data-error-msg'); if(msg) el.innerHTML='<span class=\'flex h-28 items-center justify-center text-xs text-amber-600\'>'+msg+'</span>'; }">
                                 </div>
                             @endif
                             <div class="mt-2">
@@ -250,7 +250,7 @@
                 @if($popupImgUrl)
                     <p class="mt-2 text-xs font-medium text-slate-600">{{ __('Current image') }}</p>
                     <div class="mt-1 min-h-[6rem] overflow-hidden rounded-lg border border-gray-200 bg-white hero-preview" data-error-msg="{{ __('Image unavailable or failed to load') }}">
-                        <img src="{{ $popupImgUrl }}" alt="" class="h-24 w-full max-w-xs object-cover" loading="lazy" onerror="var el=this.closest('.hero-preview'); if(el){ var msg=el.getAttribute('data-error-msg')||'Image unavailable'; el.innerHTML='<span class=\'flex h-24 items-center justify-center text-xs text-amber-600\'>'+msg+'</span>'; }">
+                        <img src="{{ $popupImgUrl }}" alt="" class="h-24 w-full max-w-xs object-cover" loading="lazy" onerror="var el=this.closest('.hero-preview'); if(el){ var msg=el.getAttribute('data-error-msg'); if(msg) el.innerHTML='<span class=\'flex h-24 items-center justify-center text-xs text-amber-600\'>'+msg+'</span>'; }">
                     </div>
                 @endif
                 <div class="mt-2">
@@ -319,7 +319,7 @@
         <h2 class="text-lg font-semibold text-gray-900">{{ __('Trust badges') }}</h2>
         <p class="text-sm text-gray-500">{{ __('Optional line shown in footer and checkout, e.g. "Secure payment", "Free shipping over X SAR", "Easy returns".') }}</p>
         @include('components.admin.form-field', ['name' => 'trust_badge_1', 'label' => __('Badge 1'), 'type' => 'text', 'value' => $settings['trust_badge_1'] ?? '', 'attributes' => ['placeholder' => 'e.g. Secure payment']])
-        @include('components.admin.form-field', ['name' => 'trust_badge_2', 'label' => __('Badge 2'), 'type' => 'text', 'value' => $settings['trust_badge_2'] ?? '', 'attributes' => ['placeholder' => 'e.g. Free shipping over 200 SAR']])
+        @include('components.admin.form-field', ['name' => 'trust_badge_2', 'label' => __('Badge 2'), 'type' => 'text', 'value' => $settings['trust_badge_2'] ?? '', 'attributes' => ['placeholder' => __('e.g. Free shipping over 200 SAR')]])
         @include('components.admin.form-field', ['name' => 'trust_badge_3', 'label' => __('Badge 3'), 'type' => 'text', 'value' => $settings['trust_badge_3'] ?? '', 'attributes' => ['placeholder' => 'e.g. Easy returns']])
     </div>
 

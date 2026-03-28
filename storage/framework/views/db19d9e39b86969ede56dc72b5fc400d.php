@@ -126,7 +126,7 @@
             <?php endif; ?>
         </div>
 
-        <button type="button" class="rounded-xl p-2 text-brand-teal hover:bg-brand-gold/10 md:hidden" aria-label="Toggle menu" data-navbar="toggle">
+        <button type="button" class="rounded-xl p-2 text-brand-teal hover:bg-brand-gold/10 md:hidden" aria-label="<?php echo e(__('Toggle menu')); ?>" data-navbar="toggle">
             <span class="material-icons" data-navbar="icon-open">menu</span>
             <span class="material-icons hidden" data-navbar="icon-close">close</span>
         </button>

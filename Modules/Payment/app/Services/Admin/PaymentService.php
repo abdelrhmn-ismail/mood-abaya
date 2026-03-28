@@ -61,7 +61,7 @@ class PaymentService
         $count = 0;
         /** @var Payment $payment */
         foreach (Payment::whereIn('id', $ids)->get() as $payment) {
-            if ($payment->method === 'bank' && $payment->status === 'pending_approval') {
+            if ($payment->status === 'pending_approval') {
                 $this->mainPaymentService->approveBankPayment($payment);
                 $count++;
             }
@@ -74,7 +74,7 @@ class PaymentService
         $count = 0;
         /** @var Payment $payment */
         foreach (Payment::whereIn('id', $ids)->get() as $payment) {
-            if ($payment->method === 'bank' && $payment->status === 'pending_approval') {
+            if ($payment->status === 'pending_approval') {
                 $this->mainPaymentService->rejectBankPayment($payment);
                 $count++;
             }

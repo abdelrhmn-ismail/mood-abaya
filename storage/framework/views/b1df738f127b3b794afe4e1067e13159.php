@@ -1,4 +1,4 @@
-<?php $__env->startSection('title', config('app.name') . ' – ' . __('Shop the Best')); ?>
+<?php $__env->startSection('title', site_title() . ' – ' . __('Shop the Best')); ?>
 <?php $__env->startSection('description', __('Quality products for everyone. Shop with confidence.')); ?>
 
 <?php $__env->startSection('content'); ?>
@@ -22,7 +22,7 @@
         </div>
         <div class="absolute inset-0 bg-gradient-to-t from-brand-black/70 via-brand-teal/40 to-transparent"></div>
         <div class="absolute inset-0 flex flex-col items-center justify-center px-4 text-center text-white">
-            <h1 class="text-4xl font-bold tracking-tight drop-shadow-lg md:text-5xl lg:text-6xl"><?php echo e(__('Welcome to :name', ['name' => config('app.name')])); ?></h1>
+            <h1 class="text-4xl font-bold tracking-tight drop-shadow-lg md:text-5xl lg:text-6xl"><?php echo e(__('Welcome to :name', ['name' => site_title()])); ?></h1>
             <p class="mt-4 max-w-xl text-lg text-white/95 md:text-xl"><?php echo e(__('Quality products for everyone. Shop with confidence.')); ?></p>
             <div class="mt-8 flex flex-wrap justify-center gap-4">
                 <a href="<?php echo e(route('categories')); ?>" class="rounded-xl bg-brand-white px-8 py-3.5 text-sm font-semibold text-brand-teal shadow-lg transition hover:bg-brand-gold hover:text-brand-black">

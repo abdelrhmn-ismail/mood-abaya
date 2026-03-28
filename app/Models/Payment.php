@@ -29,6 +29,11 @@ class Payment extends Model
         return $this->belongsTo(Order::class);
     }
 
+    public function methodDefinition(): BelongsTo
+    {
+        return $this->belongsTo(PaymentMethod::class, 'method', 'code');
+    }
+
     public function approvedByUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'approved_by');

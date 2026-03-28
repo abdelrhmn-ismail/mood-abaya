@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', ($product->meta_title ?: $product->name) . ' – ' . config('app.name'))
+@section('title', ($product->meta_title ?: $product->name) . ' – ' . site_title())
 @section('description', $product->meta_description ?: Str::limit(strip_tags($product->description ?? ''), 160))
 @section('meta_keywords', $product->meta_keywords ?? '')
 @section('og_image', $product->og_image ? (str_starts_with($product->og_image, 'http') ? $product->og_image : asset($product->og_image)) : '')
@@ -22,7 +22,7 @@
     <section class="bg-slate-50 py-8 md:py-12">
         <div class="container mx-auto px-4">
             {{-- Breadcrumb --}}
-            <nav class="mb-6 flex flex-wrap items-center gap-1 text-sm text-brand-black/70" aria-label="Breadcrumb">
+            <nav class="mb-6 flex flex-wrap items-center gap-1 text-sm text-brand-black/70" aria-label="{{ __('Breadcrumb') }}">
                 <a href="{{ route('categories') }}" class="transition hover:text-brand-teal">{{ __('Categories') }}</a>
                 <span class="material-icons text-base text-brand-black/40">chevron_right</span>
                 <a href="{{ route('categories.show', $product->category->slug) }}" class="transition hover:text-brand-teal">{{ $product->category->name }}</a>

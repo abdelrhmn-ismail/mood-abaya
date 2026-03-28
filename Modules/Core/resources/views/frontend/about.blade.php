@@ -1,7 +1,7 @@
 @extends('frontend.layouts.app')
 
-@section('title', __('About Us') . ' – ' . config('app.name'))
-@section('description', __('About us') . ' – ' . config('app.name') . '. ' . __('Quality abayas, jilbabs and hijabs for the modern modest wardrobe.'))
+@section('title', __('About Us') . ' – ' . site_title())
+@section('description', __('About us') . ' – ' . site_title() . '. ' . __('Quality abayas, jilbabs and hijabs for the modern modest wardrobe.'))
 
 @section('content')
     <x-frontend.hero-header :title="__('About Us')" :subtitle="__('Quality abayas, jilbabs and hijabs for the modern modest wardrobe.')" setting="hero_page" />

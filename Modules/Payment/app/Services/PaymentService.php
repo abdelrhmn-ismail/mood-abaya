@@ -4,17 +4,19 @@ namespace Modules\Payment\Services;
 
 use App\Models\Order;
 use App\Models\Payment;
+use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\Auth;
 
 class PaymentService
 {
 
-    public function createPaymentForOrder(Order $order, string $method, ?string $proofPath = null): Payment
+    public function createPaymentForOrder(Order $order, PaymentMethod $method, ?string $proofPath = null): Payment
     {
-        $status = $method === 'bank' ? 'pending_approval' : 'pending';
+        $status = $method->requires_admin_approval ? 'pending_approval' : 'pending';
+
         return Payment::create([
             'order_id' => $order->id,
-            'method' => $method,
+            'method' => $method->code,
             'status' => $status,
             'proof_path' => $proofPath,
         ]);

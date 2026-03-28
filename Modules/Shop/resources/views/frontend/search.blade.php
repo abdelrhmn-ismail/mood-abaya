@@ -1,6 +1,6 @@
 @extends('frontend.layouts.app')
 
-@section('title', ($q ? __('Search results') . ': ' . $q : __('Search')) . ' – ' . config('app.name'))
+@section('title', ($q ? __('Search results') . ': ' . $q : __('Search')) . ' – ' . site_title())
 @section('description', $q ? __('Search results for') . ' ' . $q : __('Search products'))
 
 @section('content')

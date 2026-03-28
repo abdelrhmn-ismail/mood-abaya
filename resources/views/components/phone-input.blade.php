@@ -90,7 +90,7 @@
                id="{{ $id }}_number"
                value="{{ $currentNumber }}"
                {{ $required ? 'required' : '' }}
-               placeholder="5xxxxxxxx"
+               placeholder="{{ __('Phone number example') }}"
                class="block w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-slate-900 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/20 {{ $inputClass }}"
                {{ $attributes->except(['class', 'inputClass'])->merge([]) }}>
     </div>

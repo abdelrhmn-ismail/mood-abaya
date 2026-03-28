@@ -34,7 +34,7 @@ class PaymentController
 
     public function approve(Payment $payment): RedirectResponse
     {
-        if ($payment->method !== 'bank' || $payment->status !== 'pending_approval') {
+        if ($payment->status !== 'pending_approval') {
             return redirect()->back()->with('error', __('Invalid payment for approval.'));
         }
         $this->paymentService->approveBankPayment($payment);
@@ -44,7 +44,7 @@ class PaymentController
 
     public function reject(Payment $payment): RedirectResponse
     {
-        if ($payment->method !== 'bank' || $payment->status !== 'pending_approval') {
+        if ($payment->status !== 'pending_approval') {
             return redirect()->back()->with('error', __('Invalid payment for rejection.'));
         }
         $this->paymentService->rejectBankPayment($payment);

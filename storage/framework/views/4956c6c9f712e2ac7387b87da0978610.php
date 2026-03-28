@@ -4,7 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
-    <title><?php echo e(config('app.name')); ?></title>
+    <?php if(site_favicon_url()): ?>
+    <link rel="icon" href="<?php echo e(site_favicon_url()); ?>">
+    <?php endif; ?>
+    <title><?php echo e(site_title()); ?></title>
     
     <link rel="stylesheet" href="<?php echo e(asset('css/core/tailwind.css')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('css/core/brand.css')); ?>">

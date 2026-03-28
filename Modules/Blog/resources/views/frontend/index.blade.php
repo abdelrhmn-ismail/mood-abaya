@@ -1,7 +1,7 @@
 @extends('frontend.layouts.app')
 
-@section('title', __('Blog') . ' – ' . config('app.name'))
-@section('description', __('News and updates from') . ' ' . config('app.name'))
+@section('title', __('Blog') . ' – ' . site_title())
+@section('description', __('News and updates from') . ' ' . site_title())
 
 @section('content')
     <x-frontend.hero-header :title="__('Blog')" :subtitle="__('News and announcements')" setting="hero_page" />

@@ -1,4 +1,4 @@
-<?php $__env->startSection('title', __('My Account') . ' – ' . config('app.name')); ?>
+<?php $__env->startSection('title', __('My Account') . ' – ' . site_title()); ?>
 <?php $__env->startSection('description', __('My Account')); ?>
 
 <?php $__env->startSection('content'); ?>
