@@ -25,9 +25,20 @@ class ServePublicMediaController extends Controller
         $full = $mediaRoot.DIRECTORY_SEPARATOR.str_replace('/', DIRECTORY_SEPARATOR, $relative);
 
         $baseReal = realpath($mediaRoot);
-        $fileReal = realpath($full);
+        if ($baseReal === false || ! is_dir($baseReal)) {
+            abort(404);
+        }
 
-        if ($baseReal === false || $fileReal === false || ! str_starts_with($fileReal, $baseReal) || ! is_file($fileReal)) {
+        $fileReal = realpath($full);
+        if ($fileReal === false || ! is_file($fileReal)) {
+            abort(404);
+        }
+
+        if (! str_starts_with($fileReal, $baseReal)) {
+            abort(404);
+        }
+
+        if (! is_readable($fileReal)) {
             abort(404);
         }
 

@@ -5,8 +5,10 @@
 
     RewriteEngine On
 
-    # Send /media/* to Laravel so files are served with response()->file() (avoids 403 when Apache cannot read OS-level permissions on public/media files).
-    RewriteCond %{REQUEST_URI} /media/
+    # Prefer serving real files under public/media as static assets (fast, reliable on production).
+    # Only send to Laravel when the path is missing (dev/permissions fallback via ServePublicMediaController).
+    RewriteCond %{REQUEST_URI} ^/media/
+    RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 
     # Handle Authorization Header
