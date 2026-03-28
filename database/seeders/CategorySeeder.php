@@ -13,29 +13,38 @@ class CategorySeeder extends Seeder
     {
         $categories = [
             [
-                'name' => ['en' => 'Abayas', 'ar' => 'عبايات'],
-                'slug' => 'abayas',
+                'name' => [
+                    'en' => 'Luxury Winter Abayas',
+                    'ar' => 'عبايات شتوية فاخرة',
+                ],
+                'slug' => 'luxury-winter-abayas',
                 'description' => [
-                    'en' => 'Elegant abayas for every occasion. Wide cuts, crepe, chiffon, lace details and back pleats—modest and stylish.',
-                    'ar' => 'عبايات أنيقة لكل مناسبة. قصات واسعة، كريب، شيفون، تفاصيل دانتيل وكسرات خلفية—محتشمة وأنيقة.',
+                    'en' => 'Warm fabrics, luxury feel, and winter-ready designs. Includes suede & fur abayas, heavy crepe winter styles, and velvet varieties.',
+                    'ar' => 'خامات دافئة وإحساس بالفخامة وتصاميم مناسبة للشتاء. تشمل عبايات الشامواه والفرو، عبايات كريب شتوية ثقيلة، وأنواع المخمل.',
                 ],
                 'sort_order' => 1,
             ],
             [
-                'name' => ['en' => 'Jilbabs', 'ar' => 'جلابيب'],
-                'slug' => 'jilbabs',
+                'name' => [
+                    'en' => 'Evening & Occasion Abayas',
+                    'ar' => 'عبايات مناسبات وسهرات',
+                ],
+                'slug' => 'evening-occasion-abayas',
                 'description' => [
-                    'en' => 'Comfortable jilbabs for daily wear and occasions. Soft fabrics and relaxed fits.',
-                    'ar' => 'جلابيب مريحة للارتداء اليومي والمناسبات. أقمشة ناعمة وقصات مريحة.',
+                    'en' => 'Elegant pieces for occasions, evenings, and formal looks. Velvet with shawl, embellishments, and pearl details.',
+                    'ar' => 'قطع أنيقة للمناسبات والسهرات والإطلالات الرسمية. مخمل مع شال، تزيينات، وتفاصيل لؤلؤ.',
                 ],
                 'sort_order' => 2,
             ],
             [
-                'name' => ['en' => 'Hijabs', 'ar' => 'حجاب'],
-                'slug' => 'hijabs',
+                'name' => [
+                    'en' => 'Ramadan & Oriental Collection',
+                    'ar' => 'تشكيلة رمضان والقطع الشرقية',
+                ],
+                'slug' => 'ramadan-oriental-collection',
                 'description' => [
-                    'en' => 'Quality hijabs and scarves. Jersey, chiffon and premium fabrics for a polished look.',
-                    'ar' => 'حجاب وشارات عالية الجودة. جيرسي وشيفون وأقمشة مميزة لإطلالة مصقولة.',
+                    'en' => 'Designs with a Ramadan spirit and an oriental touch—perfect for gatherings. Ramadan abayas, occasion dresses, and makhawar.',
+                    'ar' => 'موديلات بروح رمضانية ولمسة شرقية مناسبة للتجمعات. عبايات رمضانية، فساتين مناسبات، ومخاور.',
                 ],
                 'sort_order' => 3,
             ],

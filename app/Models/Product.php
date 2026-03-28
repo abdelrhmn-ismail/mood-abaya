@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use Spatie\Translatable\HasTranslations;
 
 class Product extends Model
@@ -29,6 +30,7 @@ class Product extends Model
         'price',
         'compare_at_price',
         'image',
+        'video',
         'stock',
         'min_order_qty',
         'max_order_qty',
@@ -61,7 +63,7 @@ class Product extends Model
     /** Discount percentage (0–100), or null if no discount. */
     public function discountPercent(): ?int
     {
-        if (!$this->hasDiscount()) {
+        if (! $this->hasDiscount()) {
             return null;
         }
         $compare = (float) $this->compare_at_price;
@@ -81,7 +83,7 @@ class Product extends Model
     }
 
     /** All images for display: main image first, then gallery images. */
-    public function getDisplayImages(): \Illuminate\Support\Collection
+    public function getDisplayImages(): Collection
     {
         $list = collect();
         if ($this->image) {
@@ -90,6 +92,7 @@ class Product extends Model
         foreach ($this->images as $img) {
             $list->push((object) ['image' => $img->image, 'is_main' => false]);
         }
+
         return $list->isEmpty() ? collect() : $list;
     }
 
@@ -97,6 +100,7 @@ class Product extends Model
     public function getFirstImageAttribute(): ?string
     {
         $first = $this->getDisplayImages()->first();
+
         return $first ? $first->image : null;
     }
 
@@ -118,6 +122,7 @@ class Product extends Model
         if (! $first || empty($first->attributes) || ! is_array($first->attributes)) {
             return [];
         }
+
         return array_keys($first->attributes);
     }
 
@@ -132,6 +137,7 @@ class Product extends Model
                 return $v;
             }
         }
+
         return null;
     }
 
@@ -144,6 +150,7 @@ class Product extends Model
     public function averageRating(): ?float
     {
         $avg = $this->reviews()->where('is_visible', true)->avg('rating');
+
         return $avg !== null ? round((float) $avg, 1) : null;
     }
 

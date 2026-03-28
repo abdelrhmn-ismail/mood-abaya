@@ -10,7 +10,7 @@
         };
         $hero1 = $heroUrl($heroRaw('hero_home_1', 'https://images.unsplash.com/photo-1558171813-4c088753af8f?w=1920'));
         $hero2 = $heroUrl($heroRaw('hero_home_2', 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=1920'));
-        $hero3 = $heroUrl($heroRaw('hero_home_3', 'https://images.unsplash.com/photo-1583391733982-1cfec2046952?w=1920'));
+        $hero3 = $heroUrl($heroRaw('hero_home_3', 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=1920&q=80'));
     ?>
 
     

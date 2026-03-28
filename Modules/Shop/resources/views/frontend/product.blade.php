@@ -32,33 +32,53 @@
 
             <div class="mx-auto max-w-6xl">
                 <div class="grid gap-10 lg:grid-cols-2 lg:gap-14">
-                    {{-- Image gallery --}}
+                    {{-- Image gallery + optional product video --}}
                     @php $displayImages = $product->getDisplayImages(); @endphp
-                    <div class="overflow-hidden rounded-2xl border border-slate-200 bg-brand-white shadow-sm" x-data="{ active: 0 }">
-                        @if($displayImages->isEmpty())
-                            <div class="flex aspect-square w-full items-center justify-center bg-slate-100">
-                                <span class="material-icons text-8xl text-slate-300">inventory_2</span>
-                            </div>
-                        @else
-                            <div class="relative aspect-square w-full bg-slate-100">
-                                @foreach($displayImages as $index => $item)
-                                    <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $product->name }}"
-                                         class="absolute inset-0 h-full w-full object-cover transition-opacity duration-300 {{ $index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' }}"
-                                         :class="active === {{ $index }} ? 'opacity-100 z-10' : 'opacity-0 z-0'">
-                                @endforeach
-                            </div>
-                            @if($displayImages->count() > 1)
-                                <div class="flex flex-wrap justify-center gap-2 border-t border-slate-100 bg-slate-50/50 p-3">
+                    <div class="space-y-4">
+                        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-brand-white shadow-sm" x-data="{ active: 0 }">
+                            @if($displayImages->isEmpty())
+                                <div class="flex aspect-square w-full items-center justify-center bg-slate-100">
+                                    <span class="material-icons text-8xl text-slate-300">inventory_2</span>
+                                </div>
+                            @else
+                                <div class="relative aspect-square w-full bg-slate-100">
                                     @foreach($displayImages as $index => $item)
-                                        <button type="button" class="h-14 w-14 shrink-0 overflow-hidden rounded-lg border-2 transition focus:ring-2 focus:ring-brand-teal focus:ring-offset-2"
-                                                :class="active === {{ $index }} ? 'border-brand-teal ring-1 ring-brand-teal' : 'border-slate-200 hover:border-slate-300'"
-                                                @@click="active = {{ $index }}"
-                                                aria-label="{{ __('Image') }} {{ $index + 1 }}">
-                                            <img src="{{ asset('storage/' . $item->image) }}" alt="" class="h-full w-full object-cover">
-                                        </button>
+                                        <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $product->name }}"
+                                             class="absolute inset-0 h-full w-full object-cover transition-opacity duration-300 {{ $index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' }}"
+                                             :class="active === {{ $index }} ? 'opacity-100 z-10' : 'opacity-0 z-0'">
                                     @endforeach
                                 </div>
+                                @if($displayImages->count() > 1)
+                                    <div class="flex flex-wrap justify-center gap-2 border-t border-slate-100 bg-slate-50/50 p-3">
+                                        @foreach($displayImages as $index => $item)
+                                            <button type="button" class="h-14 w-14 shrink-0 overflow-hidden rounded-lg border-2 transition focus:ring-2 focus:ring-brand-teal focus:ring-offset-2"
+                                                    :class="active === {{ $index }} ? 'border-brand-teal ring-1 ring-brand-teal' : 'border-slate-200 hover:border-slate-300'"
+                                                    @@click="active = {{ $index }}"
+                                                    aria-label="{{ __('Image') }} {{ $index + 1 }}">
+                                                <img src="{{ asset('storage/' . $item->image) }}" alt="" class="h-full w-full object-cover">
+                                            </button>
+                                        @endforeach
+                                    </div>
+                                @endif
                             @endif
+                        </div>
+                        @if($product->video)
+                            @php
+                                $vExt = strtolower(pathinfo($product->video, PATHINFO_EXTENSION));
+                                $videoMime = match ($vExt) {
+                                    'webm' => 'video/webm',
+                                    'mov' => 'video/quicktime',
+                                    default => 'video/mp4',
+                                };
+                            @endphp
+                            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-black shadow-sm">
+                                <p class="border-b border-slate-800 bg-slate-900 px-4 py-2 text-sm font-medium text-white">{{ __('Product video') }}</p>
+                                <video class="aspect-video w-full object-contain" controls playsinline preload="metadata"
+                                       @if($displayImages->isNotEmpty()) poster="{{ asset('storage/' . $displayImages->first()->image) }}" @endif>
+                                    <source src="{{ asset('storage/' . $product->video) }}" type="{{ $videoMime }}">
+                                    {{ __('Your browser does not support the video tag.') }}
+                                </video>
+                            </div>
                         @endif
                     </div>
 
