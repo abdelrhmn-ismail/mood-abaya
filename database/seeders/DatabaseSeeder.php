@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             TestimonialSeeder::class,
             PostSeeder::class,
             AdminUserSeeder::class,
+            PaymentGatewaySeeder::class,
         ]);
     }
 }

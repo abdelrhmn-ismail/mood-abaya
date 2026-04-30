@@ -26,17 +26,29 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->mapWebRoutes();
         $this->mapAdminRoutes();
+        $this->mapApiRoutes();
     }
 
     protected function mapWebRoutes(): void
     {
         Route::middleware('web')->group(module_path($this->name, '/routes/web.php'));
     }
-protected function mapAdminRoutes(): void
+
+    protected function mapAdminRoutes(): void
     {
         Route::middleware(['web', 'auth', 'verified', 'is_admin'])
             ->prefix('admin')
             ->name('admin.')
             ->group(module_path($this->name, '/routes/admin.php'));
     }
+
+    /**
+     * Webhook routes — no CSRF, no session required.
+     */
+    protected function mapApiRoutes(): void
+    {
+        Route::middleware('api')
+            ->group(module_path($this->name, '/routes/api.php'));
+    }
 }
+

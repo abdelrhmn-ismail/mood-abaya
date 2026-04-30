@@ -10,12 +10,14 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Modules\Order\Http\Requests\StoreCheckoutRequest;
 use Modules\Order\Services\CheckoutService;
+use Modules\Payment\Services\TabbyCheckoutService;
 
 class CheckoutController extends Controller
 {
     public function __construct(
         private CheckoutService $checkoutService,
-        private ShippingService $shippingService
+        private ShippingService $shippingService,
+        private TabbyCheckoutService $tabbyCheckoutService
     ) {}
 
     public function show(Request $request): View|RedirectResponse
@@ -111,6 +113,20 @@ class CheckoutController extends Controller
                 $shippingLabel
             );
 
+            // ── Tabby redirect: create checkout session → redirect to Tabby ──
+            if ($validated['payment_method'] === 'tabby') {
+                $tabbyRedirectUrl = $this->tabbyCheckoutService->createSession($order);
+
+                if ($tabbyRedirectUrl) {
+                    return redirect()->away($tabbyRedirectUrl);
+                }
+
+                // Tabby session creation failed — inform the user
+                return redirect()
+                    ->route('order.confirmed', $order->order_number)
+                    ->with('error', __('Could not connect to Tabby. Your order has been placed — please contact us to complete payment.'));
+            }
+
             return redirect()
                 ->route('order.confirmed', $order->order_number)
                 ->with('success', __('Order placed successfully.'));
@@ -119,3 +135,4 @@ class CheckoutController extends Controller
         }
     }
 }
+

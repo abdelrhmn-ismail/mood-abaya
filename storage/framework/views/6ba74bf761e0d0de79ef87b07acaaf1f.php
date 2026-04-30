@@ -65,6 +65,10 @@
                     <span class="material-icons text-lg">account_balance</span> <?php echo e(__('Payment methods')); ?>
 
                 </a>
+                <a href="<?php echo e(route('admin.tabby-settings.edit')); ?>" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm <?php echo e(request()->routeIs('admin.tabby-settings.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20'); ?>">
+                    <span class="material-icons text-lg">credit_score</span> <?php echo e(__('Tabby Settings')); ?>
+
+                </a>
                 <a href="<?php echo e(route('admin.products.index')); ?>" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm <?php echo e(request()->routeIs('admin.products.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20'); ?>">
                     <span class="material-icons text-lg">inventory_2</span> <?php echo e(__('Products')); ?>
 

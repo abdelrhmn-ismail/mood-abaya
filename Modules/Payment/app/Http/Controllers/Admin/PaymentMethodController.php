@@ -15,11 +15,18 @@ class PaymentMethodController
         private PaymentMethodAdminService $paymentMethodAdminService
     ) {}
 
+    /** Gateway codes that have dedicated integrations & settings pages. */
+    private const GATEWAY_CODES = ['tabby'];
+
     public function index(): View
     {
-        $methods = $this->paymentMethodAdminService->getAllOrdered();
+        $all = $this->paymentMethodAdminService->getAllOrdered();
 
-        return view('payment::admin.payment-methods.index', compact('methods'));
+        // Split: gateway integrations vs manual/custom methods
+        $gatewayMethods = $all->filter(fn ($m) => in_array($m->code, self::GATEWAY_CODES, true));
+        $methods        = $all->reject(fn ($m) => in_array($m->code, self::GATEWAY_CODES, true));
+
+        return view('payment::admin.payment-methods.index', compact('methods', 'gatewayMethods'));
     }
 
     public function create(): View

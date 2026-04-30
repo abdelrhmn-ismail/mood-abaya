@@ -58,6 +58,9 @@
                 <a href="{{ route('admin.payment-methods.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.payment-methods.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">account_balance</span> {{ __('Payment methods') }}
                 </a>
+                <a href="{{ route('admin.tabby-settings.edit') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.tabby-settings.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
+                    <span class="material-icons text-lg">credit_score</span> {{ __('Tabby Settings') }}
+                </a>
                 <a href="{{ route('admin.products.index') }}" class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm {{ request()->routeIs('admin.products.*') ? 'bg-brand-teal-dark' : 'hover:bg-brand-gold/20' }}">
                     <span class="material-icons text-lg">inventory_2</span> {{ __('Products') }}
                 </a>

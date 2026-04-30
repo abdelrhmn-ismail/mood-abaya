@@ -9,6 +9,9 @@
             @if(session('success'))
                 <div class="mb-6 rounded-xl bg-green-100 px-4 py-3 text-green-800">{{ session('success') }}</div>
             @endif
+            @if(session('error'))
+                <div class="mb-6 rounded-xl bg-amber-100 px-4 py-3 text-amber-800">{{ session('error') }}</div>
+            @endif
 
             <div class="rounded-2xl border border-slate-200 bg-white p-10 text-center shadow-sm">
                 <span class="material-icons text-7xl text-green-500">check_circle</span>
@@ -19,6 +22,8 @@
 
                 @if($order->payment_status === 'pending_approval')
                     <p class="mt-6 text-sm text-slate-600">{{ __('We have received your payment proof. Our team will confirm and process your order.') }}</p>
+                @elseif($order->payment_method === 'tabby' && $order->payment_status === 'pending')
+                    <p class="mt-6 text-sm text-slate-600">{{ __('Your Tabby payment is being processed. You will receive a confirmation once payment is complete.') }}</p>
                 @elseif($order->payment_method === 'cash')
                     <p class="mt-6 text-sm text-slate-600">{{ __('Pay when you receive your order.') }}</p>
                 @else

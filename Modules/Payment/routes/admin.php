@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Payment\Http\Controllers\Admin\PaymentController;
 use Modules\Payment\Http\Controllers\Admin\PaymentMethodController;
+use Modules\Payment\Http\Controllers\Admin\TabbySettingsController;
 
 Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
 Route::post('/payments/bulk', [PaymentController::class, 'bulkAction'])->name('payments.bulk');
@@ -18,3 +19,8 @@ Route::get('/payment-methods/{paymentMethod}/edit', [PaymentMethodController::cl
 Route::put('/payment-methods/{paymentMethod}', [PaymentMethodController::class, 'update'])->name('payment-methods.update');
 Route::delete('/payment-methods/{paymentMethod}', [PaymentMethodController::class, 'destroy'])->name('payment-methods.destroy');
 Route::post('/payment-methods/{paymentMethod}/toggle', [PaymentMethodController::class, 'toggle'])->name('payment-methods.toggle');
+
+// Tabby gateway settings
+Route::get('/tabby-settings', [TabbySettingsController::class, 'edit'])->name('tabby-settings.edit');
+Route::put('/tabby-settings', [TabbySettingsController::class, 'update'])->name('tabby-settings.update');
+
